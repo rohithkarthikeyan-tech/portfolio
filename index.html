@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rohith Karthikeyan | Mechatronics Engineering Portfolio</title>
+  <meta name="description" content="Engineering Portfolio of Rohith Karthikeyan - B.E. Mechatronics Engineering Student at Kumaraguru College of Technology specializing in Automotive, Chassis Design, CNC Machining, and Product Development.">
+  <meta name="keywords" content="Rohith Karthikeyan, Mechatronics Engineer, Formula Student, Chassis Design, CNC Machining, KCT, Automotive Engineering, CAD Design">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Background Grid & Glow Overlay -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <!-- Navigation Header -->
+  <header class="navbar-header" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-brand">
+        <span class="brand-badge"><i class="fa-solid fa-gear fa-spin"></i></span>
+        <span class="brand-name">Rohith<span class="highlight">.K</span></span>
+      </a>
+
+      <nav class="nav-links" id="nav-links">
+        <a href="#about" class="nav-link"><i class="fa-regular fa-user"></i> About</a>
+        <a href="#skills" class="nav-link"><i class="fa-solid fa-microchip"></i> Skills</a>
+        <a href="#experience" class="nav-link"><i class="fa-solid fa-briefcase"></i> Experience</a>
+        <a href="#projects" class="nav-link"><i class="fa-solid fa-diagram-project"></i> Projects</a>
+        <a href="#protosem" class="nav-link"><i class="fa-solid fa-diagram-next"></i> ProtoSem</a>
+        <a href="#contact" class="nav-link"><i class="fa-regular fa-envelope"></i> Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle light/dark theme" title="Toggle Theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <button onclick="window.print()" class="btn btn-outline-sm btn-print" title="Print / Download PDF Portfolio">
+          <i class="fa-solid fa-file-pdf"></i> Resume PDF
+        </button>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section id="hero" class="hero-section">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="pulse-dot"></span>
+            <span>B.E. Mechatronics Engineering Student</span>
+          </div>
+          <h1 class="hero-title">
+            Rohith <span class="gradient-text">Karthikeyan</span>
+          </h1>
+          <p class="hero-subtitle">
+            Aspiring Automotive &bull; Manufacturing &bull; Product Development Engineer
+          </p>
+          <p class="hero-institution">
+            <i class="fa-solid fa-university"></i> Kumaraguru College of Technology (KCT)
+          </p>
+
+          <!-- Personal Motto Banner -->
+          <div class="motto-card">
+            <i class="fa-solid fa-quote-left motto-icon"></i>
+            <p class="motto-text">
+              "Engineering is about turning ideas into impactful solutions through innovation, precision, and continuous learning."
+            </p>
+          </div>
+
+          <!-- Hero Action Buttons -->
+          <div class="hero-cta">
+            <a href="#projects" class="btn btn-primary">
+              <i class="fa-solid fa-rocket"></i> View Engineering Projects
+            </a>
+            <a href="#experience" class="btn btn-secondary">
+              <i class="fa-solid fa-industry"></i> Industrial Experience
+            </a>
+            <a href="#contact" class="btn btn-outline">
+              <i class="fa-regular fa-paper-plane"></i> Contact Me
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="tech-card-frame">
+            <img src="images/chassis.png" alt="Formula Student Chassis CAD Design Render" class="hero-img">
+            <div class="visual-overlay">
+              <div class="overlay-tag"><i class="fa-solid fa-car-side"></i> FSAE Chassis CAD Spec</div>
+              <div class="overlay-status">
+                <span class="status-indicator"></span> Metal Fixture Precision &bull; Pull-Bar Suspension
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT & CAREER OBJECTIVE SECTION -->
+    <section id="about" class="section about-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Profile Overview</span>
+          <h2 class="section-title">About & Career Objective</h2>
+          <div class="title-bar"></div>
+        </div>
+
+        <div class="about-grid">
+          <div class="card glass-card objective-card">
+            <div class="card-icon"><i class="fa-solid fa-bullseye"></i></div>
+            <h3 class="card-title">Career Objective</h3>
+            <p>
+              To build a successful career in the <strong>automotive and manufacturing industries</strong> by applying my knowledge of mechanical design, mechatronics, manufacturing processes, and product development. I aim to contribute to innovative engineering solutions while continuously improving my technical, analytical, and leadership skills.
+            </p>
+          </div>
+
+          <div class="card glass-card bio-card">
+            <div class="card-icon"><i class="fa-solid fa-user-gear"></i></div>
+            <h3 class="card-title">About Me</h3>
+            <p>
+              I am a passionate <strong>Mechatronics Engineering student at Kumaraguru College of Technology</strong> with a strong interest in automotive engineering, manufacturing technologies, CNC machining, product development, and industrial automation.
+            </p>
+            <p>
+              My engineering journey has provided me with practical exposure to <strong>Formula Student vehicle development</strong>, CNC machining, precision manufacturing, and textile machinery manufacturing. I enjoy transforming engineering ideas into practical solutions through design, analysis, fabrication, and testing.
+            </p>
+            <p>
+              I am always eager to learn new technologies, collaborate with multidisciplinary teams, and solve real-world engineering challenges.
+            </p>
+          </div>
+        </div>
+
+        <!-- Strengths Highlights -->
+        <div class="strengths-wrapper">
+          <h3 class="subsection-title"><i class="fa-solid fa-bolt"></i> Core Engineering Strengths</h3>
+          <div class="strengths-grid">
+            <div class="strength-pill"><i class="fa-solid fa-brain"></i> Strong Analytical Thinking</div>
+            <div class="strength-pill"><i class="fa-solid fa-gears"></i> Practical Manufacturing Knowledge</div>
+            <div class="strength-pill"><i class="fa-solid fa-car"></i> Passion for Automotive Engineering</div>
+            <div class="strength-pill"><i class="fa-solid fa-lightbulb"></i> Quick Learner</div>
+            <div class="strength-pill"><i class="fa-solid fa-wrench"></i> Hands-on Engineering Approach</div>
+            <div class="strength-pill"><i class="fa-solid fa-people-group"></i> Collaborative Mindset</div>
+            <div class="strength-pill"><i class="fa-solid fa-drafting-compass"></i> Detail-Oriented Design Methodology</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECHNICAL & SOFTWARE SKILLS SECTION -->
+    <section id="skills" class="section skills-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Competencies</span>
+          <h2 class="section-title">Technical & Software Skills</h2>
+          <div class="title-bar"></div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="tab-filters">
+          <button class="tab-btn active" data-filter="all">All Skills</button>
+          <button class="tab-btn" data-filter="mechanical">Mechanical Design</button>
+          <button class="tab-btn" data-filter="manufacturing">Manufacturing</button>
+          <button class="tab-btn" data-filter="automotive">Automotive</button>
+          <button class="tab-btn" data-filter="software">Software Tools</button>
+          <button class="tab-btn" data-filter="engineering">Engineering & Soft Skills</button>
+        </div>
+
+        <div class="skills-grid" id="skills-container">
+
+          <!-- Mechanical Design -->
+          <div class="skill-card glass-card" data-category="mechanical">
+            <div class="skill-head">
+              <i class="fa-solid fa-drafting-compass skill-icon"></i>
+              <h4>Chassis Design</h4>
+            </div>
+            <p>Spaceframe tubular chassis layout, structural geometry & stiffness optimization.</p>
+            <div class="skill-tag">Mechanical Design</div>
+          </div>
+
+          <div class="skill-card glass-card" data-category="mechanical software">
+            <div class="skill-head">
+              <i class="fa-solid fa-cube skill-icon"></i>
+              <h4>CAD Modelling</h4>
+            </div>
+            <p>3D parametric part design, complex assembly design, packaging and clearance checks.</p>
+            <div class="skill-tag">Mechanical / Software</div>
+          </div>
+
+          <div class="skill-card glass-card" data-category="mechanical">
+            <div class="skill-head">
+              <i class="fa-regular fa-file-code skill-icon"></i>
+              <h4>Engineering Drawings</h4>
+            </div>
+            <p>2D drafting, GD&T tolerancing, manufacturing process documentation and exploded views.</p>
+            <div class="skill-tag">Mechanical Design</div>
+          </div>
+
+          <div class="skill-card glass-card" data-category="mechanical manufacturing">
+            <div class="skill-head">
+              <i class="fa-solid fa-vial-circle-check skill-icon"></i>
+              <h4>Design for Manufacturing (DFM)</h4>
+            </div>
+            <p>Optimizing component geometry for ease of fabrication, machining, and assembly.</p>
+            <div class="skill-tag">DFM / Optimization</div>
+          </div>
+
+          <!-- Manufacturing -->
+          <div class="skill-card glass-card" data-category="manufacturing">
+            <div class="skill-head">
+              <i class="fa-solid fa-industry skill-icon"></i>
+              <h4>CNC Machining</h4>
+            </div>
+            <p>CNC Turning, CNC Milling, G-Code/M-Code understanding, machine setup, tool selection.</p>
+            <div class="skill-tag">Manufacturing</div>
+          </div>
+
+          <div class="skill-card glass-card" data-category="manufacturing">
+            <div class="skill-head">
+              <i class="fa-solid fa-screwdriver-wrench skill-icon"></i>
+              <h4>Lathe & Welding Operations</h4>
+            </div>
+            <p>Conventional lathe operations, tube cutting, metal fabrication, jigs & fixture usage.</p>
+            <div class="skill-tag">Fabrication</div>
+          </div>
+
+          <div class="skill-card glass-card" data-category="manufacturing">
+            <div class="skill-head">
+              <i class="fa-solid fa-ruler-combined skill-icon"></i>
+              <h4>Quality Inspection & QA</h4>
+            </div>
+            <p>Dimensional measurement, precision instruments, raw material to finished product QC.</p>
+            <div class="skill-tag">Quality Control</div>
+          </div>
+
+          <!-- Automotive -->
+          <div class="skill-card glass-card" data-category="automotive">
+            <div class="skill-head">
+              <i class="fa-solid fa-car-burst skill-icon"></i>
+              <h4>Formula Student Development</h4>
+            </div>
+            <p>FSAE vehicle lifecycle: chassis design, packaging, assembly, and track testing coordination.</p>
+            <div class="skill-tag">Automotive / FSAE</div>
+          </div>
+
+          <div class="skill-card glass-card" data-category="automotive mechanical">
+            <div class="skill-head">
+              <i class="fa-solid fa-oil-can skill-icon"></i>
+              <h4>Engine Packaging & Harnessing</h4>
+            </div>
+            <p>Powertrain accommodation, clearance optimization, electrical harness & sensor routing.</p>
+            <div class="skill-tag">Powertrain Packaging</div>
+          </div>
+
+          <div class="skill-card glass-card" data-category="automotive">
+            <div class="skill-head">
+              <i class="fa-solid fa-ring skill-icon"></i>
+              <h4>Suspension Accommodation</h4>
+            </div>
+            <p>Integrating pull-bar suspension hardpoints into chassis geometry for dynamic stability.</p>
+            <div class="skill-tag">Suspension Systems</div>
+          </div>
+
+          <!-- Software Tools -->
+          <div class="skill-card glass-card" data-category="software">
+            <div class="skill-head">
+              <i class="fa-solid fa-laptop-code skill-icon"></i>
+              <h4>SolidWorks</h4>
+            </div>
+            <p>Advanced 3D modeling, weldment design, sheet metal, and assembly simulation.</p>
+            <div class="skill-badge-level">Advanced CAD</div>
+          </div>
+
+          <div class="skill-card glass-card" data-category="software">
+            <div class="skill-head">
+              <i class="fa-solid fa-layer-group skill-icon"></i>
+              <h4>CATIA</h4>
+            </div>
+            <p>Surface modeling, aerospace & automotive structural design modules.</p>
+            <div class="skill-badge-level">CAD Software</div>
+          </div>
+
+          <div class="skill-card glass-card" data-category="software">
+            <div class="skill-head">
+              <i class="fa-solid fa-pen-ruler skill-icon"></i>
+              <h4>AutoCAD</h4>
+            </div>
+            <p>2D drafting, plant layout, mechanical component schematic design.</p>
+            <div class="skill-badge-level">2D Drafting</div>
+          </div>
+
+          <div class="skill-card glass-card" data-category="software">
+            <div class="skill-head">
+              <i class="fa-solid fa-file-excel skill-icon"></i>
+              <h4>Microsoft Office Suite</h4>
+            </div>
+            <p>Excel data calculation, Word technical documentation, PowerPoint presentations.</p>
+            <div class="skill-badge-level">Documentation</div>
+          </div>
+
+          <!-- Engineering & Soft Skills -->
+          <div class="skill-card glass-card" data-category="engineering">
+            <div class="skill-head">
+              <i class="fa-solid fa-magnifying-glass-chart skill-icon"></i>
+              <h4>Root Cause Analysis</h4>
+            </div>
+            <p>Systematic problem solving, 5-Why analysis, process improvement in manufacturing.</p>
+            <div class="skill-tag">Engineering Method</div>
+          </div>
+
+          <div class="skill-card glass-card" data-category="engineering">
+            <div class="skill-head">
+              <i class="fa-solid fa-users-gear skill-icon"></i>
+              <h4>Leadership & Teamwork</h4>
+            </div>
+            <p>Cross-departmental collaboration, technical documentation, time management, adaptability.</p>
+            <div class="skill-tag">Professional Skills</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- INDUSTRIAL EXPERIENCE SECTION -->
+    <section id="experience" class="section experience-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Hands-on Work</span>
+          <h2 class="section-title">Industrial Experience</h2>
+          <div class="title-bar"></div>
+        </div>
+
+        <!-- Experience Nav Tabs -->
+        <div class="exp-nav">
+          <button class="exp-nav-btn active" data-exp="sakthi">
+            <i class="fa-solid fa-flag-checkered"></i> Team Sakthi Racing (Formula Student)
+          </button>
+          <button class="exp-nav-btn" data-exp="cnc">
+            <i class="fa-solid fa-gears"></i> CNC Machining Internship
+          </button>
+          <button class="exp-nav-btn" data-exp="textile">
+            <i class="fa-solid fa-industry"></i> Textile Industry Exposure
+          </button>
+        </div>
+
+        <div class="exp-content-container">
+
+          <!-- 1. Sakthi Racing -->
+          <div class="exp-panel active" id="exp-sakthi">
+            <div class="exp-header-card glass-card">
+              <div class="exp-title-group">
+                <h3>Team Sakthi Racing – Formula Student</h3>
+                <div class="exp-meta">
+                  <span class="badge badge-primary"><i class="fa-solid fa-shield-halved"></i> Department: Chassis</span>
+                  <span class="badge badge-outline"><i class="fa-solid fa-award"></i> Internship Certified</span>
+                </div>
+              </div>
+              <p class="exp-summary">
+                As a member of Team Sakthi Racing, I worked on the design and development of a Formula Student race car. This experience exposed me to the complete engineering lifecycle, including design, manufacturing, assembly, testing, and interdisciplinary teamwork.
+              </p>
+            </div>
+
+            <div class="exp-details-grid">
+              <div class="exp-box glass-card">
+                <h4><i class="fa-solid fa-list-check"></i> Key Responsibilities</h4>
+                <ul>
+                  <li><i class="fa-solid fa-check text-cyan"></i> Designed the Formula Student chassis in CAD.</li>
+                  <li><i class="fa-solid fa-check text-cyan"></i> Improved torsional rigidity for vehicle stability.</li>
+                  <li><i class="fa-solid fa-check text-cyan"></i> <strong>Reduced chassis weight by approximately 500 g</strong>.</li>
+                  <li><i class="fa-solid fa-check text-cyan"></i> Enhanced engine compartment spacing and clearance.</li>
+                  <li><i class="fa-solid fa-check text-cyan"></i> Designed chassis to accommodate <strong>pull-bar suspension</strong>.</li>
+                  <li><i class="fa-solid fa-check text-cyan"></i> Introduced <strong>metal fixtures</strong> to improve manufacturing accuracy.</li>
+                  <li><i class="fa-solid fa-check text-cyan"></i> Coordinated directly with the fabrication team during manufacturing.</li>
+                </ul>
+              </div>
+
+              <div class="exp-box glass-card">
+                <h4><i class="fa-solid fa-hammer"></i> Manufacturing & Fabrication</h4>
+                <ul>
+                  <li><i class="fa-solid fa-wrench text-orange"></i> Chassis fabrication & assembly</li>
+                  <li><i class="fa-solid fa-wrench text-orange"></i> Precision tube cutting & notch alignment</li>
+                  <li><i class="fa-solid fa-wrench text-orange"></i> TIG/MIG Welding coordination</li>
+                  <li><i class="fa-solid fa-wrench text-orange"></i> Jig and fixture design and usage</li>
+                  <li><i class="fa-solid fa-wrench text-orange"></i> Dimensional inspection & frame alignment</li>
+                  <li><i class="fa-solid fa-wrench text-orange"></i> Rigorous Quality control procedures</li>
+                </ul>
+              </div>
+
+              <div class="exp-box glass-card">
+                <h4><i class="fa-solid fa-plug-zap"></i> Powertrain & Electrical Integration</h4>
+                <ul>
+                  <li><i class="fa-solid fa-bolt text-yellow"></i> Engine assembly & mounting alignment</li>
+                  <li><i class="fa-solid fa-bolt text-yellow"></i> Engine installation into chassis envelope</li>
+                  <li><i class="fa-solid fa-bolt text-yellow"></i> Electrical wiring harness routing</li>
+                  <li><i class="fa-solid fa-bolt text-yellow"></i> Sensor connections & telemetry wire paths</li>
+                  <li><i class="fa-solid fa-bolt text-yellow"></i> Interdisciplinary electrical integration</li>
+                </ul>
+              </div>
+
+              <div class="exp-box glass-card">
+                <h4><i class="fa-solid fa-graduation-cap"></i> Skills Developed</h4>
+                <div class="tag-cloud">
+                  <span class="cloud-tag">CAD Design</span>
+                  <span class="cloud-tag">Manufacturing Planning</span>
+                  <span class="cloud-tag">Team Collaboration</span>
+                  <span class="cloud-tag">Problem Solving</span>
+                  <span class="cloud-tag">Technical Communication</span>
+                  <span class="cloud-tag">Rigidity Optimization</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. CNC Internship -->
+          <div class="exp-panel" id="exp-cnc">
+            <div class="exp-header-card glass-card">
+              <div class="exp-title-group">
+                <h3>CNC Machining Internship</h3>
+                <div class="exp-meta">
+                  <span class="badge badge-primary"><i class="fa-solid fa-industry"></i> Modern Manufacturing</span>
+                  <span class="badge badge-outline"><i class="fa-solid fa-certificate"></i> Certified Internship</span>
+                </div>
+              </div>
+              <p class="exp-summary">
+                My first industrial internship was at a CNC machining company, where I spent more than two weeks learning modern manufacturing practices. I gained practical knowledge of CNC machining and conventional lathe machines while observing the complete manufacturing process from raw material to finished components.
+              </p>
+            </div>
+
+            <div class="exp-cnc-grid">
+              <div class="exp-img-col">
+                <img src="images/cnc.png" alt="CNC Machining Precision Tooling" class="exp-img">
+              </div>
+              <div class="exp-box glass-card">
+                <h4><i class="fa-solid fa-gears"></i> Core Learning Outcomes</h4>
+                <div class="outcomes-grid">
+                  <div class="outcome-item"><i class="fa-solid fa-circle-check"></i> CNC Turning</div>
+                  <div class="outcome-item"><i class="fa-solid fa-circle-check"></i> CNC Milling</div>
+                  <div class="outcome-item"><i class="fa-solid fa-circle-check"></i> Conventional Lathe Operations</div>
+                  <div class="outcome-item"><i class="fa-solid fa-circle-check"></i> Cutting Tool Selection</div>
+                  <div class="outcome-item"><i class="fa-solid fa-circle-check"></i> Machine Setup & Workholding</div>
+                  <div class="outcome-item"><i class="fa-solid fa-circle-check"></i> Engineering Drawing Interpretation</div>
+                  <div class="outcome-item"><i class="fa-solid fa-circle-check"></i> Dimensional Inspection & Micrometers</div>
+                  <div class="outcome-item"><i class="fa-solid fa-circle-check"></i> Production Workflow Planning</div>
+                  <div class="outcome-item"><i class="fa-solid fa-circle-check"></i> Industrial Manufacturing Safety</div>
+                </div>
+                <div class="takeaway-box">
+                  <p><em>"This internship helped me understand precision manufacturing and the critical importance of dimensional accuracy, process planning, and quality control."</em></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Textile Exposure -->
+          <div class="exp-panel" id="exp-textile">
+            <div class="exp-header-card glass-card">
+              <div class="exp-title-group">
+                <h3>Textile Industry Exposure</h3>
+                <div class="exp-meta">
+                  <span class="badge badge-primary"><i class="fa-solid fa-screwdriver-wrench"></i> Machine Manufacturing & Maintenance</span>
+                  <span class="badge badge-outline"><i class="fa-solid fa-building"></i> Industrial Exposure</span>
+                </div>
+              </div>
+              <p class="exp-summary">
+                Gained valuable industrial exposure through my father's business, which manufactures <strong>fabric checking machines for textile industries</strong>. From an early stage, I had opportunities to visit several textile manufacturing plants, observing production processes, industrial machinery, maintenance practices, and quality inspection systems.
+              </p>
+            </div>
+
+            <div class="exp-details-grid">
+              <div class="exp-box glass-card full-width">
+                <h4><i class="fa-solid fa-industry"></i> Areas of Industrial Exposure</h4>
+                <div class="areas-grid">
+                  <div class="area-card">
+                    <i class="fa-solid fa-sliders"></i>
+                    <h5>Fabric Checking Machinery</h5>
+                    <p>Understanding mechanical structure & roller drive mechanisms.</p>
+                  </div>
+                  <div class="area-card">
+                    <i class="fa-solid fa-cubes-stacked"></i>
+                    <h5>Machine Assembly</h5>
+                    <p>Integration of mechanical components, motors, & structural frames.</p>
+                  </div>
+                  <div class="area-card">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <h5>Production Planning</h5>
+                    <p>Raw material sourcing, fabrication timelines, & component tracking.</p>
+                  </div>
+                  <div class="area-card">
+                    <i class="fa-solid fa-microscope"></i>
+                    <h5>Quality Inspection</h5>
+                    <p>Testing fabric inspection accuracy, sensor calibration, & tolerances.</p>
+                  </div>
+                  <div class="area-card">
+                    <i class="fa-solid fa-wrench"></i>
+                    <h5>Industrial Maintenance</h5>
+                    <p>Preventive maintenance, gear/belt troubleshooting, & customer support.</p>
+                  </div>
+                  <div class="area-card">
+                    <i class="fa-solid fa-comments"></i>
+                    <h5>Customer Requirements</h5>
+                    <p>Translating client feedback into machine design improvements.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- MAJOR ENGINEERING PROJECTS SECTION -->
+    <section id="projects" class="section projects-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Engineering Innovation</span>
+          <h2 class="section-title">Major Projects</h2>
+          <div class="title-bar"></div>
+        </div>
+
+        <div class="projects-grid">
+
+          <!-- Project 1: Formula Student Chassis -->
+          <div class="project-card glass-card">
+            <div class="project-img-wrapper">
+              <img src="images/chassis.png" alt="Formula Student Chassis Development">
+              <div class="project-badge">Automotive / FSAE</div>
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Formula Student Chassis Development</h3>
+              <p class="project-desc">
+                Designed and developed a lightweight Formula Student spaceframe chassis focused on high torsional rigidity, optimized engine packaging, pull-bar suspension, and metal fixture manufacturing accuracy.
+              </p>
+
+              <div class="project-highlights">
+                <div class="highlight-item"><i class="fa-solid fa-weight-hanging"></i> -500g Weight Optimization</div>
+                <div class="highlight-item"><i class="fa-solid fa-shield-halved"></i> High Torsional Rigidity</div>
+                <div class="highlight-item"><i class="fa-solid fa-bullseye"></i> Metal Fixtures for Precision</div>
+              </div>
+
+              <div class="project-tags">
+                <span>SolidWorks</span>
+                <span>Chassis Design</span>
+                <span>DFM</span>
+                <span>Pull-Bar Suspension</span>
+                <span>Jigs & Fixtures</span>
+              </div>
+
+              <button class="btn btn-outline-sm btn-modal-trigger" onclick="openProjectModal('modal-chassis')">
+                <i class="fa-solid fa-circle-info"></i> Technical Details
+              </button>
+            </div>
+          </div>
+
+          <!-- Project 2: Smart Cargo Theft Detection -->
+          <div class="project-card glass-card">
+            <div class="project-img-wrapper">
+              <img src="images/cargo.png" alt="Smart Cargo Theft Detection System">
+              <div class="project-badge">Mechatronics / IoT</div>
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Smart Cargo Theft Detection System</h3>
+              <p class="project-desc">
+                Designed an intelligent mechatronic concept for detecting cargo theft in commercial logistics using vehicle suspension displacement monitoring and real-time sensor analytics.
+              </p>
+
+              <div class="project-highlights">
+                <div class="highlight-item"><i class="fa-solid fa-satellite-dish"></i> Suspension Displacement Monitor</div>
+                <div class="highlight-item"><i class="fa-solid fa-wifi"></i> IoT & GPS Real-Time Alert</div>
+                <div class="highlight-item"><i class="fa-solid fa-chart-line"></i> Load Analytics & Fleet Log</div>
+              </div>
+
+              <div class="project-tags">
+                <span>Mechatronics</span>
+                <span>IoT Sensors</span>
+                <span>GPS Tracking</span>
+                <span>Load Monitoring</span>
+                <span>Data Logging</span>
+              </div>
+
+              <button class="btn btn-outline-sm btn-modal-trigger" onclick="openProjectModal('modal-cargo')">
+                <i class="fa-solid fa-circle-info"></i> Technical Details
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PROTOSEM (PROTOTYPE SEMESTER) SECTION -->
+    <section id="protosem" class="section protosem-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Product Prototyping Journey</span>
+          <h2 class="section-title">ProtoSem Journal & Work Logs</h2>
+          <div class="title-bar"></div>
+          <p class="section-description">
+            Comprehensive 20-Week milestone log at KCT ProtoSem covering product ideation, CAD modeling, circuit design, fabrication, assignments, and picture documentation.
+          </p>
+        </div>
+
+        <!-- ProtoSem Top Controls & Action Bar -->
+        <div class="protosem-control-bar glass-card">
+          <div class="protosem-info">
+            <i class="fa-solid fa-layer-group protosem-badge-icon"></i>
+            <div>
+              <h4>ProtoSem Prototyping Timeline</h4>
+              <p>Select any week below (Week 0 to Week 20) to view or update works, assignments, photos, and project progress.</p>
+            </div>
+          </div>
+          <button class="btn btn-outline-sm btn-update-week" onclick="openUpdateWeekModal()">
+            <i class="fa-solid fa-pen-to-square"></i> Add / Edit Weekly Log
+          </button>
+        </div>
+
+        <!-- Week Sub-Tabs Navigation (Scrollable Bar + Dropdown for Mobile) -->
+        <div class="week-tabs-container">
+          <div class="mobile-week-selector">
+            <label for="protosem-select"><i class="fa-solid fa-calendar-week"></i> Select Week:</label>
+            <select id="protosem-select" onchange="switchWeekTab(this.value)">
+              <option value="0" selected>Zeroth Week (Week 0) - Problem Discovery & Ideation</option>
+              <option value="1">Week 1 - Need Statement & Market Research</option>
+              <option value="2">Week 2 - System Architecture & Technical Specs</option>
+              <option value="3">Week 3 - CAD Conceptualization & Component Selection</option>
+              <option value="4">Week 4 - DFM & Bill of Materials (BOM)</option>
+              <option value="5">Week 5 - Microcontroller & Sensor Prototyping</option>
+              <option value="6">Week 6 - Chassis & Mechanical Geometry</option>
+              <option value="7">Week 7 - Circuit Schematics & PCB Layout</option>
+              <option value="8">Week 8 - Mid-Term Review & Milestone Defense</option>
+              <option value="9">Week 9 - Mechanical Structure Machining</option>
+              <option value="10">Week 10 - Telemetry & Firmware Development</option>
+              <option value="11">Week 11 - Structural Fabrication & Welding</option>
+              <option value="12">Week 12 - Suspension Transducer Integration</option>
+              <option value="13">Week 13 - 3D Printing & Enclosure Wiring</option>
+              <option value="14">Week 14 - Sub-Assembly Testing & Calibration</option>
+              <option value="15">Week 15 - Algorithm Tuning & Data Analytics</option>
+              <option value="16">Week 16 - Rigorous Track & Load Testing</option>
+              <option value="17">Week 17 - System Optimization & Reliability</option>
+              <option value="18">Week 18 - Technical Documentation & Manuals</option>
+              <option value="19">Week 19 - Product Demo & Expo Preparation</option>
+              <option value="20">Week 20 - Final Jury Defense & Graduation</option>
+            </select>
+          </div>
+
+          <div class="week-pills-bar" id="week-pills-bar">
+            <button class="week-pill active" data-week="0">Zeroth Week</button>
+            <button class="week-pill" data-week="1">Week 1</button>
+            <button class="week-pill" data-week="2">Week 2</button>
+            <button class="week-pill" data-week="3">Week 3</button>
+            <button class="week-pill" data-week="4">Week 4</button>
+            <button class="week-pill" data-week="5">Week 5</button>
+            <button class="week-pill" data-week="6">Week 6</button>
+            <button class="week-pill" data-week="7">Week 7</button>
+            <button class="week-pill" data-week="8">Week 8</button>
+            <button class="week-pill" data-week="9">Week 9</button>
+            <button class="week-pill" data-week="10">Week 10</button>
+            <button class="week-pill" data-week="11">Week 11</button>
+            <button class="week-pill" data-week="12">Week 12</button>
+            <button class="week-pill" data-week="13">Week 13</button>
+            <button class="week-pill" data-week="14">Week 14</button>
+            <button class="week-pill" data-week="15">Week 15</button>
+            <button class="week-pill" data-week="16">Week 16</button>
+            <button class="week-pill" data-week="17">Week 17</button>
+            <button class="week-pill" data-week="18">Week 18</button>
+            <button class="week-pill" data-week="19">Week 19</button>
+            <button class="week-pill" data-week="20">Week 20</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Week Display Container -->
+        <div class="protosem-display-area" id="protosem-display-area">
+          <!-- Panels generated & loaded dynamically by JS -->
+        </div>
+
+        <!-- ProtoSem to Major Projects Integration Banner -->
+        <div class="protosem-projects-banner glass-card">
+          <div class="banner-content">
+            <i class="fa-solid fa-diagram-project banner-icon"></i>
+            <div>
+              <h3>ProtoSem Work Integrated Into Major Projects</h3>
+              <p>The engineering milestones, CAD models, and sensor prototypes developed throughout ProtoSem directly feed into our flagship Major Projects.</p>
+            </div>
+          </div>
+          <a href="#projects" class="btn btn-primary">
+            <i class="fa-solid fa-rocket"></i> View Major Projects
+          </a>
+        </div>
+
+        <!-- Certifications & Credentials Strip -->
+        <div class="certifications-strip glass-card">
+          <h3 class="subsection-title"><i class="fa-solid fa-certificate"></i> Certifications & Credentials</h3>
+          <div class="cert-strip-grid">
+            <div class="cert-strip-card">
+              <i class="fa-solid fa-award cert-icon"></i>
+              <div>
+                <h5>CNC Machining Internship Certificate</h5>
+                <p>Certified 2+ weeks training in CNC turning, milling, and precision inspection.</p>
+              </div>
+            </div>
+            <div class="cert-strip-card">
+              <i class="fa-solid fa-award cert-icon"></i>
+              <div>
+                <h5>Team Sakthi Racing Internship Certificate</h5>
+                <p>Formula Student Chassis design, manufacturing, and vehicle integration.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="section contact-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Get In Touch</span>
+          <h2 class="section-title">Contact & Professional Links</h2>
+          <div class="title-bar"></div>
+        </div>
+
+        <div class="contact-grid">
+          <!-- Info Cards -->
+          <div class="contact-info">
+            <div class="contact-card glass-card">
+              <div class="contact-icon"><i class="fa-solid fa-user-check"></i></div>
+              <div>
+                <span class="info-label">Name</span>
+                <span class="info-value">Rohith Karthikeyan</span>
+              </div>
+            </div>
+
+            <div class="contact-card glass-card">
+              <div class="contact-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+              <div>
+                <span class="info-label">Degree & College</span>
+                <span class="info-value">B.E. Mechatronics Engineering &bull; KCT</span>
+              </div>
+            </div>
+
+            <div class="contact-card glass-card" onclick="copyToClipboard('email-val', 'Email')" title="Click to copy email">
+              <div class="contact-icon"><i class="fa-regular fa-envelope"></i></div>
+              <div>
+                <span class="info-label">Email Address (Click to Copy)</span>
+                <span class="info-value" id="email-val">rohith.karthikeyan@kct.ac.in</span>
+              </div>
+              <i class="fa-solid fa-copy copy-icon"></i>
+            </div>
+
+            <div class="contact-card glass-card" onclick="copyToClipboard('phone-val', 'Phone number')" title="Click to copy phone">
+              <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
+              <div>
+                <span class="info-label">Phone Number (Click to Copy)</span>
+                <span class="info-value" id="phone-val">+91 (Add Phone Number)</span>
+              </div>
+              <i class="fa-solid fa-copy copy-icon"></i>
+            </div>
+
+            <div class="contact-card glass-card">
+              <div class="contact-icon"><i class="fa-brands fa-linkedin"></i></div>
+              <div>
+                <span class="info-label">LinkedIn Profile</span>
+                <a href="https://linkedin.com" target="_blank" rel="noopener" class="info-link">linkedin.com/in/rohith-karthikeyan</a>
+              </div>
+              <i class="fa-solid fa-arrow-up-right-from-square copy-icon"></i>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div class="contact-form-container glass-card">
+            <h3>Send an Engineering Inquiry</h3>
+            <p>Interested in collaborating on automotive design, CNC machining, or mechatronics projects? Drop a message below.</p>
+
+            <form id="contact-form" onsubmit="handleFormSubmit(event)">
+              <div class="form-group">
+                <label for="form-name">Your Name</label>
+                <input type="text" id="form-name" placeholder="Enter your full name" required>
+              </div>
+
+              <div class="form-group">
+                <label for="form-email">Your Email</label>
+                <input type="email" id="form-email" placeholder="name@company.com" required>
+              </div>
+
+              <div class="form-group">
+                <label for="form-subject">Subject / Inquiry Type</label>
+                <select id="form-subject" required>
+                  <option value="" disabled selected>Select subject...</option>
+                  <option value="Automotive Design">Automotive / Chassis Design</option>
+                  <option value="CNC & Manufacturing">CNC & Manufacturing Inquiry</option>
+                  <option value="Mechatronics Project">Mechatronics / Product Development</option>
+                  <option value="Internship / Recruitment">Internship / Job Opportunity</option>
+                  <option value="Other">Other Inquiry</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="form-message">Message</label>
+                <textarea id="form-message" rows="4" placeholder="Write your message here..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-full">
+                <i class="fa-regular fa-paper-plane"></i> Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <h4>Rohith Karthikeyan</h4>
+        <p>B.E. Mechatronics Engineering &bull; Kumaraguru College of Technology</p>
+      </div>
+      <div class="footer-quote">
+        <p><em>"Engineering is about turning ideas into impactful solutions through innovation, precision, and continuous learning."</em></p>
+      </div>
+      <div class="footer-copy">
+        <p>&copy; 2026 Rohith Karthikeyan. All Rights Reserved. Built with Precision HTML & CSS.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PROJECT DETAIL MODAL 1: FORMULA STUDENT CHASSIS -->
+  <div id="modal-chassis" class="modal">
+    <div class="modal-overlay" onclick="closeProjectModal('modal-chassis')"></div>
+    <div class="modal-card glass-card">
+      <button class="modal-close" onclick="closeProjectModal('modal-chassis')">&times;</button>
+      <div class="modal-header">
+        <span class="badge badge-primary">FSAE Chassis Engineering</span>
+        <h2>Formula Student Chassis Development</h2>
+      </div>
+      <div class="modal-body">
+        <img src="images/chassis.png" alt="Formula Student Chassis Specs" class="modal-img">
+
+        <h4>Project Overview & Objectives</h4>
+        <p>
+          As part of Team Sakthi Racing's Chassis Department, I designed and optimized the tubular spaceframe chassis for a Formula Student race car. The primary goal was to achieve high structural torsional rigidity while minimizing overall vehicle mass and ensuring smooth engine packaging.
+        </p>
+
+        <h4>Technical Accomplishments & Innovations</h4>
+        <ul class="modal-list">
+          <li><strong>Weight Savings:</strong> Successfully reduced chassis overall weight by ~500 grams through targeted tube wall thickness selection and triangulation optimization.</li>
+          <li><strong>Pull-Bar Suspension Hardpoints:</strong> Integrated custom mounting points designed specifically for a pull-bar suspension layout.</li>
+          <li><strong>Engine Envelope:</strong> Improved engine compartment spacing, simplifying installation, maintenance access, and intake/exhaust routing.</li>
+          <li><strong>Manufacturing Fixtures:</strong> Introduced custom metal fixtures and notch templates during fabrication to eliminate distortion during TIG/MIG welding and boost frame alignment accuracy.</li>
+        </ul>
+
+        <h4>Software & Tools Utilized</h4>
+        <div class="project-tags">
+          <span>SolidWorks Weldments</span>
+          <span>DFM Principles</span>
+          <span>Tube Notch Geometry</span>
+          <span>Fixturing Jigs</span>
+          <span>GD&T Tolerancing</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT DETAIL MODAL 2: SMART CARGO THEFT DETECTION -->
+  <div id="modal-cargo" class="modal">
+    <div class="modal-overlay" onclick="closeProjectModal('modal-cargo')"></div>
+    <div class="modal-card glass-card">
+      <button class="modal-close" onclick="closeProjectModal('modal-cargo')">&times;</button>
+      <div class="modal-header">
+        <span class="badge badge-primary">Mechatronics / Smart Systems</span>
+        <h2>Smart Cargo Theft Detection System</h2>
+      </div>
+      <div class="modal-body">
+        <img src="images/cargo.png" alt="Smart Cargo System Architecture" class="modal-img">
+
+        <h4>Concept Overview & Problem Statement</h4>
+        <p>
+          Cargo theft during transit in heavy commercial logistics causes massive financial loss worldwide. Traditional door sensors are often bypassed or damaged. This project proposes an intelligent mechatronic load monitoring system integrated into the vehicle's suspension chassis.
+        </p>
+
+        <h4>Key System Features & Working Principle</h4>
+        <ul class="modal-list">
+          <li><strong>Suspension Displacement Sensing:</strong> Monitors vertical suspension compression/extension in real-time to compute instant payload weight changes.</li>
+          <li><strong>Anomalous Offload Detection:</strong> Detects unauthorized cargo removal while vehicle is halted or in transit by identifying unexpected displacement drops.</li>
+          <li><strong>IoT & GPS Integration:</strong> Transmits instantaneous GPS coordinates, vehicle speed, and load telemetry to cloud fleet servers.</li>
+          <li><strong>Driver & Central Alerting:</strong> Triggers immediate audible cab alerts and SMS/dashboard notifications to fleet operators during suspicious events.</li>
+          <li><strong>Continuous Data Logging:</strong> Maintains digital logs for auditability and root-cause theft investigation.</li>
+        </ul>
+
+        <h4>Technologies & Components</h4>
+        <div class="project-tags">
+          <span>Suspension Displacement Transducers</span>
+          <span>Microcontroller Unit</span>
+          <span>IoT Telemetry</span>
+          <span>GPS Module</span>
+          <span>Data Analytics</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROTOSEM WEEKLY LOG EDIT/UPDATE MODAL -->
+  <div id="modal-update-week" class="modal">
+    <div class="modal-overlay" onclick="closeProjectModal('modal-update-week')"></div>
+    <div class="modal-card glass-card">
+      <button class="modal-close" onclick="closeProjectModal('modal-update-week')">&times;</button>
+      <div class="modal-header">
+        <span class="badge badge-primary"><i class="fa-solid fa-pen-to-square"></i> ProtoSem Journal Editor</span>
+        <h2>Update Weekly Log & Submissions</h2>
+      </div>
+      <div class="modal-body">
+        <form id="update-week-form" onsubmit="saveWeekLog(event)">
+          <div class="form-group">
+            <label for="edit-week-select">Select Week to Update:</label>
+            <select id="edit-week-select" required>
+              <option value="0">Zeroth Week (Week 0)</option>
+              <option value="1">Week 1</option>
+              <option value="2">Week 2</option>
+              <option value="3">Week 3</option>
+              <option value="4">Week 4</option>
+              <option value="5">Week 5</option>
+              <option value="6">Week 6</option>
+              <option value="7">Week 7</option>
+              <option value="8">Week 8</option>
+              <option value="9">Week 9</option>
+              <option value="10">Week 10</option>
+              <option value="11">Week 11</option>
+              <option value="12">Week 12</option>
+              <option value="13">Week 13</option>
+              <option value="14">Week 14</option>
+              <option value="15">Week 15</option>
+              <option value="16">Week 16</option>
+              <option value="17">Week 17</option>
+              <option value="18">Week 18</option>
+              <option value="19">Week 19</option>
+              <option value="20">Week 20</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-week-title">Week Title / Milestone Topic:</label>
+            <input type="text" id="edit-week-title" placeholder="e.g. CAD Assembly & Suspension Hardpoints" required>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-week-tasks">Works & Progress (One item per line):</label>
+            <textarea id="edit-week-tasks" rows="3" placeholder="- Completed 3D chassis tubing weldment model&#10;- Ran torsional rigidity simulation&#10;- Fixed packaging clearance" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-week-assignments">Assignments & Submissions (One item per line):</label>
+            <textarea id="edit-week-assignments" rows="2" placeholder="- Submitted CAD Assembly STEP file&#10;- Milestone Design Presentation PDF"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-week-image">Picture Image URL / Path (Optional):</label>
+            <input type="text" id="edit-week-image" placeholder="images/chassis.png or https://example.com/photo.jpg">
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">
+            <i class="fa-solid fa-floppy-disk"></i> Save Weekly Log
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Custom Script -->
+  <script src="script.js"></script>
+</body>
+</html>
