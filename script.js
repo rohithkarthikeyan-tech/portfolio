@@ -249,6 +249,16 @@ function showToast(message, iconClass = 'fa-circle-info') {
    10. ProtoSem (20-Week Product Prototyping Journal) Controller
    -------------------------------------------------------------------------- */
 const defaultProtoSemWeeks = {
+  0: {
+    title: "Orientation Program",
+    phase: "Phase 1: Discovery & Concept",
+    tasks: [
+      "Orientation & Introduction to ProtoSem prototyping methodology.",
+      "Completed 16Personalities (MBTI) assessment - Advocate (INFJ).",
+      "Introduced to Zen Pencils inspiring life lessons & mindset building.",
+      "Established foundation for problem-solving, design thinking & teamwork."
+    ]
+  },
   1: {
     title: "Need Statement & Market Research",
     phase: "Phase 1: Discovery & Concept",
@@ -551,8 +561,11 @@ const defaultProtoSemWeeks = {
   }
 };
 
-let currentProtoSemWeek = 1;
+let currentProtoSemWeek = 0;
 let protoSemData = JSON.parse(localStorage.getItem('protoSemData')) || defaultProtoSemWeeks;
+if (!protoSemData[0]) {
+  protoSemData[0] = defaultProtoSemWeeks[0];
+}
 
 function initProtoSem() {
   const pillsBar = document.getElementById('week-pills-bar');
@@ -600,7 +613,7 @@ function renderWeekPanel(weekNum) {
     tasks: ["No tasks logged yet. Click 'Add / Edit Weekly Log' to enter details."]
   };
 
-  const weekNameLabel = `Week ${weekNum}`;
+  const weekNameLabel = weekNum === 0 ? "Zeroth Week (Week 0)" : `Week ${weekNum}`;
 
   let tasksHtml = (data.tasks || []).map(t => `<li><i class="fa-solid fa-square-check text-cyan"></i> ${t}</li>`).join('');
 

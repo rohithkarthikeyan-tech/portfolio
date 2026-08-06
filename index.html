@@ -585,7 +585,7 @@
             <i class="fa-solid fa-layer-group protosem-badge-icon"></i>
             <div>
               <h4>ProtoSem Prototyping Timeline</h4>
-              <p>Select any week below (Week 1 to Week 20) to view or update weekly milestone logs.</p>
+              <p>Select any week below (Week 0 to Week 20) to view or update weekly milestone logs.</p>
             </div>
           </div>
           <button class="btn btn-outline-sm btn-update-week" onclick="openUpdateWeekModal()">
@@ -598,7 +598,8 @@
           <div class="mobile-week-selector">
             <label for="protosem-select"><i class="fa-solid fa-calendar-week"></i> Select Week:</label>
             <select id="protosem-select" onchange="switchWeekTab(this.value)">
-              <option value="1" selected>Week 1 - Need Statement & Market Research</option>
+              <option value="0" selected>Zeroth Week (Week 0) - Problem Discovery & Ideation</option>
+              <option value="1">Week 1 - Need Statement & Market Research</option>
               <option value="2">Week 2 - System Architecture & Technical Specs</option>
               <option value="3">Week 3 - CAD Conceptualization & Component Selection</option>
               <option value="4">Week 4 - DFM & Bill of Materials (BOM)</option>
@@ -622,8 +623,11 @@
           </div>
 
           <div class="week-pills-bar" id="week-pills-bar">
+            <a href="week - 0.html">
+  <button class="week-pill active" data-week="0">Zeroth Week</button>
+</a>
             <a href="week - 1.html">
-  <button class="week-pill active" data-week="1">Week 1</button>
+  <button class="week-pill" data-week="1">Week 1</button>
 </a>
             <button class="week-pill" data-week="2">Week 2</button>
             <button class="week-pill" data-week="3">Week 3</button>
@@ -844,6 +848,7 @@
           <div class="form-group">
             <label for="edit-week-select">Select Week to Update:</label>
             <select id="edit-week-select" required>
+              <option value="0">Zeroth Week (Week 0)</option>
               <option value="1">Week 1</option>
               <option value="2">Week 2</option>
               <option value="3">Week 3</option>
