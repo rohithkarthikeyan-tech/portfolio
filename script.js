@@ -249,21 +249,6 @@ function showToast(message, iconClass = 'fa-circle-info') {
    10. ProtoSem (20-Week Product Prototyping Journal) Controller
    -------------------------------------------------------------------------- */
 const defaultProtoSemWeeks = {
-  0: {
-    title: "Problem Statement Discovery & Ideation",
-    phase: "Phase 1: Discovery & Concept",
-    tasks: [
-      "Orientation & Introduction to ProtoSem prototyping methodology.",
-      "Identified cargo theft in transit as core engineering problem statement.",
-      "Analyzed existing door sensors & fleet tracking limitations.",
-      "Formulated hypothesis: Real-time suspension displacement monitoring."
-    ],
-    assignments: [
-      "Zeroth Week Problem Statement Submission PDF",
-      "Logistics Stakeholder Interview Questionnaire"
-    ],
-    image: "images/cargo.png"
-  },
   1: {
     title: "Need Statement & Market Research",
     phase: "Phase 1: Discovery & Concept",
@@ -566,7 +551,7 @@ const defaultProtoSemWeeks = {
   }
 };
 
-let currentProtoSemWeek = 0;
+let currentProtoSemWeek = 1;
 let protoSemData = JSON.parse(localStorage.getItem('protoSemData')) || defaultProtoSemWeeks;
 
 function initProtoSem() {
@@ -612,22 +597,12 @@ function renderWeekPanel(weekNum) {
   const data = protoSemData[weekNum] || {
     title: `Week ${weekNum} Work Log`,
     phase: "ProtoSem Milestone Log",
-    tasks: ["No tasks logged yet. Click 'Add / Edit Weekly Log' to enter details."],
-    assignments: ["No assignments submitted yet."],
-    image: "images/cargo.png"
+    tasks: ["No tasks logged yet. Click 'Add / Edit Weekly Log' to enter details."]
   };
 
-  const weekNameLabel = weekNum === 0 ? "Zeroth Week (Week 0)" : `Week ${weekNum}`;
+  const weekNameLabel = `Week ${weekNum}`;
 
-  let tasksHtml = data.tasks.map(t => `<li><i class="fa-solid fa-square-check text-cyan"></i> ${t}</li>`).join('');
-  let assignHtml = data.assignments.map(a => `
-    <div class="assignment-box">
-      <span><i class="fa-regular fa-file-lines text-orange"></i> ${a}</span>
-      <button class="btn btn-outline-sm" onclick="showToast('Downloading assignment specimen: ${a}', 'fa-download')">
-        <i class="fa-solid fa-download"></i> View
-      </button>
-    </div>
-  `).join('');
+  let tasksHtml = (data.tasks || []).map(t => `<li><i class="fa-solid fa-square-check text-cyan"></i> ${t}</li>`).join('');
 
   const html = `
     <div class="week-panel active">
@@ -636,43 +611,13 @@ function renderWeekPanel(weekNum) {
           <h3>${weekNameLabel}: ${data.title}</h3>
           <span class="week-phase-tag">${data.phase}</span>
         </div>
-        <p class="exp-summary">Technical milestone documentation, CAD model progress, and assignment submissions for ${weekNameLabel}.</p>
+        <p class="exp-summary">Technical milestone documentation and progress for ${weekNameLabel}.</p>
       </div>
 
-      <div class="week-grid">
-        <div class="week-card glass-card">
-          <h4><i class="fa-solid fa-list-check text-cyan"></i> Works & Technical Progress</h4>
-          <ul class="week-task-list">
-            ${tasksHtml}
-          </ul>
-        </div>
-
-        <div class="week-card glass-card">
-          <h4><i class="fa-solid fa-file-signature text-orange"></i> Assignments & Submissions</h4>
-          <div class="assignments-list">
-            ${assignHtml}
-          </div>
-        </div>
-      </div>
-
-      <!-- Media & Pictures Gallery Card -->
       <div class="week-card glass-card" style="margin-bottom: 2rem;">
-        <h4><i class="fa-solid fa-images text-cyan"></i> Pictures & Media Documentation</h4>
-        <div class="media-gallery-grid">
-          <div class="media-item">
-            <img src="${data.image || 'images/cargo.png'}" alt="${weekNameLabel} Prototype Render">
-            <div class="media-caption">${weekNameLabel} Prototype Photo</div>
-          </div>
-          <div class="media-item">
-            <img src="images/chassis.png" alt="${weekNameLabel} CAD Drawing">
-            <div class="media-caption">CAD Assembly Drawing</div>
-          </div>
-          <div class="media-upload-placeholder" onclick="openUpdateWeekModal(${weekNum})" title="Click to upload/attach photos">
-            <i class="fa-solid fa-cloud-arrow-up"></i>
-            <span>Upload Picture</span>
-            <small>Drag & Drop media file</small>
-          </div>
-        </div>
+        <ul class="week-task-list">
+          ${tasksHtml}
+        </ul>
       </div>
     </div>
   `;
@@ -684,13 +629,15 @@ function openUpdateWeekModal(weekNum = currentProtoSemWeek) {
   const modal = document.getElementById('modal-update-week');
   if (!modal) return;
 
-  document.getElementById('edit-week-select').value = weekNum.toString();
+  const select = document.getElementById('edit-week-select');
+  if (select) select.value = weekNum.toString();
   
   const data = protoSemData[weekNum] || {};
-  document.getElementById('edit-week-title').value = data.title || '';
-  document.getElementById('edit-week-tasks').value = (data.tasks || []).join('\n');
-  document.getElementById('edit-week-assignments').value = (data.assignments || []).join('\n');
-  document.getElementById('edit-week-image').value = data.image || '';
+  const titleInput = document.getElementById('edit-week-title');
+  if (titleInput) titleInput.value = data.title || '';
+  
+  const tasksInput = document.getElementById('edit-week-tasks');
+  if (tasksInput) tasksInput.value = (data.tasks || []).join('\n');
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -698,14 +645,14 @@ function openUpdateWeekModal(weekNum = currentProtoSemWeek) {
 
 function saveWeekLog(event) {
   event.preventDefault();
-  const weekNum = parseInt(document.getElementById('edit-week-select').value, 10);
-  const title = document.getElementById('edit-week-title').value;
-  const tasksRaw = document.getElementById('edit-week-tasks').value;
-  const assignRaw = document.getElementById('edit-week-assignments').value;
-  const image = document.getElementById('edit-week-image').value || 'images/cargo.png';
+  const select = document.getElementById('edit-week-select');
+  const weekNum = parseInt(select ? select.value : currentProtoSemWeek, 10);
+  const titleInput = document.getElementById('edit-week-title');
+  const title = titleInput ? titleInput.value : '';
+  const tasksInput = document.getElementById('edit-week-tasks');
+  const tasksRaw = tasksInput ? tasksInput.value : '';
 
   const tasks = tasksRaw.split('\n').map(s => s.trim()).filter(s => s.length > 0);
-  const assignments = assignRaw.split('\n').map(s => s.trim()).filter(s => s.length > 0);
 
   const phase = weekNum <= 4 ? "Phase 1: Discovery & Concept" :
                 weekNum <= 8 ? "Phase 2: CAD & Electronics Design" :
@@ -714,9 +661,7 @@ function saveWeekLog(event) {
   protoSemData[weekNum] = {
     title: title || `Week ${weekNum} Progress`,
     phase: phase,
-    tasks: tasks.length ? tasks : ["Progress logged for this week."],
-    assignments: assignments.length ? assignments : ["Weekly progress report submitted."],
-    image: image
+    tasks: tasks.length ? tasks : ["Progress logged for this week."]
   };
 
   localStorage.setItem('protoSemData', JSON.stringify(protoSemData));
