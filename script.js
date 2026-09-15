@@ -305,19 +305,21 @@ const defaultProtoSemWeeks = {
     image: "images/cargo.png"
   },
   4: {
-    title: "Design for Manufacturing (DFM) & BOM",
+    title: "CAD Designing, Digital Fabrication & 3D Printing",
     phase: "Phase 1: Discovery & Concept",
     tasks: [
-      "Optimized sensor bracket geometry for CNC milling & sheet metal bending.",
-      "Finalized complete Bill of Materials (BOM) with cost estimates.",
-      "Selected IP67 waterproof connectors for external chassis wire runs.",
-      "Prepared component procurement request."
+      "Recreated water bottle model in Fusion 360 & applied Joint option for cap assembly movement.",
+      "Converted logo image into DXF format & prepared layout in RDWorks for laser cutting.",
+      "Animated parts and assemblies in Fusion 360 to demonstrate part interactions.",
+      "Introduced to 3D printing workflow & configured Bambu Studio slicing parameters.",
+      "Selected as Designer for Alpha Team to lead design-related activities.",
+      "Completed week 4 assignments and participated in a debate on influencers and societal impact."
     ],
     assignments: [
-      "Week 4 Bill of Materials (BOM) & Costing Table",
-      "DFM Guidelines Compliance Report"
+      "Fusion 360 Bottle Assembly & Joint Motion Model",
+      "Laser Cutting DXF Profile & Bambu Studio Slicing Setup"
     ],
-    image: "images/cnc.png"
+    image: "images/week - 4/image3.png"
   },
   5: {
     title: "Microcontroller & Sensor Prototyping",
@@ -565,6 +567,9 @@ let currentProtoSemWeek = 0;
 let protoSemData = JSON.parse(localStorage.getItem('protoSemData')) || defaultProtoSemWeeks;
 if (!protoSemData[0]) {
   protoSemData[0] = defaultProtoSemWeeks[0];
+}
+if (!protoSemData[4] || protoSemData[4].title === "Design for Manufacturing (DFM) & BOM") {
+  protoSemData[4] = defaultProtoSemWeeks[4];
 }
 
 function initProtoSem() {
