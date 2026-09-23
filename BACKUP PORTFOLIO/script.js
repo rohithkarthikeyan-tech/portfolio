@@ -611,11 +611,7 @@ function initProtoSem() {
 
   // Add click events to pills
   pillsBar.querySelectorAll('.week-pill').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const parentLink = btn.closest('a');
-      if (parentLink && parentLink.getAttribute('href') && !parentLink.getAttribute('href').startsWith('#')) {
-        e.preventDefault();
-      }
+    btn.addEventListener('click', () => {
       const week = parseInt(btn.getAttribute('data-week'), 10);
       switchWeekTab(week);
     });
@@ -659,6 +655,15 @@ function renderWeekPanel(weekNum) {
 
   let tasksHtml = (data.tasks || []).map(t => `<li><i class="fa-solid fa-square-check text-cyan"></i> ${t}</li>`).join('');
 
+  const docFile = (weekNum <= 4) ? `week - ${weekNum}.html` : null;
+  const docBtnHtml = docFile ? `
+    <div style="margin-top: 1.5rem;">
+      <a href="${docFile}" target="_blank" class="btn btn-outline-sm" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+        <i class="fa-solid fa-file-lines"></i> Open Full Week ${weekNum} Document
+      </a>
+    </div>
+  ` : '';
+
   const html = `
     <div class="week-panel active">
       <div class="week-header-card glass-card">
@@ -673,6 +678,7 @@ function renderWeekPanel(weekNum) {
         <ul class="week-task-list">
           ${tasksHtml}
         </ul>
+        ${docBtnHtml}
       </div>
     </div>
   `;
