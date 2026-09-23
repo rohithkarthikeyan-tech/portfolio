@@ -20,20 +20,32 @@ function initThemeToggle() {
   const htmlEl = document.documentElement;
 
   // Load saved theme or default to dark
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  htmlEl.setAttribute('data-theme', savedTheme);
+  let savedTheme = 'dark';
+  try {
+    savedTheme = localStorage.getItem('theme') || 'dark';
+  } catch (e) {
+    console.warn('localStorage is not accessible:', e);
+  }
+
+  if (htmlEl) htmlEl.setAttribute('data-theme', savedTheme);
   updateThemeIcon(savedTheme);
 
-  themeBtn.addEventListener('click', () => {
-    const currentTheme = htmlEl.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    htmlEl.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    updateThemeIcon(newTheme);
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      const currentTheme = htmlEl ? htmlEl.getAttribute('data-theme') : 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      if (htmlEl) htmlEl.setAttribute('data-theme', newTheme);
+      try {
+        localStorage.setItem('theme', newTheme);
+      } catch (e) {
+        console.warn('localStorage setItem failed:', e);
+      }
+      updateThemeIcon(newTheme);
 
-    showToast(`Switched to ${newTheme.toUpperCase()} theme`, 'fa-circle-half-stroke');
-  });
+      showToast(`Switched to ${newTheme.toUpperCase()} theme`, 'fa-circle-half-stroke');
+    });
+  }
 }
 
 function updateThemeIcon(theme) {
@@ -117,10 +129,11 @@ function initSkillsFilter() {
       btn.classList.add('active');
 
       const filter = btn.getAttribute('data-filter');
+      if (!filter) return;
 
       skillCards.forEach(card => {
         const categories = card.getAttribute('data-category');
-        if (filter === 'all' || categories.includes(filter)) {
+        if (categories && (filter === 'all' || categories.includes(filter))) {
           card.style.display = 'flex';
           card.style.animation = 'fadeIn 0.3s ease forwards';
         } else {
@@ -206,22 +219,32 @@ document.addEventListener('keydown', (e) => {
    8. Contact Form Handling & Copy Utilities
    -------------------------------------------------------------------------- */
 function handleFormSubmit(event) {
-  event.preventDefault();
-  const name = document.getElementById('form-name').value;
-  const email = document.getElementById('form-email').value;
-  const subject = document.getElementById('form-subject').value;
+  if (event) event.preventDefault();
+  const nameEl = document.getElementById('form-name');
+  const emailEl = document.getElementById('form-email');
+  const subjectEl = document.getElementById('form-subject');
+
+  const name = nameEl ? nameEl.value : 'Visitor';
+  const subject = subjectEl ? subjectEl.value : 'Inquiry';
 
   showToast(`Thank you ${name}! Your inquiry regarding '${subject}' has been recorded.`, 'fa-circle-check');
-  document.getElementById('contact-form').reset();
+  const form = document.getElementById('contact-form');
+  if (form) form.reset();
 }
 
 function copyToClipboard(elementId, label) {
-  const text = document.getElementById(elementId).textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    showToast(`${label} copied to clipboard!`, 'fa-copy');
-  }).catch(() => {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const text = el.textContent || '';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(`${label} copied to clipboard!`, 'fa-copy');
+    }).catch(() => {
+      showToast(`Copied: ${text}`, 'fa-copy');
+    });
+  } else {
     showToast(`Copied: ${text}`, 'fa-copy');
-  });
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -564,7 +587,17 @@ const defaultProtoSemWeeks = {
 };
 
 let currentProtoSemWeek = 0;
-let protoSemData = JSON.parse(localStorage.getItem('protoSemData')) || defaultProtoSemWeeks;
+let protoSemData = defaultProtoSemWeeks;
+try {
+  const stored = localStorage.getItem('protoSemData');
+  if (stored) {
+    protoSemData = JSON.parse(stored) || defaultProtoSemWeeks;
+  }
+} catch (e) {
+  console.warn("Could not load protoSemData from localStorage:", e);
+  protoSemData = defaultProtoSemWeeks;
+}
+
 if (!protoSemData[0]) {
   protoSemData[0] = defaultProtoSemWeeks[0];
 }
@@ -578,7 +611,11 @@ function initProtoSem() {
 
   // Add click events to pills
   pillsBar.querySelectorAll('.week-pill').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      const parentLink = btn.closest('a');
+      if (parentLink && parentLink.getAttribute('href') && !parentLink.getAttribute('href').startsWith('#')) {
+        e.preventDefault();
+      }
       const week = parseInt(btn.getAttribute('data-week'), 10);
       switchWeekTab(week);
     });
