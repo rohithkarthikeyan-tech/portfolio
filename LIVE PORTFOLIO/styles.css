@@ -131,13 +131,53 @@ img {
 /* --------------------------------------------------------------------------
    3. Dynamic Background Overlay
    -------------------------------------------------------------------------- */
+/* Background System Container & Layer Control */
+.bg-system-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -2;
+  overflow: hidden;
+}
+
+.mechatronics-bg-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+  z-index: 1;
+}
+
+.bg-system-container.cyber-mode .mechatronics-bg-canvas {
+  opacity: 1;
+}
+
+.bg-system-container.classic-mode .mechatronics-bg-canvas {
+  opacity: 0;
+}
+
+.bg-system-container.classic-mode .bg-grid,
+.bg-system-container.classic-mode .bg-glow {
+  opacity: 1;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.bg-system-container.cyber-mode .bg-grid {
+  opacity: 0.25;
+}
+
 .bg-grid {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-image: radial-gradient(rgba(0, 242, 254, 0.08) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(170, 183, 196, 0.05) 1px, transparent 1px);
   background-size: 32px 32px;
   pointer-events: none;
   z-index: -2;
@@ -149,11 +189,67 @@ img {
   right: -10%;
   width: 50vw;
   height: 50vw;
-  background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(79, 172, 254, 0.03) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 217, 255, 0.05) 0%, rgba(16, 23, 32, 0.03) 50%, transparent 70%);
   pointer-events: none;
   z-index: -1;
   border-radius: 50%;
   filter: blur(80px);
+}
+
+/* Diagnostic Scan Beam Sweep */
+.mechatronics-scanbeam {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(0, 217, 255, 0.4) 50%, transparent 100%);
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.4), 0 0 20px rgba(0, 217, 255, 0.15);
+  opacity: 0;
+  z-index: 2;
+  animation: scan-sweep 14s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.bg-system-container.cyber-mode .mechatronics-scanbeam {
+  opacity: 0.7;
+}
+
+@keyframes scan-sweep {
+  0% { top: -10px; opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { top: 105vh; opacity: 0; }
+}
+
+/* Nav Background Mode Toggle Button */
+.bg-toggle-btn {
+  background: rgba(0, 242, 254, 0.08);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  color: var(--accent-cyan);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all var(--transition-fast);
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.15);
+}
+
+.bg-toggle-btn:hover {
+  background: rgba(0, 242, 254, 0.2);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+  transform: scale(1.08) rotate(30deg);
+}
+
+.bg-toggle-btn.classic-active {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-glass);
+  color: var(--text-secondary);
+  box-shadow: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -520,61 +616,213 @@ img {
   margin-top: 0.3rem;
 }
 
-/* Hero Visual Card */
-.tech-card-frame {
+/* Hero Mechatronics HUD & CAD Visual Card */
+.hero-hud-card {
   position: relative;
-  border-radius: 20px;
-  overflow: hidden;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: rgba(11, 15, 25, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-glass-hover);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
-  transition: transform var(--transition-slow);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 242, 254, 0.12);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  overflow: hidden;
 }
 
-.tech-card-frame:hover {
-  transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+.hero-hud-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 242, 254, 0.25);
 }
 
-.hero-img {
-  width: 100%;
-  height: 380px;
-  object-fit: cover;
-}
-
-.visual-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 1.25rem;
-  background: linear-gradient(to top, rgba(11, 15, 25, 0.95), transparent);
+.hud-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
+  padding-bottom: 0.85rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px dashed var(--border-glass);
+  font-family: var(--font-code);
+  font-size: 0.75rem;
 }
 
-.overlay-tag {
-  background: rgba(0, 242, 254, 0.2);
+.hud-sys-tag {
   color: var(--accent-cyan);
-  padding: 0.35rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.8rem;
   font-weight: 600;
-}
-
-.overlay-status {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
+  letter-spacing: 0.5px;
   display: flex;
   align-items: center;
   gap: 0.4rem;
 }
 
-.status-indicator {
+.hud-status-badge {
+  color: #10b981;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.hud-status-dot {
   width: 6px;
   height: 6px;
   background: #10b981;
   border-radius: 50%;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse 1.8s infinite;
+}
+
+.hud-cad-viewport {
+  position: relative;
+  width: 100%;
+  height: 270px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(0, 242, 254, 0.05) 0%, rgba(11, 15, 25, 0.95) 75%);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.hud-viewport-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0, 242, 254, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 242, 254, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+.cad-svg-container {
+  width: 210px;
+  height: 210px;
+  position: relative;
+  z-index: 2;
+}
+
+.spin-slow {
+  transform-origin: 100px 100px;
+  animation: spin-cw 30s linear infinite;
+}
+
+.spin-reverse {
+  transform-origin: 100px 100px;
+  animation: spin-ccw 20s linear infinite;
+}
+
+@keyframes spin-cw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-ccw {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.hud-tag {
+  position: absolute;
+  font-family: var(--font-code);
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+  z-index: 3;
+  pointer-events: none;
+  letter-spacing: 0.5px;
+}
+
+.hud-tag-1 {
+  top: 12px;
+  left: 12px;
+  background: rgba(0, 242, 254, 0.1);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+}
+
+.hud-tag-2 {
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 94, 54, 0.1);
+  color: var(--accent-orange);
+  border: 1px solid rgba(255, 94, 54, 0.3);
+}
+
+.hud-tag-3 {
+  bottom: 12px;
+  left: 12px;
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--accent-purple);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.hud-tag-4 {
+  bottom: 12px;
+  right: 12px;
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.hud-dim-text {
+  position: absolute;
+  font-family: var(--font-code);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.hud-dim-top {
+  top: 55px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.hud-dim-right {
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hud-footer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  padding-top: 0.85rem;
+  border-top: 1px dashed var(--border-glass);
+  font-family: var(--font-code);
+  text-align: center;
+}
+
+.hud-stat-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+  padding: 0.4rem;
+}
+
+.hud-stat-label {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  display: block;
+}
+
+.hud-stat-val {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
 }
 
 /* --------------------------------------------------------------------------
@@ -2016,6 +2264,414 @@ img {
   }
 }
 
+
+/* --------------------------------------------------------------------------
+   17.5 IoT Works Section Styles
+   -------------------------------------------------------------------------- */
+.iot-section {
+  position: relative;
+}
+
+.iot-hero-banner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 2rem;
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+  overflow: hidden;
+  border: 1px solid var(--border-glass);
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.05) 0%, rgba(17, 24, 39, 0.8) 100%);
+  border-radius: 16px;
+}
+
+@media (max-width: 992px) {
+  .iot-hero-banner {
+    grid-template-columns: 1fr;
+  }
+}
+
+.iot-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  background: rgba(0, 242, 254, 0.1);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  border-radius: 20px;
+  color: var(--accent-cyan);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.iot-hero-heading {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.iot-hero-sub {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  margin-bottom: 1.5rem;
+  max-width: 650px;
+}
+
+/* MCU Graphic Component */
+.mcu-chip-card {
+  width: 100%;
+  height: 180px;
+  background: rgba(11, 15, 25, 0.9);
+  border: 2px solid var(--accent-cyan);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.2);
+}
+
+.mcu-icon {
+  font-size: 3rem;
+  color: var(--accent-cyan);
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 0 10px var(--accent-cyan));
+}
+
+.mcu-label {
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Experiments Grid */
+.iot-grid-intro {
+  margin-bottom: 1.5rem;
+}
+
+.iot-grid-intro h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.3rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.iot-grid-intro p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.iot-experiments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.iot-card {
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal);
+  border: 1px solid var(--border-glass);
+  border-radius: 14px;
+  background: var(--bg-card);
+}
+
+.iot-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 10px 30px rgba(0, 242, 254, 0.15);
+}
+
+.iot-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.iot-card-num {
+  font-family: var(--font-code);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  background: rgba(0, 242, 254, 0.1);
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 242, 254, 0.2);
+}
+
+.iot-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-cyan);
+  font-size: 1.25rem;
+  border: 1px solid var(--border-glass);
+}
+
+.iot-card-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.iot-card-desc {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+
+.iot-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.tag-pill {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  border: 1px solid var(--border-glass);
+}
+
+.btn-iot-view {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Details View Styling */
+.iot-details-view {
+  padding: 2.5rem;
+  margin-top: 2rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-glass-hover);
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.iot-detail-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.iot-detail-main-title {
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.iot-detail-tags {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.iot-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .iot-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.iot-detail-block {
+  background: rgba(11, 15, 25, 0.5);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.iot-detail-block.full-width {
+  grid-column: 1 / -1;
+}
+
+.iot-block-title {
+  font-size: 1.15rem;
+  color: var(--accent-cyan);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.placeholder-text {
+  color: var(--text-muted);
+  font-style: italic;
+  font-family: var(--font-code);
+  font-size: 0.95rem;
+  padding: 0.5rem 0;
+}
+
+/* Component Cards Grid inside Details */
+.iot-components-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.iot-component-card {
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-glass);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.comp-icon {
+  font-size: 1.8rem;
+  color: var(--accent-cyan);
+  margin-bottom: 0.5rem;
+}
+
+.iot-component-card h4 {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.iot-component-card p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Flow Diagram */
+.iot-flow-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+.iot-flow-node {
+  flex: 1;
+  min-width: 140px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent-blue);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+}
+
+.flow-step-badge {
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  margin-bottom: 0.3rem;
+}
+
+.iot-flow-node h4 {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+}
+
+.iot-flow-node p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.iot-flow-arrow {
+  color: var(--accent-cyan);
+  font-size: 1.2rem;
+}
+
+/* Architecture & Gallery Placeholders */
+.iot-placeholder-area {
+  min-height: 180px;
+  border: 2px dashed rgba(0, 242, 254, 0.3);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 242, 254, 0.02);
+  color: var(--text-muted);
+  text-align: center;
+  padding: 2rem;
+}
+
+.placeholder-big-icon {
+  font-size: 2.5rem;
+  color: rgba(0, 242, 254, 0.4);
+  margin-bottom: 0.75rem;
+}
+
+.iot-placeholder-area p {
+  font-family: var(--font-code);
+  font-size: 0.95rem;
+}
+
+/* Code Viewer */
+.iot-code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.iot-code-viewer {
+  background: #080c14;
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+  padding: 1.25rem;
+  font-family: var(--font-code);
+  font-size: 0.88rem;
+  color: #a7f3d0;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+.iot-detail-footer {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.iot-tech-badges-list {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tag-badge {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.75rem;
+  background: rgba(0, 242, 254, 0.1);
+  border: 1px solid rgba(0, 242, 254, 0.2);
+  border-radius: 6px;
+  color: var(--accent-cyan);
+}
 
 /* --------------------------------------------------------------------------
    18. Print / PDF Portfolio Stylesheet (@media print)
