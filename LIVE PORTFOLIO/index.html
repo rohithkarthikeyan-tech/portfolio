@@ -64,6 +64,9 @@
         <button id="bg-toggle-btn" class="bg-toggle-btn" aria-label="Toggle Background Mode" title="Toggle Background Mode (Cyber Mechatronics / Classic Grid)">
           <i class="fa-solid fa-atom"></i>
         </button>
+        <button id="btn-style-toggle-btn" class="bg-toggle-btn" aria-label="Toggle Button Style" title="Toggle Button Style (Cinematic Floating Glass / Classic Solid)">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </button>
         <button onclick="window.print()" class="btn btn-outline-sm btn-print" title="Print / Download PDF Portfolio">
           <i class="fa-solid fa-file-pdf"></i> Resume PDF
         </button>
@@ -74,11 +77,24 @@
     </div>
   </header>
 
+  <!-- Cinematic Stepped Geometric Page Mask Transition Overlay -->
+  <div id="cinematic-transition-overlay" class="cinematic-transition-overlay" aria-hidden="true">
+    <div class="mask-strip strip-1"></div>
+    <div class="mask-strip strip-2"></div>
+    <div class="mask-strip strip-3"></div>
+    <div class="mask-strip strip-4"></div>
+    <div class="mask-strip strip-5"></div>
+    <div class="transition-tech-label">MECHATRONICS &bull; AUTOMOTIVE &bull; CAD &bull; IoT &bull; MANUFACTURING</div>
+  </div>
+
   <main>
     <!-- HERO SECTION -->
     <section id="hero" class="hero-section">
       <div class="container hero-grid">
-        <div class="hero-content">
+        <div class="hero-content stagger-editorial">
+          <div class="editorial-annotation hero-editorial-annotation">
+            <span class="editorial-num">00</span> <span class="editorial-slash">/</span> MECHATRONICS &bull; AUTOMOTIVE &bull; CAD &bull; IoT
+          </div>
           <div class="hero-badge">
             <span class="pulse-dot"></span>
             <span>B.E. Mechatronics Engineering Student</span>
@@ -105,94 +121,105 @@
           <!-- Hero Action Buttons -->
           <div class="hero-cta">
             <a href="#projects" class="btn btn-primary">
-              <i class="fa-solid fa-rocket"></i> View Engineering Projects
+              <i class="fa-solid fa-rocket"></i> View Engineering Projects <span class="btn-arrow">&rarr;</span>
             </a>
             <a href="#experience" class="btn btn-secondary">
-              <i class="fa-solid fa-industry"></i> Industrial Experience
+              <i class="fa-solid fa-industry"></i> Industrial Experience <span class="btn-arrow">&rarr;</span>
             </a>
             <a href="#contact" class="btn btn-outline">
-              <i class="fa-regular fa-paper-plane"></i> Contact Me
+              <i class="fa-regular fa-paper-plane"></i> Contact Me <span class="btn-arrow">&rarr;</span>
             </a>
           </div>
         </div>
 
-        <!-- RIGHT SIDE: CREATIVE MECHATRONICS ENGINEERING HUD VISUALIZATION -->
+        <!-- RIGHT SIDE: CINEMATIC EDITORIAL MECHATRONICS HUD & STEPPED MASK VISUAL LAYER -->
         <div class="hero-visual">
-          <div class="hero-hud-card glass-card">
-            <!-- HUD Top Header Bar -->
-            <div class="hud-header">
-              <span class="hud-sys-tag"><i class="fa-solid fa-gear fa-spin"></i> SYSTEM / 01 &bull; MECHATRONICS</span>
-              <span class="hud-status-badge"><span class="hud-status-dot"></span> ACTIVE</span>
+          <div class="cinematic-hero-mask-wrapper">
+            <!-- Stepped Rectangular Image Mask Layer -->
+            <div class="hero-stepped-mask" id="hero-stepped-mask">
+              <div class="mask-slice slice-1"></div>
+              <div class="mask-slice slice-2"></div>
+              <div class="mask-slice slice-3"></div>
+              <div class="mask-slice slice-4"></div>
+              <div class="mask-slice slice-5"></div>
             </div>
 
-            <!-- CAD Viewport Box -->
-            <div class="hud-cad-viewport">
-              <div class="hud-viewport-grid"></div>
-
-              <!-- HUD Engineering Annotations -->
-              <span class="hud-tag hud-tag-1"><i class="fa-solid fa-cube"></i> CAD DESIGN</span>
-              <span class="hud-tag hud-tag-2"><i class="fa-solid fa-car"></i> AUTOMOTIVE</span>
-              <span class="hud-tag hud-tag-3"><i class="fa-solid fa-wifi"></i> IoT SYSTEMS</span>
-              <span class="hud-tag hud-tag-4"><i class="fa-solid fa-industry"></i> MANUFACTURING</span>
-
-              <span class="hud-dim-text hud-dim-top">&bull; R 42.0 mm &bull;</span>
-              <span class="hud-dim-text hud-dim-right">&bull; Ø 84.50 &bull;</span>
-
-              <!-- Central Interactive SVG Wireframe -->
-              <svg class="cad-svg-container" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Outer Rotating Compass Ring -->
-                <g class="spin-slow">
-                  <circle cx="100" cy="100" r="90" stroke="rgba(0, 242, 254, 0.25)" stroke-width="1" stroke-dasharray="4 4" />
-                  <circle cx="100" cy="100" r="82" stroke="rgba(0, 242, 254, 0.15)" stroke-width="1" />
-                  <line x1="100" y1="5" x2="100" y2="15" stroke="#00f2fe" stroke-width="1.5" />
-                  <line x1="100" y1="185" x2="100" y2="195" stroke="#00f2fe" stroke-width="1.5" />
-                  <line x1="5" y1="100" x2="15" y2="100" stroke="#00f2fe" stroke-width="1.5" />
-                  <line x1="185" y1="100" x2="195" y2="100" stroke="#00f2fe" stroke-width="1.5" />
-                </g>
-
-                <!-- Counter-Rotating Tech Inner Ring -->
-                <g class="spin-reverse">
-                  <circle cx="100" cy="100" r="65" stroke="rgba(79, 172, 254, 0.3)" stroke-width="1.5" stroke-dasharray="12 6" />
-                </g>
-
-                <!-- Isometric 3D Wireframe Box -->
-                <g transform="translate(100, 100)">
-                  <!-- Top Face -->
-                  <polygon points="0,-35 30,-18 0,0 -30,-18" stroke="#00f2fe" stroke-width="1.5" fill="rgba(0, 242, 254, 0.05)" />
-                  <!-- Left Face -->
-                  <polygon points="-30,-18 0,0 0,35 -30,18" stroke="#00f2fe" stroke-width="1.5" fill="rgba(0, 242, 254, 0.08)" />
-                  <!-- Right Face -->
-                  <polygon points="0,0 30,-18 30,18 0,35" stroke="#4facfe" stroke-width="1.5" fill="rgba(79, 172, 254, 0.05)" />
-                  <!-- Inner Axis Lines -->
-                  <line x1="0" y1="0" x2="0" y2="-45" stroke="#ff5e36" stroke-width="1" stroke-dasharray="2 2" />
-                  <line x1="0" y1="0" x2="45" y2="25" stroke="#00f2fe" stroke-width="1" stroke-dasharray="2 2" />
-                  <line x1="0" y1="0" x2="-45" y2="25" stroke="#00f2fe" stroke-width="1" stroke-dasharray="2 2" />
-
-                  <!-- Pulsing Vertex Nodes -->
-                  <circle cx="0" cy="-35" r="3" fill="#00f2fe" />
-                  <circle cx="30" cy="-18" r="3" fill="#00f2fe" />
-                  <circle cx="-30" cy="-18" r="3" fill="#00f2fe" />
-                  <circle cx="0" cy="0" r="3.5" fill="#ff5e36" />
-                  <circle cx="30" cy="18" r="3" fill="#00f2fe" />
-                  <circle cx="-30" cy="18" r="3" fill="#00f2fe" />
-                  <circle cx="0" cy="35" r="3" fill="#00f2fe" />
-                </g>
-              </svg>
-            </div>
-
-            <!-- HUD Bottom Diagnostics Strip -->
-            <div class="hud-footer">
-              <div class="hud-stat-box">
-                <span class="hud-stat-label">TOLERANCE</span>
-                <span class="hud-stat-val">&plusmn; 0.001 mm</span>
+            <div class="hero-hud-card glass-card">
+              <!-- HUD Top Header Bar -->
+              <div class="hud-header">
+                <span class="hud-sys-tag"><i class="fa-solid fa-gear fa-spin"></i> SYSTEM / 01 &bull; MECHATRONICS</span>
+                <span class="hud-status-badge"><span class="hud-status-dot"></span> ACTIVE</span>
               </div>
-              <div class="hud-stat-box">
-                <span class="hud-stat-label">CONTROL</span>
-                <span class="hud-stat-val">PID / PWM</span>
+
+              <!-- CAD Viewport Box -->
+              <div class="hud-cad-viewport">
+                <div class="hud-viewport-grid"></div>
+
+                <!-- HUD Engineering Annotations -->
+                <span class="hud-tag hud-tag-1"><i class="fa-solid fa-cube"></i> CAD DESIGN</span>
+                <span class="hud-tag hud-tag-2"><i class="fa-solid fa-car"></i> AUTOMOTIVE</span>
+                <span class="hud-tag hud-tag-3"><i class="fa-solid fa-wifi"></i> IoT SYSTEMS</span>
+                <span class="hud-tag hud-tag-4"><i class="fa-solid fa-industry"></i> MANUFACTURING</span>
+
+                <span class="hud-dim-text hud-dim-top">&bull; R 42.0 mm &bull;</span>
+                <span class="hud-dim-text hud-dim-right">&bull; Ø 84.50 &bull;</span>
+
+                <!-- Central Interactive SVG Wireframe -->
+                <svg class="cad-svg-container" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Outer Rotating Compass Ring -->
+                  <g class="spin-slow">
+                    <circle cx="100" cy="100" r="90" stroke="rgba(0, 242, 254, 0.25)" stroke-width="1" stroke-dasharray="4 4" />
+                    <circle cx="100" cy="100" r="82" stroke="rgba(0, 242, 254, 0.15)" stroke-width="1" />
+                    <line x1="100" y1="5" x2="100" y2="15" stroke="#00f2fe" stroke-width="1.5" />
+                    <line x1="100" y1="185" x2="100" y2="195" stroke="#00f2fe" stroke-width="1.5" />
+                    <line x1="5" y1="100" x2="15" y2="100" stroke="#00f2fe" stroke-width="1.5" />
+                    <line x1="185" y1="100" x2="195" y2="100" stroke="#00f2fe" stroke-width="1.5" />
+                  </g>
+
+                  <!-- Counter-Rotating Tech Inner Ring -->
+                  <g class="spin-reverse">
+                    <circle cx="100" cy="100" r="65" stroke="rgba(79, 172, 254, 0.3)" stroke-width="1.5" stroke-dasharray="12 6" />
+                  </g>
+
+                  <!-- Isometric 3D Wireframe Box -->
+                  <g transform="translate(100, 100)">
+                    <!-- Top Face -->
+                    <polygon points="0,-35 30,-18 0,0 -30,-18" stroke="#00f2fe" stroke-width="1.5" fill="rgba(0, 242, 254, 0.05)" />
+                    <!-- Left Face -->
+                    <polygon points="-30,-18 0,0 0,35 -30,18" stroke="#00f2fe" stroke-width="1.5" fill="rgba(0, 242, 254, 0.08)" />
+                    <!-- Right Face -->
+                    <polygon points="0,0 30,-18 30,18 0,35" stroke="#4facfe" stroke-width="1.5" fill="rgba(79, 172, 254, 0.05)" />
+                    <!-- Inner Axis Lines -->
+                    <line x1="0" y1="0" x2="0" y2="-45" stroke="#ff5e36" stroke-width="1" stroke-dasharray="2 2" />
+                    <line x1="0" y1="0" x2="45" y2="25" stroke="#00f2fe" stroke-width="1" stroke-dasharray="2 2" />
+                    <line x1="0" y1="0" x2="-45" y2="25" stroke="#00f2fe" stroke-width="1" stroke-dasharray="2 2" />
+
+                    <!-- Pulsing Vertex Nodes -->
+                    <circle cx="0" cy="-35" r="3" fill="#00f2fe" />
+                    <circle cx="30" cy="-18" r="3" fill="#00f2fe" />
+                    <circle cx="-30" cy="-18" r="3" fill="#00f2fe" />
+                    <circle cx="0" cy="0" r="3.5" fill="#ff5e36" />
+                    <circle cx="30" cy="18" r="3" fill="#00f2fe" />
+                    <circle cx="-30" cy="18" r="3" fill="#00f2fe" />
+                    <circle cx="0" cy="35" r="3" fill="#00f2fe" />
+                  </g>
+                </svg>
               </div>
-              <div class="hud-stat-box">
-                <span class="hud-stat-label">PRECISION</span>
-                <span class="hud-stat-val">OPTIMAL</span>
+
+              <!-- HUD Bottom Diagnostics Strip -->
+              <div class="hud-footer">
+                <div class="hud-stat-box">
+                  <span class="hud-stat-label">TOLERANCE</span>
+                  <span class="hud-stat-val">&plusmn; 0.001 mm</span>
+                </div>
+                <div class="hud-stat-box">
+                  <span class="hud-stat-label">CONTROL</span>
+                  <span class="hud-stat-val">PID / PWM</span>
+                </div>
+                <div class="hud-stat-box">
+                  <span class="hud-stat-label">PRECISION</span>
+                  <span class="hud-stat-val">OPTIMAL</span>
+                </div>
               </div>
             </div>
           </div>
@@ -203,7 +230,8 @@
     <!-- ABOUT & CAREER OBJECTIVE SECTION -->
     <section id="about" class="section about-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header stagger-editorial">
+          <div class="editorial-annotation"><span class="editorial-num">01</span> <span class="editorial-slash">/</span> MECHATRONICS PROFILE</div>
           <span class="section-tag">Profile Overview</span>
           <h2 class="section-title">About & Career Objective</h2>
           <div class="title-bar"></div>
@@ -262,7 +290,8 @@
     <!-- TECHNICAL & SOFTWARE SKILLS SECTION -->
     <section id="skills" class="section skills-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header stagger-editorial">
+          <div class="editorial-annotation"><span class="editorial-num">02</span> <span class="editorial-slash">/</span> TECHNICAL EXPERTISE</div>
           <span class="section-tag">Competencies</span>
           <h2 class="section-title">Technical & Software Skills</h2>
           <div class="title-bar"></div>
@@ -436,7 +465,8 @@
     <!-- INDUSTRIAL EXPERIENCE SECTION -->
     <section id="experience" class="section experience-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header stagger-editorial">
+          <div class="editorial-annotation"><span class="editorial-num">03</span> <span class="editorial-slash">/</span> INDUSTRIAL EXPERIENCE</div>
           <span class="section-tag">Hands-on Work</span>
           <h2 class="section-title">Industrial Experience</h2>
           <div class="title-bar"></div>
@@ -642,7 +672,8 @@
     <!-- MAJOR ENGINEERING PROJECTS SECTION -->
     <section id="projects" class="section projects-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header stagger-editorial">
+          <div class="editorial-annotation"><span class="editorial-num">04</span> <span class="editorial-slash">/</span> FEATURED PROJECTS</div>
           <span class="section-tag">Engineering Innovation</span>
           <h2 class="section-title">Major Projects</h2>
           <div class="title-bar"></div>
@@ -690,7 +721,8 @@
     <!-- PROTOSEM (PROTOTYPE SEMESTER) SECTION -->
     <section id="protosem" class="section protosem-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header stagger-editorial">
+          <div class="editorial-annotation"><span class="editorial-num">05</span> <span class="editorial-slash">/</span> PROTOSEM INNOVATION</div>
           <span class="section-tag">Product Prototyping Journey</span>
           <h2 class="section-title">ProtoSem Journal & Work Logs</h2>
           <div class="title-bar"></div>
@@ -800,7 +832,8 @@
     <!-- IoT WORKS SECTION -->
     <section id="iot-works" class="section iot-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header stagger-editorial">
+          <div class="editorial-annotation"><span class="editorial-num">06</span> <span class="editorial-slash">/</span> IoT SYSTEMS & LAB</div>
           <span class="section-tag"><i class="fa-solid fa-network-wired"></i> Embedded Systems & Hardware</span>
           <h2 class="section-title">IoT Works</h2>
           <div class="title-bar"></div>
@@ -876,7 +909,8 @@
     <!-- CONTACT SECTION -->
     <section id="contact" class="section contact-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header stagger-editorial">
+          <div class="editorial-annotation"><span class="editorial-num">07</span> <span class="editorial-slash">/</span> CONTACT & INQUIRIES</div>
           <span class="section-tag">Get In Touch</span>
           <h2 class="section-title">Contact & Professional Links</h2>
           <div class="title-bar"></div>

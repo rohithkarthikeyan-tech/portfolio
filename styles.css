@@ -394,9 +394,11 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   6. Buttons & Badges
+   6. Buttons & Badges - Futuristic Cinematic Floating Glass System
    -------------------------------------------------------------------------- */
-.btn {
+
+/* Default / Classic Solid Button Fallback Option */
+.btn-style-classic .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -411,43 +413,43 @@ img {
   border: none;
 }
 
-.btn-primary {
+.btn-style-classic .btn-primary {
   background: var(--gradient-primary);
   color: #0b0f19;
   box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3);
 }
 
-.btn-primary:hover {
+.btn-style-classic .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(0, 242, 254, 0.5);
   color: #0b0f19;
 }
 
-.btn-secondary {
+.btn-style-classic .btn-secondary {
   background: var(--gradient-accent);
   color: #ffffff;
   box-shadow: 0 4px 20px rgba(255, 94, 54, 0.3);
 }
 
-.btn-secondary:hover {
+.btn-style-classic .btn-secondary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(255, 94, 54, 0.5);
   color: #ffffff;
 }
 
-.btn-outline {
+.btn-style-classic .btn-outline {
   background: transparent;
   border: 1px solid var(--border-glass-hover);
   color: var(--text-primary);
 }
 
-.btn-outline:hover {
+.btn-style-classic .btn-outline:hover {
   background: rgba(0, 242, 254, 0.1);
   color: var(--accent-cyan);
   border-color: var(--accent-cyan);
 }
 
-.btn-outline-sm {
+.btn-style-classic .btn-outline-sm {
   padding: 0.5rem 1rem;
   font-size: 0.85rem;
   border-radius: 20px;
@@ -456,9 +458,184 @@ img {
   color: var(--text-primary);
 }
 
-.btn-outline-sm:hover {
-  border-color: var(--accent-cyan);
-  color: var(--accent-cyan);
+/* ==========================================================================
+   CINEMATIC FLOATING GLASS BUTTON DESIGN SYSTEM (PRIMARY MODE)
+   ========================================================================== */
+body:not(.btn-style-classic) .btn,
+.btn-style-cinematic .btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.85rem;
+  border-radius: 50px;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: #ffffff !important;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  text-decoration: none;
+  
+  /* Dark Translucent Glass Base & Blur */
+  background: rgba(13, 19, 34, 0.68) !important;
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  
+  /* Thin Subtle Glass Border & Inner Light Highlight */
+  border: 1px solid rgba(59, 130, 246, 0.24) !important;
+  box-shadow: 
+    0 4px 20px -2px rgba(5, 8, 18, 0.6),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.3);
+  
+  transition: 
+    transform 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    background 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Interactive Cursor Spotlight Glow Effect */
+body:not(.btn-style-classic) .btn::before,
+.btn-style-cinematic .btn::before {
+  content: '';
+  position: absolute;
+  top: var(--mouse-y, 50%);
+  left: var(--mouse-x, 50%);
+  width: 170px;
+  height: 170px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.28) 0%, rgba(59, 130, 246, 0.14) 45%, transparent 70%);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.4s ease;
+}
+
+/* Light Sweep Shimmer Gradient across Glass */
+body:not(.btn-style-classic) .btn::after,
+.btn-style-cinematic .btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -125%;
+  width: 75%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 25%,
+    rgba(6, 182, 212, 0.25) 50%,
+    rgba(255, 255, 255, 0.12) 75%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+  z-index: 1;
+  transition: left 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Arrow & Icon Micro-Interaction */
+body:not(.btn-style-classic) .btn .btn-arrow,
+body:not(.btn-style-classic) .btn i,
+.btn-style-cinematic .btn .btn-arrow,
+.btn-style-cinematic .btn i {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* General Hover States */
+body:not(.btn-style-classic) .btn:hover,
+.btn-style-cinematic .btn:hover {
+  transform: translateY(-3.5px);
+  color: #ffffff !important;
+}
+
+body:not(.btn-style-classic) .btn:hover::before,
+.btn-style-cinematic .btn:hover::before {
+  opacity: 1;
+}
+
+body:not(.btn-style-classic) .btn:hover::after,
+.btn-style-cinematic .btn:hover::after {
+  left: 140%;
+}
+
+body:not(.btn-style-classic) .btn:hover .btn-arrow,
+body:not(.btn-style-classic) .btn:hover i:not(.fa-solid.fa-moon):not(.fa-atom):not(.fa-wand-magic-sparkles):not(.fa-file-pdf):not(.fa-bars),
+.btn-style-cinematic .btn:hover .btn-arrow,
+.btn-style-cinematic .btn:hover i:not(.fa-solid.fa-moon):not(.fa-atom):not(.fa-wand-magic-sparkles):not(.fa-file-pdf):not(.fa-bars) {
+  transform: translateX(5px);
+}
+
+/* 1. PRIMARY BUTTON TYPE (Electric Cyan Ambient Glow) */
+body:not(.btn-style-classic) .btn-primary,
+.btn-style-cinematic .btn-primary {
+  background: rgba(14, 25, 48, 0.75) !important;
+  border-color: rgba(6, 182, 212, 0.4) !important;
+  box-shadow: 
+    0 4px 20px -2px rgba(6, 182, 212, 0.22),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 0 rgba(6, 182, 212, 0.2);
+}
+
+body:not(.btn-style-classic) .btn-primary:hover,
+.btn-style-cinematic .btn-primary:hover {
+  background: rgba(18, 35, 66, 0.88) !important;
+  border-color: rgba(6, 182, 212, 0.78) !important;
+  box-shadow: 
+    0 10px 30px -4px rgba(6, 182, 212, 0.42),
+    0 0 20px rgba(59, 130, 246, 0.3),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.35);
+}
+
+/* 2. SECONDARY BUTTON TYPE (Soft Violet / Blue Glow) */
+body:not(.btn-style-classic) .btn-secondary,
+body:not(.btn-style-classic) .btn-outline,
+.btn-style-cinematic .btn-secondary,
+.btn-style-cinematic .btn-outline {
+  background: rgba(22, 20, 48, 0.7) !important;
+  border-color: rgba(139, 92, 246, 0.35) !important;
+  box-shadow: 
+    0 4px 20px -2px rgba(139, 92, 246, 0.16),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+body:not(.btn-style-classic) .btn-secondary:hover,
+body:not(.btn-style-classic) .btn-outline:hover,
+.btn-style-cinematic .btn-secondary:hover,
+.btn-style-cinematic .btn-outline:hover {
+  background: rgba(30, 26, 68, 0.86) !important;
+  border-color: rgba(167, 139, 250, 0.72) !important;
+  box-shadow: 
+    0 10px 30px -4px rgba(139, 92, 246, 0.38),
+    0 0 18px rgba(124, 58, 237, 0.25),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+}
+
+/* 3. TERTIARY & COMPACT OUTLINE BUTTON TYPE */
+body:not(.btn-style-classic) .btn-outline-sm,
+body:not(.btn-style-classic) .btn-tertiary,
+.btn-style-cinematic .btn-outline-sm,
+.btn-style-cinematic .btn-tertiary {
+  padding: 0.55rem 1.2rem;
+  font-size: 0.85rem;
+  border-radius: 30px;
+  background: rgba(13, 19, 34, 0.58) !important;
+  border: 1px solid rgba(148, 163, 184, 0.26) !important;
+}
+
+body:not(.btn-style-classic) .btn-outline-sm:hover,
+body:not(.btn-style-classic) .btn-tertiary:hover,
+.btn-style-cinematic .btn-outline-sm:hover,
+.btn-style-cinematic .btn-tertiary:hover {
+  border-color: rgba(6, 182, 212, 0.65) !important;
+  box-shadow: 0 6px 20px -3px rgba(6, 182, 212, 0.28);
 }
 
 .badge {
@@ -2723,3 +2900,180 @@ img {
     padding: 1.5rem 0;
   }
 }
+
+/* ==========================================================================
+   CINEMATIC EDITORIAL ENGINEERING PRESENTATION & MASK TRANSITIONS
+   ========================================================================== */
+
+/* 1. EDITORIAL TECHNICAL ANNOTATION LABELS */
+.editorial-annotation {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-code);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+.hero-editorial-annotation {
+  font-size: 0.82rem;
+  letter-spacing: 0.25em;
+  background: rgba(0, 242, 254, 0.06);
+  border: 1px solid rgba(0, 242, 254, 0.2);
+  padding: 0.35rem 0.9rem;
+  border-radius: 4px;
+  margin-bottom: 1.25rem;
+}
+
+.editorial-num {
+  font-weight: 800;
+  color: var(--accent-cyan);
+}
+
+.editorial-slash {
+  color: var(--accent-orange);
+  font-weight: 700;
+}
+
+/* 2. STEPPED RECTANGULAR HERO IMAGE MASK WRAPPER */
+.cinematic-hero-mask-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero-stepped-mask {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cinematic-hero-mask-wrapper.animating-mask .hero-stepped-mask {
+  opacity: 1;
+}
+
+.hero-stepped-mask .mask-slice {
+  flex: 1;
+  background: #0b0f19;
+  border-right: 1px solid rgba(0, 242, 254, 0.3);
+  transform: translateY(0);
+  transition: transform 0.65s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.hero-stepped-mask .mask-slice:nth-child(1) { transition-delay: 0.05s; }
+.hero-stepped-mask .mask-slice:nth-child(2) { transition-delay: 0.12s; }
+.hero-stepped-mask .mask-slice:nth-child(3) { transition-delay: 0.19s; }
+.hero-stepped-mask .mask-slice:nth-child(4) { transition-delay: 0.26s; }
+.hero-stepped-mask .mask-slice:nth-child(5) { transition-delay: 0.33s; }
+
+.cinematic-hero-mask-wrapper.animating-mask .hero-stepped-mask .mask-slice {
+  transform: translateY(-100%);
+}
+
+/* Hover Micro-Interaction for Hero Visual Mask */
+.hero-hud-card {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+}
+
+.cinematic-hero-mask-wrapper:hover .hero-hud-card {
+  transform: scale(1.02) translateY(-4px);
+  box-shadow: 0 20px 40px -10px rgba(0, 242, 254, 0.25);
+}
+
+/* 3. CINEMATIC FULL-SCREEN STEPPED MASK PAGE TRANSITION OVERLAY */
+.cinematic-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.cinematic-transition-overlay.active {
+  pointer-events: all;
+  visibility: visible;
+}
+
+.cinematic-transition-overlay .mask-strip {
+  flex: 1;
+  height: 100%;
+  background: linear-gradient(180deg, #090d16 0%, #111827 100%);
+  border-right: 1px solid rgba(0, 242, 254, 0.15);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.45s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.cinematic-transition-overlay .mask-strip:nth-child(1) { transition-delay: 0.00s; }
+.cinematic-transition-overlay .mask-strip:nth-child(2) { transition-delay: 0.06s; }
+.cinematic-transition-overlay .mask-strip:nth-child(3) { transition-delay: 0.12s; }
+.cinematic-transition-overlay .mask-strip:nth-child(4) { transition-delay: 0.18s; }
+.cinematic-transition-overlay .mask-strip:nth-child(5) { transition-delay: 0.24s; }
+
+.cinematic-transition-overlay.active .mask-strip {
+  transform: scaleY(1);
+}
+
+.cinematic-transition-overlay.exit .mask-strip {
+  transform-origin: bottom;
+  transform: scaleY(0);
+}
+
+.transition-tech-label {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 3rem;
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  letter-spacing: 0.3em;
+  color: var(--accent-cyan);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 100000;
+}
+
+.cinematic-transition-overlay.active .transition-tech-label {
+  opacity: 1;
+}
+
+/* 4. STAGGERED EDITORIAL TEXT ENTRANCE ANIMATION */
+.stagger-editorial {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stagger-editorial.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stagger-delay-1 { transition-delay: 0.08s; }
+.stagger-delay-2 { transition-delay: 0.16s; }
+.stagger-delay-3 { transition-delay: 0.24s; }
+.stagger-delay-4 { transition-delay: 0.32s; }
+
+/* 5. EDITORIAL SECTION HEADER STYLING */
+.section-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+}
+
+.section-header {
+  margin-bottom: 3.5rem;
+}
+

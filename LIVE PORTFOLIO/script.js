@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initMetricCounter();
   initProtoSem();
   initIoTWorks();
+  initButtonStyleToggle();
+  initCinematicButtonEffects();
+  initCinematicPageTransitions();
+  initEditorialScrollAnimations();
 });
 
 /* --------------------------------------------------------------------------
@@ -1733,3 +1737,141 @@ function applyBgMode(mode) {
     }
   }
 }
+
+/* ==========================================================================
+   BUTTON STYLE SWITCHER & CINEMATIC MOUSE SPOTLIGHT ENGINE
+   ========================================================================== */
+function initCinematicButtonEffects() {
+  const buttons = document.querySelectorAll('.btn, .tab-btn, .exp-nav-btn, .week-pill');
+  buttons.forEach((btn) => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      btn.style.setProperty('--mouse-x', `${x}px`);
+      btn.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+}
+
+function initButtonStyleToggle() {
+  const toggleBtn = document.getElementById('btn-style-toggle-btn');
+  let savedBtnStyle = 'cinematic';
+  try {
+    savedBtnStyle = localStorage.getItem('btnStyle') || 'cinematic';
+  } catch (e) {
+    console.warn('localStorage error:', e);
+  }
+
+  applyButtonStyle(savedBtnStyle);
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const currentStyle = document.body.classList.contains('btn-style-classic') ? 'classic' : 'cinematic';
+      const newStyle = currentStyle === 'cinematic' ? 'classic' : 'cinematic';
+      applyButtonStyle(newStyle);
+      try {
+        localStorage.setItem('btnStyle', newStyle);
+      } catch (e) {}
+
+      if (newStyle === 'cinematic') {
+        showToast('Switched to Cinematic Glass Floating Buttons', 'fa-wand-magic-sparkles');
+      } else {
+        showToast('Switched to Classic Portfolio Buttons', 'fa-square');
+      }
+    });
+  }
+}
+
+function applyButtonStyle(style) {
+  const toggleBtn = document.getElementById('btn-style-toggle-btn');
+  if (style === 'classic') {
+    document.body.classList.remove('btn-style-cinematic');
+    document.body.classList.add('btn-style-classic');
+    if (toggleBtn) {
+      toggleBtn.classList.add('classic-active');
+      toggleBtn.title = 'Switch Button Style (Currently: Classic Solid)';
+    }
+  } else {
+    document.body.classList.remove('btn-style-classic');
+    document.body.classList.add('btn-style-cinematic');
+    if (toggleBtn) {
+      toggleBtn.classList.remove('classic-active');
+      toggleBtn.title = 'Switch Button Style (Currently: Cinematic Floating Glass)';
+    }
+  }
+}
+
+/* ==========================================================================
+   CINEMATIC EDITORIAL PAGE TRANSITIONS & STEPPED MASK ANIMATION ENGINE
+   ========================================================================== */
+function initCinematicPageTransitions() {
+  const overlay = document.getElementById('cinematic-transition-overlay');
+  const navLinks = document.querySelectorAll('.nav-link, .hero-cta a, .nav-brand');
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (!href || !href.startsWith('#')) return;
+
+      const targetSection = document.querySelector(href);
+      if (!targetSection) return;
+
+      e.preventDefault();
+
+      if (overlay) {
+        overlay.classList.remove('exit');
+        overlay.classList.add('active');
+
+        setTimeout(() => {
+          targetSection.scrollIntoView({ behavior: 'auto' });
+          overlay.classList.add('exit');
+
+          if (href === '#hero') {
+            triggerHeroMaskAnimation();
+          }
+
+          setTimeout(() => {
+            overlay.classList.remove('active', 'exit');
+          }, 450);
+        }, 350);
+      } else {
+        targetSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Initial hero mask animation
+  setTimeout(() => {
+    triggerHeroMaskAnimation();
+  }, 250);
+}
+
+function triggerHeroMaskAnimation() {
+  const wrapper = document.querySelector('.cinematic-hero-mask-wrapper');
+  if (wrapper) {
+    wrapper.classList.remove('animating-mask');
+    void wrapper.offsetWidth;
+    wrapper.classList.add('animating-mask');
+  }
+}
+
+function initEditorialScrollAnimations() {
+  const elements = document.querySelectorAll('.stagger-editorial, .section-header, .glass-card, .project-card, .skill-card');
+  
+  if (!('IntersectionObserver' in window)) {
+    elements.forEach(el => el.classList.add('visible'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  elements.forEach(el => observer.observe(el));
+}
+
