@@ -745,31 +745,136 @@ function saveWeekLog(event) {
 const iotExperiments = [
   {
     id: 1,
-    number: "EXPERIMENT 01",
-    title: "Experiment Title",
-    shortDesc: "Add content later",
-    icon: "fa-solid fa-microchip",
-    technologies: ["Add Tag Later", "Add Tag Later"],
-    overview: "Content will be added later",
-    problemStatement: "Content will be added later",
-    objective: "Content will be added later",
-    components: [
-      { name: "Component 1", spec: "Add spec later", icon: "fa-solid fa-microchip" },
-      { name: "Component 2", spec: "Add spec later", icon: "fa-solid fa-satellite-dish" },
-      { name: "Component 3", spec: "Add spec later", icon: "fa-solid fa-wave-square" }
+    number: "TASK 01",
+    title: "Task 01 — Local Wi-Fi Embedded HTTP Server",
+    subtitle: "ESP32 Web Server & HTML LED Control",
+    category: "IoT / Embedded Systems / ESP32 / Web Server",
+    shortDesc: "Built a local Wi-Fi web server on an ESP32 to control a GPIO LED through an interactive browser-based HTML interface, without using cloud services.",
+    icon: "fa-solid fa-server",
+    technologies: ["ESP32", "Wi-Fi", "HTTP", "HTML", "Arduino IDE", "GPIO", "Embedded Systems"],
+    duration: "IoT Works — Task 01",
+    platform: "ESP32",
+    environment: "Arduino IDE",
+    network: "Local Wi-Fi",
+    communication: "HTTP",
+    output: "GPIO LED",
+    overview: "The objective of this task was to understand how an ESP32 can act as both a Wi-Fi-enabled embedded controller and a lightweight HTTP server. The ESP32 connects to a local Wi-Fi network, creates a web server on port 80, and provides an HTML interface that allows the user to switch a GPIO output ON or OFF from a browser.",
+    architecture: {
+      client: "Web browser",
+      network: "Local Wi-Fi router / access point",
+      server: "ESP32",
+      protocol: "HTTP",
+      interface: "HTML webpage",
+      output: "GPIO LED",
+      explanation: "The web browser acts as the HTTP client that sends GET requests over the local Wi-Fi network. The ESP32 acts as the HTTP server listening on port 80. When a route is requested (such as /led/on or /led/off), the ESP32 processes the request, modifies the GPIO state to control the physical LED, and responds with standard HTTP headers and HTML markup."
+    },
+    hardware: [
+      { name: "ESP32 Development Board", spec: "Wi-Fi & Bluetooth MCU", icon: "fa-solid fa-microchip" },
+      { name: "USB Cable", spec: "Power & Serial Communication", icon: "fa-solid fa-plug" },
+      { name: "Built-in / GPIO LED", spec: "Digital Output (GPIO Pin 2)", icon: "fa-solid fa-lightbulb" },
+      { name: "Laptop / Browser Device", spec: "HTTP Client Interface", icon: "fa-solid fa-laptop" },
+      { name: "Wi-Fi Network", spec: "2.4GHz Local Wireless AP", icon: "fa-solid fa-wifi" }
+    ],
+    software: [
+      { name: "Arduino IDE", spec: "Firmware Development", icon: "fa-solid fa-code" },
+      { name: "C/C++ Language", spec: "Embedded Firmware Logic", icon: "fa-solid fa-file-code" },
+      { name: "ESP32 Wi-Fi Library", spec: "WiFi.h Connection Stack", icon: "fa-solid fa-wifi" },
+      { name: "WebServer Library", spec: "WebServer.h HTTP Server Engine", icon: "fa-solid fa-server" },
+      { name: "HTML5", spec: "Control UI Markup", icon: "fa-brands fa-html5" },
+      { name: "HTTP Protocol", spec: "Port 80 GET Requests", icon: "fa-solid fa-network-wired" },
+      { name: "GPIO Control", spec: "Digital Pin Output Operations", icon: "fa-solid fa-bolt" }
+    ],
+    programFlow: [
+      "Start serial communication (Serial.begin(115200)).",
+      "Configure the LED GPIO pin as OUTPUT (pinMode(ledPin, OUTPUT)).",
+      "Connect ESP32 to the configured Wi-Fi network (WiFi.begin(ssid, password)).",
+      "Obtain the ESP32 local IP address.",
+      "Create an HTTP server on port 80 (WebServer server(80)).",
+      "Create the main webpage route (server.on('/', handleRoot)).",
+      "Create /led/on and /led/off endpoints (server.on('/led/on', handleLedOn), server.on('/led/off', handleLedOff)).",
+      "When the browser requests /led/on, set the GPIO HIGH (digitalWrite(ledPin, HIGH)).",
+      "When the browser requests /led/off, set the GPIO LOW (digitalWrite(ledPin, LOW)).",
+      "Keep handling incoming browser requests inside the main loop (server.handleClient())."
     ],
     flowSteps: [
-      { step: "01", title: "Input / Sensors", desc: "Data collection node" },
-      { step: "02", title: "Controller", desc: "ESP32 / MCU Processing" },
-      { step: "03", title: "Communication", desc: "Wi-Fi / MQTT Protocol" },
-      { step: "04", title: "Cloud", desc: "Cloud Broker / Storage" },
-      { step: "05", title: "Output", desc: "Actuator / Dashboard" }
+      { step: "01", title: "Laptop / Mobile Browser", desc: "User opens ESP32 IP address" },
+      { step: "02", title: "Local Wi-Fi Network", desc: "Transmits HTTP GET packets" },
+      { step: "03", title: "ESP32 HTTP Web Server", desc: "Listens on Port 80 & parses URL route" },
+      { step: "04", title: "HTTP Request", desc: "Endpoint route trigger (/led/on or /led/off)" },
+      { step: "05", title: "GPIO Pin", desc: "MCU toggles Pin 2 HIGH / LOW" },
+      { step: "06", title: "LED ON / OFF", desc: "Physical output state changed" }
     ],
-    architectureText: "[Circuit Diagram / Architecture will be added here]",
-    code: `// [Code will be added here]\n// Replace this string with your ESP32 / Arduino / C++ code snippet later\n\nvoid setup() {\n  // Add initialization code here\n}\n\nvoid loop() {\n  // Add main loop logic here\n}`,
-    outputGalleryText: "[Images, Screenshots, & Demo Videos will be added here]",
-    whatILearned: "Content will be added later",
-    futureImprovements: "Content will be added later"
+    code: `#include <WiFi.h>
+#include <WebServer.h>
+
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
+
+WebServer server(80);
+const int ledPin = 2;
+
+void handleRoot() {
+  String html = "<html><body><h1>ESP32 Local Web Control</h1><a href='/led/on'>TURN ON</a> <a href='/led/off'>TURN OFF</a></body></html>";
+  server.send(200, "text/html", html);
+}
+
+void handleLedOn() {
+  digitalWrite(ledPin, HIGH);
+  server.sendHeader("Location", "/");
+  server.send(303);
+}
+
+void handleLedOff() {
+  digitalWrite(ledPin, LOW);
+  server.sendHeader("Location", "/");
+  server.send(303);
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(ledPin, OUTPUT);
+
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+  }
+
+  server.on("/", handleRoot);
+  server.on("/led/on", handleLedOn);
+  server.on("/led/off", handleLedOff);
+
+  server.begin();
+}
+
+void loop() {
+  server.handleClient();
+}`,
+    demoImage: "images/iot/task1_demo.jpg",
+    demoFallback: "../../../.gemini/antigravity-ide/brain/92f4f735-28b9-440a-ba9d-351d8c6037ac/.user_uploaded/media_1790524369288.png",
+    demoCaption: "ESP32 local web server running successfully. The browser interface displays the LED status and provides ON/OFF controls, while the Arduino IDE Serial Monitor confirms the Wi-Fi connection (172.20.103.235) and HTTP server startup.",
+    hardwareImage: "images/iot/task1_hardware.jpg",
+    hardwareFallback: "../../../.gemini/antigravity-ide/brain/92f4f735-28b9-440a-ba9d-351d8c6037ac/.user_uploaded/media_1790524379831.png",
+    hardwareCaption: "ESP32 development board powered on via USB, displaying active power and status LEDs during hardware execution.",
+    keyConcepts: [
+      { title: "ESP32", desc: "Learned how an ESP32 can provide both Wi-Fi connectivity and embedded control.", icon: "fa-solid fa-microchip" },
+      { title: "Wi-Fi Networking", desc: "Learned how the ESP32 joins a local wireless network and becomes accessible through its local IP address.", icon: "fa-solid fa-wifi" },
+      { title: "HTTP Protocol", desc: "Understood how browser requests can be used to trigger embedded hardware actions.", icon: "fa-solid fa-network-wired" },
+      { title: "Client-Server Architecture", desc: "Understood how the browser acts as the client while the ESP32 operates as the server.", icon: "fa-solid fa-server" },
+      { title: "REST-Style Routes", desc: "Implemented separate routes such as /led/on and /led/off for controlling the GPIO.", icon: "fa-solid fa-route" },
+      { title: "GPIO Control", desc: "Learned how software commands can directly control a digital output.", icon: "fa-solid fa-bolt" }
+    ],
+    results: [
+      "ESP32 successfully connected to Wi-Fi",
+      "Local IP address obtained",
+      "HTTP server successfully started",
+      "Browser interface successfully loaded",
+      "ON/OFF controls implemented",
+      "GPIO output controlled through HTTP requests",
+      "No cloud platform required"
+    ],
+    whatILearned: "Through this task, I learned how an ESP32 can work as a standalone web server and communicate with a browser over a local Wi-Fi network. I understood the basic HTTP request-response cycle and how web requests can be mapped to GPIO operations. This task helped me connect web technologies with physical embedded hardware.",
+    reflection: "Building the ESP32 HTTP web server gave me practical experience in combining embedded programming, Wi-Fi communication, HTTP requests, HTML interfaces, and GPIO control. It helped me understand how a simple web interface can directly interact with physical hardware without depending on cloud services."
   },
   {
     id: 2,
@@ -917,6 +1022,16 @@ function renderIoTExperimentCards() {
   `).join('');
 }
 
+function copyIoTCode(id) {
+  const exp = iotExperiments.find(e => e.id === id);
+  if (!exp) return;
+  navigator.clipboard.writeText(exp.code).then(() => {
+    alert("Source code copied to clipboard!");
+  }).catch(err => {
+    console.error("Failed to copy code: ", err);
+  });
+}
+
 function openIoTDetails(id) {
   const exp = iotExperiments.find(e => e.id === id);
   if (!exp) return;
@@ -924,129 +1039,428 @@ function openIoTDetails(id) {
   const detailsView = document.getElementById('iot-details-view');
   if (!detailsView) return;
 
-  detailsView.innerHTML = `
-    <!-- Top Nav Back Button Header -->
-    <div class="iot-detail-header-bar">
-      <button onclick="closeIoTDetails()" class="btn btn-outline-sm btn-back-iot">
-        <i class="fa-solid fa-arrow-left"></i> Back to IoT Works
-      </button>
-      <span class="badge badge-primary">${exp.number}</span>
-    </div>
-
-    <div class="iot-detail-title-section">
-      <h2 class="iot-detail-main-title">[${exp.title}]</h2>
-      <div class="iot-detail-tags">
-        ${exp.technologies.map(t => `<span class="badge badge-outline">${t}</span>`).join('')}
-      </div>
-    </div>
-
-    <div class="iot-detail-grid">
-      <!-- 1. Overview -->
-      <div class="iot-detail-block">
-        <h3 class="iot-block-title"><i class="fa-solid fa-eye"></i> Overview</h3>
-        <p class="placeholder-text">${exp.overview}</p>
+  if (exp.id === 1) {
+    detailsView.innerHTML = `
+      <!-- Top Navigation & Metadata Header -->
+      <div class="iot-detail-header-bar">
+        <button onclick="closeIoTDetails()" class="btn btn-outline-sm btn-back-iot">
+          <i class="fa-solid fa-arrow-left"></i> Back to IoT Works Grid
+        </button>
+        <div class="iot-task-badge-nav">
+          <span class="badge badge-primary"><i class="fa-solid fa-microchip"></i> ${exp.number}</span>
+        </div>
       </div>
 
-      <!-- 2. Problem Statement -->
-      <div class="iot-detail-block">
-        <h3 class="iot-block-title"><i class="fa-solid fa-circle-exclamation"></i> Problem Statement</h3>
-        <p class="placeholder-text">${exp.problemStatement}</p>
+      <!-- 1. HERO SECTION -->
+      <div class="iot-detail-title-section">
+        <div class="editorial-annotation"><span class="editorial-num">TASK 01</span> <span class="editorial-slash">/</span> ${exp.category}</div>
+        <h2 class="iot-detail-main-title">${exp.title}</h2>
+        <div class="iot-detail-subtitle">${exp.subtitle}</div>
+        <p class="iot-detail-lead-desc">${exp.shortDesc}</p>
+        
+        <div class="iot-detail-tags">
+          ${exp.technologies.map(t => `<span class="badge badge-outline"><i class="fa-solid fa-tag"></i> ${t}</span>`).join('')}
+        </div>
       </div>
 
-      <!-- 3. Objective -->
-      <div class="iot-detail-block">
-        <h3 class="iot-block-title"><i class="fa-solid fa-bullseye"></i> Objective</h3>
-        <p class="placeholder-text">${exp.objective}</p>
+      <!-- 16. PROJECT METADATA BANNER -->
+      <div class="iot-meta-bar">
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Duration</span>
+          <span class="iot-meta-value">${exp.duration}</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Platform</span>
+          <span class="iot-meta-value">${exp.platform}</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Environment</span>
+          <span class="iot-meta-value">${exp.environment}</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Network</span>
+          <span class="iot-meta-value">${exp.network}</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Communication</span>
+          <span class="iot-meta-value">${exp.communication}</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Output</span>
+          <span class="iot-meta-value">${exp.output}</span>
+        </div>
       </div>
 
-      <!-- 4. Components Used -->
-      <div class="iot-detail-block full-width">
-        <h3 class="iot-block-title"><i class="fa-solid fa-microchip"></i> Components Used</h3>
-        <div class="iot-components-grid">
-          ${exp.components.map(c => `
-            <div class="iot-component-card">
-              <i class="${c.icon} comp-icon"></i>
-              <h4>${c.name}</h4>
-              <p>${c.spec}</p>
+      <div class="iot-detail-grid">
+        <!-- 2. PROJECT OVERVIEW -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-eye"></i> Project Overview</h3>
+          <p class="iot-text-content">${exp.overview}</p>
+        </div>
+
+        <!-- 3. HOW IT WORKS (HORIZONTAL PROCESS DIAGRAM) -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-diagram-project"></i> How It Works</h3>
+          <div class="iot-flow-diagram">
+            ${exp.flowSteps.map((s, idx) => `
+              <div class="iot-flow-node">
+                <div class="flow-step-badge">STEP ${s.step}</div>
+                <h4>${s.title}</h4>
+                <p>${s.desc}</p>
+              </div>
+              ${idx < exp.flowSteps.length - 1 ? `<div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>` : ''}
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 4. SYSTEM ARCHITECTURE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-sitemap"></i> System Architecture</h3>
+          <div class="iot-arch-grid">
+            <div class="iot-arch-card">
+              <div class="iot-arch-icon"><i class="fa-solid fa-laptop"></i></div>
+              <div class="iot-arch-info">
+                <h4>Client</h4>
+                <p>${exp.architecture.client}</p>
+              </div>
             </div>
-          `).join('')}
-        </div>
-      </div>
-
-      <!-- 5. Working Principle (Flow Diagram) -->
-      <div class="iot-detail-block full-width">
-        <h3 class="iot-block-title"><i class="fa-solid fa-diagram-project"></i> Working Principle</h3>
-        <div class="iot-flow-diagram">
-          ${exp.flowSteps.map((s, idx) => `
-            <div class="iot-flow-node">
-              <div class="flow-step-badge">${s.step}</div>
-              <h4>${s.title}</h4>
-              <p>${s.desc}</p>
+            <div class="iot-arch-card">
+              <div class="iot-arch-icon"><i class="fa-solid fa-wifi"></i></div>
+              <div class="iot-arch-info">
+                <h4>Network</h4>
+                <p>${exp.architecture.network}</p>
+              </div>
             </div>
-            ${idx < exp.flowSteps.length - 1 ? `<div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>` : ''}
-          `).join('')}
+            <div class="iot-arch-card">
+              <div class="iot-arch-icon"><i class="fa-solid fa-server"></i></div>
+              <div class="iot-arch-info">
+                <h4>Server</h4>
+                <p>${exp.architecture.server}</p>
+              </div>
+            </div>
+            <div class="iot-arch-card">
+              <div class="iot-arch-icon"><i class="fa-solid fa-network-wired"></i></div>
+              <div class="iot-arch-info">
+                <h4>Protocol</h4>
+                <p>${exp.architecture.protocol}</p>
+              </div>
+            </div>
+            <div class="iot-arch-card">
+              <div class="iot-arch-icon"><i class="fa-brands fa-html5"></i></div>
+              <div class="iot-arch-info">
+                <h4>Interface</h4>
+                <p>${exp.architecture.interface}</p>
+              </div>
+            </div>
+            <div class="iot-arch-card">
+              <div class="iot-arch-icon"><i class="fa-solid fa-lightbulb"></i></div>
+              <div class="iot-arch-info">
+                <h4>Output</h4>
+                <p>${exp.architecture.output}</p>
+              </div>
+            </div>
+          </div>
+          <p class="iot-text-content" style="margin-top: 1rem;">${exp.architecture.explanation}</p>
+        </div>
+
+        <!-- 5. HARDWARE USED -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-microchip"></i> Hardware Used</h3>
+          <div class="iot-components-grid">
+            ${exp.hardware.map(c => `
+              <div class="iot-component-card">
+                <i class="${c.icon} comp-icon"></i>
+                <h4>${c.name}</h4>
+                <p>${c.spec}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 6. SOFTWARE & TECHNOLOGIES -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-laptop-code"></i> Software & Technologies</h3>
+          <div class="iot-components-grid">
+            ${exp.software.map(s => `
+              <div class="iot-component-card">
+                <i class="${s.icon} comp-icon"></i>
+                <h4>${s.name}</h4>
+                <p>${s.spec}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 7. IMPLEMENTATION & CODE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-list-check"></i> Program Implementation Flow</h3>
+          <div class="iot-steps-list">
+            ${exp.programFlow.map((stepText, idx) => `
+              <div class="iot-step-item">
+                <span class="iot-step-number">${String(idx + 1).padStart(2, '0')}</span>
+                <span class="iot-step-text">${stepText}</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="iot-code-header" style="margin-top: 2rem;">
+            <h3 class="iot-block-title"><i class="fa-solid fa-terminal"></i> Core C/C++ Firmware Code</h3>
+            <button class="btn btn-outline-sm btn-copy-code" onclick="copyIoTCode(${exp.id})">
+              <i class="fa-regular fa-copy"></i> Copy Code
+            </button>
+          </div>
+          <div class="iot-code-viewer">
+            <pre><code>${escapeHtml(exp.code)}</code></pre>
+          </div>
+        </div>
+
+        <!-- 8. HTTP REQUEST FLOW PIPELINE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-arrows-split-up-and-left"></i> HTTP Request-Response Flow</h3>
+          <div class="iot-pipeline-container">
+            <div class="iot-pipeline-card">
+              <div class="iot-pipeline-title"><i class="fa-solid fa-circle-play"></i> Step 1: Interface Request</div>
+              <div class="iot-pipeline-steps">
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">Browser Opens</div>
+                  <div class="iot-pipe-step-val">http://ESP32-IP/</div>
+                </div>
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">ESP32 Responds</div>
+                  <div class="iot-pipe-step-val">HTML Web Server UI</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="iot-pipeline-card">
+              <div class="iot-pipeline-title"><i class="fa-solid fa-toggle-on"></i> Step 2: Turn ON Action</div>
+              <div class="iot-pipeline-steps">
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">User Action</div>
+                  <div class="iot-pipe-step-val">Click ON Button</div>
+                </div>
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">HTTP Request</div>
+                  <div class="iot-pipe-step-val">GET /led/on</div>
+                </div>
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">ESP32 Execution</div>
+                  <div class="iot-pipe-step-val">digitalWrite(ledPin, HIGH)</div>
+                </div>
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">Hardware Output</div>
+                  <div class="iot-pipe-step-val">GPIO LED ON</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="iot-pipeline-card">
+              <div class="iot-pipeline-title"><i class="fa-solid fa-toggle-off"></i> Step 3: Turn OFF Action</div>
+              <div class="iot-pipeline-steps">
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">User Action</div>
+                  <div class="iot-pipe-step-val">Click OFF Button</div>
+                </div>
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">HTTP Request</div>
+                  <div class="iot-pipe-step-val">GET /led/off</div>
+                </div>
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">ESP32 Execution</div>
+                  <div class="iot-pipe-step-val">digitalWrite(ledPin, LOW)</div>
+                </div>
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">Hardware Output</div>
+                  <div class="iot-pipe-step-val">GPIO LED OFF</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. WORKING DEMONSTRATION & HARDWARE SETUP (PHOTOS) -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-camera"></i> Working Demonstration & Hardware Setup</h3>
+          <div class="iot-evidence-gallery">
+            <div class="iot-evidence-card">
+              <div class="iot-evidence-img-wrapper">
+                <span class="iot-evidence-badge">Photo 1: Working Demonstration</span>
+                <img src="${exp.demoImage}" onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src='${exp.demoFallback}';}else if(this.dataset.retry==='1'){this.dataset.retry=2;this.src='../../../../.gemini/antigravity-ide/brain/92f4f735-28b9-440a-ba9d-351d8c6037ac/.user_uploaded/media_1790524369288.png';}" alt="Working Demonstration" class="iot-evidence-img">
+              </div>
+              <div class="iot-evidence-caption">${exp.demoCaption}</div>
+            </div>
+
+            <div class="iot-evidence-card">
+              <div class="iot-evidence-img-wrapper">
+                <span class="iot-evidence-badge">Photo 2: Hardware Setup</span>
+                <img src="${exp.hardwareImage}" onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src='${exp.hardwareFallback}';}else if(this.dataset.retry==='1'){this.dataset.retry=2;this.src='../../../../.gemini/antigravity-ide/brain/92f4f735-28b9-440a-ba9d-351d8c6037ac/.user_uploaded/media_1790524379831.png';}" alt="Hardware Setup" class="iot-evidence-img">
+              </div>
+              <div class="iot-evidence-caption">${exp.hardwareCaption}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10. KEY CONCEPTS LEARNED -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-graduation-cap"></i> Key Concepts Learned</h3>
+          <div class="iot-concepts-grid">
+            ${exp.keyConcepts.map(c => `
+              <div class="iot-concept-card">
+                <div class="iot-concept-header">
+                  <div class="iot-concept-icon"><i class="${c.icon}"></i></div>
+                  <h4 class="iot-concept-title">${c.title}</h4>
+                </div>
+                <p class="iot-concept-desc">${c.desc}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 11. RESULTS -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-circle-check"></i> Project Results & Verification</h3>
+          <div class="iot-results-checklist">
+            ${exp.results.map(r => `
+              <div class="iot-result-item">
+                <i class="fa-solid fa-circle-check iot-result-icon"></i>
+                <span>${r}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 12. WHAT I LEARNED -->
+        <div class="iot-detail-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-lightbulb"></i> What I Learned</h3>
+          <p class="iot-text-content">${exp.whatILearned}</p>
+        </div>
+
+        <!-- 13. REFLECTION -->
+        <div class="iot-detail-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-brain"></i> Engineering Reflection</h3>
+          <p class="iot-text-content">${exp.reflection}</p>
         </div>
       </div>
 
-      <!-- 6. Circuit / Architecture -->
-      <div class="iot-detail-block full-width">
-        <h3 class="iot-block-title"><i class="fa-solid fa-network-wired"></i> Circuit / Architecture</h3>
-        <div class="iot-placeholder-area architecture-box">
-          <i class="fa-solid fa-microchip placeholder-big-icon"></i>
-          <p>${exp.architectureText}</p>
+      <!-- 16. PORTFOLIO TASK NAVIGATION & FOOTER -->
+      <div class="iot-task-nav">
+        <button class="btn btn-outline-sm" disabled style="opacity: 0.5;">
+          <i class="fa-solid fa-arrow-left"></i> Previous Task
+        </button>
+        <span class="badge badge-primary">Task 01</span>
+        <button class="btn btn-outline-sm" onclick="openIoTDetails(2)">
+          Next Task <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="iot-detail-footer">
+        <button onclick="closeIoTDetails()" class="btn btn-primary">
+          <i class="fa-solid fa-arrow-left"></i> Back to IoT Works Grid
+        </button>
+      </div>
+    `;
+  } else {
+    detailsView.innerHTML = `
+      <div class="iot-detail-header-bar">
+        <button onclick="closeIoTDetails()" class="btn btn-outline-sm btn-back-iot">
+          <i class="fa-solid fa-arrow-left"></i> Back to IoT Works
+        </button>
+        <span class="badge badge-primary">${exp.number}</span>
+      </div>
+
+      <div class="iot-detail-title-section">
+        <h2 class="iot-detail-main-title">[${exp.title}]</h2>
+        <div class="iot-detail-tags">
+          ${exp.technologies.map(t => `<span class="badge badge-outline">${t}</span>`).join('')}
         </div>
       </div>
 
-      <!-- 7. Technologies -->
-      <div class="iot-detail-block full-width">
-        <h3 class="iot-block-title"><i class="fa-solid fa-tags"></i> Technologies</h3>
-        <div class="iot-tech-badges-list">
-          ${exp.technologies.map(t => `<span class="tag-badge"><i class="fa-solid fa-code"></i> ${t}</span>`).join('')}
+      <div class="iot-detail-grid">
+        <div class="iot-detail-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-eye"></i> Overview</h3>
+          <p class="placeholder-text">${exp.overview}</p>
+        </div>
+        <div class="iot-detail-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-circle-exclamation"></i> Problem Statement</h3>
+          <p class="placeholder-text">${exp.problemStatement}</p>
+        </div>
+        <div class="iot-detail-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-bullseye"></i> Objective</h3>
+          <p class="placeholder-text">${exp.objective}</p>
+        </div>
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-microchip"></i> Components Used</h3>
+          <div class="iot-components-grid">
+            ${exp.components.map(c => `
+              <div class="iot-component-card">
+                <i class="${c.icon} comp-icon"></i>
+                <h4>${c.name}</h4>
+                <p>${c.spec}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-diagram-project"></i> Working Principle</h3>
+          <div class="iot-flow-diagram">
+            ${exp.flowSteps.map((s, idx) => `
+              <div class="iot-flow-node">
+                <div class="flow-step-badge">${s.step}</div>
+                <h4>${s.title}</h4>
+                <p>${s.desc}</p>
+              </div>
+              ${idx < exp.flowSteps.length - 1 ? `<div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>` : ''}
+            `).join('')}
+          </div>
+        </div>
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-network-wired"></i> Circuit / Architecture</h3>
+          <div class="iot-placeholder-area architecture-box">
+            <i class="fa-solid fa-microchip placeholder-big-icon"></i>
+            <p>${exp.architectureText}</p>
+          </div>
+        </div>
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-tags"></i> Technologies</h3>
+          <div class="iot-tech-badges-list">
+            ${exp.technologies.map(t => `<span class="tag-badge"><i class="fa-solid fa-code"></i> ${t}</span>`).join('')}
+          </div>
+        </div>
+        <div class="iot-detail-block full-width">
+          <div class="iot-code-header">
+            <h3 class="iot-block-title"><i class="fa-solid fa-terminal"></i> Source Code</h3>
+            <button class="btn btn-outline-sm btn-copy-code" onclick="copyIoTCode(${exp.id})">
+              <i class="fa-regular fa-copy"></i> Copy Code
+            </button>
+          </div>
+          <div class="iot-code-viewer">
+            <pre><code>${escapeHtml(exp.code)}</code></pre>
+          </div>
+        </div>
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-images"></i> Output / Results</h3>
+          <div class="iot-placeholder-area gallery-box">
+            <i class="fa-solid fa-photo-film placeholder-big-icon"></i>
+            <p>${exp.outputGalleryText}</p>
+          </div>
+        </div>
+        <div class="iot-detail-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-lightbulb"></i> What I Learned</h3>
+          <p class="placeholder-text">${exp.whatILearned}</p>
+        </div>
+        <div class="iot-detail-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-rocket"></i> Future Improvements</h3>
+          <p class="placeholder-text">${exp.futureImprovements}</p>
         </div>
       </div>
 
-      <!-- 8. Code -->
-      <div class="iot-detail-block full-width">
-        <div class="iot-code-header">
-          <h3 class="iot-block-title"><i class="fa-solid fa-terminal"></i> Source Code</h3>
-          <button class="btn btn-outline-sm btn-copy-code" onclick="copyIoTCode(${exp.id})">
-            <i class="fa-regular fa-copy"></i> Copy Code
-          </button>
-        </div>
-        <div class="iot-code-viewer">
-          <pre><code>${escapeHtml(exp.code)}</code></pre>
-        </div>
+      <div class="iot-detail-footer">
+        <button onclick="closeIoTDetails()" class="btn btn-primary">
+          <i class="fa-solid fa-arrow-left"></i> Back to IoT Works Grid
+        </button>
       </div>
-
-      <!-- 9. Output / Results -->
-      <div class="iot-detail-block full-width">
-        <h3 class="iot-block-title"><i class="fa-solid fa-images"></i> Output / Results</h3>
-        <div class="iot-placeholder-area gallery-box">
-          <i class="fa-solid fa-photo-film placeholder-big-icon"></i>
-          <p>${exp.outputGalleryText}</p>
-        </div>
-      </div>
-
-      <!-- 10. What I Learned -->
-      <div class="iot-detail-block">
-        <h3 class="iot-block-title"><i class="fa-solid fa-lightbulb"></i> What I Learned</h3>
-        <p class="placeholder-text">${exp.whatILearned}</p>
-      </div>
-
-      <!-- 11. Future Improvements -->
-      <div class="iot-detail-block">
-        <h3 class="iot-block-title"><i class="fa-solid fa-rocket"></i> Future Improvements</h3>
-        <p class="placeholder-text">${exp.futureImprovements}</p>
-      </div>
-    </div>
-
-    <!-- Bottom Back Button -->
-    <div class="iot-detail-footer">
-      <button onclick="closeIoTDetails()" class="btn btn-primary">
-        <i class="fa-solid fa-arrow-left"></i> Back to IoT Works Grid
-      </button>
-    </div>
-  `;
+    `;
+  }
 
   detailsView.style.display = 'block';
   detailsView.scrollIntoView({ behavior: 'smooth', block: 'start' });
