@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT Works — Task 03: DHT11 Sensor & Cloud Telemetry | Rohith Karthikeyan</title>
+  <meta name="description" content="Detailed engineering report for IoT Task 03 - DHT11 Sensor & Environmental Cloud Telemetry by Rohith Karthikeyan.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <style>
+    body {
+      padding-top: 2rem;
+      padding-bottom: 4rem;
+    }
+    .standalone-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .back-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-glass);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Engineering Background Container -->
+  <div id="bg-system-container" class="bg-system-container cyber-mode">
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    <div class="mechatronics-scanbeam"></div>
+  </div>
+
+  <main class="standalone-container">
+    
+    <!-- Top Navigation Header -->
+    <div class="back-nav-bar">
+      <a href="index.html#iot-works" class="btn btn-outline-sm">
+        <i class="fa-solid fa-arrow-left"></i> Back to Main Portfolio
+      </a>
+      <div class="iot-task-badge-nav">
+        <span class="badge badge-primary"><i class="fa-solid fa-temperature-high"></i> EXPERIMENT 03</span>
+      </div>
+    </div>
+
+    <!-- Details Glass Card Container -->
+    <div class="iot-details-view glass-card" style="display: block; margin-top: 0;">
+      
+      <!-- HERO SECTION -->
+      <div class="iot-detail-title-section">
+        <div class="editorial-annotation"><span class="editorial-num">TASK 03</span> <span class="editorial-slash">/</span> IoT / Environmental Monitoring / ESP32 / DHT11 Sensor</div>
+        <h2 class="iot-detail-main-title">DHT11 Sensor & Cloud Telemetry</h2>
+        <div class="iot-detail-subtitle">Real-Time Environmental Data Acquisition & Cloud Telemetry</div>
+        <p class="iot-detail-lead-desc">Reading ambient temperature and relative humidity via DHT11 digital single-bus sensor, signal sampling, and publishing telemetry data feeds to Adafruit IO cloud dashboards.</p>
+        
+        <div class="iot-detail-tags">
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> ESP32</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> DHT11 Sensor</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> Temperature</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> Humidity</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> Adafruit IO</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> MQTT</span>
+        </div>
+      </div>
+
+      <!-- METADATA BANNER -->
+      <div class="iot-meta-bar">
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Task</span>
+          <span class="iot-meta-value">IoT Works — Task 03</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Microcontroller</span>
+          <span class="iot-meta-value">ESP32 Dev Module</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Sensor</span>
+          <span class="iot-meta-value">DHT11 Digital Sensor</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Interface</span>
+          <span class="iot-meta-value">Single-Wire Digital Protocol</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Data Pins</span>
+          <span class="iot-meta-value">GPIO 4 (Signal Data)</span>
+        </div>
+      </div>
+
+      <!-- GRID SECTION CONTENT -->
+      <div class="iot-detail-grid">
+        
+        <!-- 1. OVERVIEW -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-circle-info"></i> 1. Overview</h3>
+          <p class="iot-text-content">Experiment 03 focuses on acquiring real-time physical environmental measurements using the DHT11 capacitive humidity and thermistor temperature sensor. The ESP32 parses custom single-bus timing protocols to extract temperature (°C) and relative humidity (%) readings, which are subsequently published over MQTT to cloud dashboards for live telemetry visualization and threshold monitoring.</p>
+        </div>
+
+        <!-- 2. CONCEPTS & ARCHITECTURE -->
+        <div class="iot-detail-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-diagram-project"></i> 2. Core Concepts</h3>
+          <div class="table-responsive">
+            <table class="iot-spec-table">
+              <thead>
+                <tr>
+                  <th>Concept</th>
+                  <th>Function / Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Capacitive Sensing</strong></td>
+                  <td>Measures atmospheric relative humidity via dielectric polymer film.</td>
+                </tr>
+                <tr>
+                  <td><strong>NTC Thermistor</strong></td>
+                  <td>Measures ambient temperature through negative temperature coefficient resistor.</td>
+                </tr>
+                <tr>
+                  <td><strong>Single-Bus Protocol</strong></td>
+                  <td>Custom 40-bit serial packet communication over a single GPIO pin.</td>
+                </tr>
+                <tr>
+                  <td><strong>Cloud Feed Streaming</strong></td>
+                  <td>Continuous payload publishing to cloud time-series charts.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. SYSTEM DESIGN & FLOW -->
+        <div class="iot-detail-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-route"></i> 3. System Architecture</h3>
+          <p class="iot-text-content mb-3">End-to-end signal conversion from physical environment to cloud dashboard:</p>
+          <div class="iot-system-flow">
+            <div class="flow-step">
+              <div class="flow-icon"><i class="fa-solid fa-wind"></i></div>
+              <div class="flow-label">Environment</div>
+              <div class="flow-sub">Temp & Humidity</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-angle-right"></i></div>
+            <div class="flow-step">
+              <div class="flow-icon"><i class="fa-solid fa-temperature-half"></i></div>
+              <div class="flow-label">DHT11 Sensor</div>
+              <div class="flow-sub">40-Bit Signal Data</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-angle-right"></i></div>
+            <div class="flow-step">
+              <div class="flow-icon"><i class="fa-solid fa-microchip"></i></div>
+              <div class="flow-label">ESP32 Core</div>
+              <div class="flow-sub">GPIO 4 Data Decoding</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-angle-right"></i></div>
+            <div class="flow-step">
+              <div class="flow-icon"><i class="fa-solid fa-chart-line"></i></div>
+              <div class="flow-label">Adafruit IO</div>
+              <div class="flow-sub">Live Telemetry Graphs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. SPECIFICATIONS TABLE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-sliders"></i> 4. Specifications</h3>
+          <div class="table-responsive">
+            <table class="iot-spec-table">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value / Description</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Humidity Range</td>
+                  <td>20% – 90% RH (±5% accuracy)</td>
+                  <td>1% RH resolution</td>
+                </tr>
+                <tr>
+                  <td>Temperature Range</td>
+                  <td>0°C – 50°C (±2°C accuracy)</td>
+                  <td>1°C resolution</td>
+                </tr>
+                <tr>
+                  <td>Operating Voltage</td>
+                  <td>3.3V – 5.0V DC</td>
+                  <td>Powered via ESP32 3.3V power rail</td>
+                </tr>
+                <tr>
+                  <td>Sampling Period</td>
+                  <td>2.0 Seconds Minimum</td>
+                  <td>Internal sensor measurement conversion latency</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 5. WIRING & SETUP -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-plug"></i> 5. Wiring & Hardware Setup</h3>
+          <div class="iot-wiring-card">
+            <div class="iot-wiring-grid">
+              <div class="wiring-col">
+                <h4 class="wiring-subtitle"><i class="fa-solid fa-microchip"></i> Pin Connections</h4>
+                <ul class="iot-pin-list">
+                  <li><span class="pin-tag pin-gpio">GPIO 4</span> <i class="fa-solid fa-arrow-right"></i> DHT11 Data Pin (with 10kΩ Pull-Up Resistor)</li>
+                  <li><span class="pin-tag pin-vcc">3.3V</span> <i class="fa-solid fa-arrow-right"></i> DHT11 VCC (+) Power Pin</li>
+                  <li><span class="pin-tag pin-gnd">GND</span> <i class="fa-solid fa-arrow-right"></i> DHT11 Ground (-) Pin</li>
+                </ul>
+              </div>
+              <div class="wiring-col">
+                <h4 class="wiring-subtitle"><i class="fa-solid fa-circle-check"></i> Verification Steps</h4>
+                <ul class="iot-pin-list">
+                  <li>Ensure 10kΩ resistor is connected between VCC and Data line.</li>
+                  <li>Verify Serial Monitor logs valid temperature & humidity values every 2 seconds.</li>
+                  <li>Check Adafruit IO cloud feeds for continuous incoming data points.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. IMPLEMENTATION CODE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-code"></i> 6. Implementation Code</h3>
+          <div class="iot-code-wrapper">
+            <div class="iot-code-header">
+              <span class="iot-code-lang"><i class="fa-solid fa-file-code"></i> esp32_dht11_mqtt.ino</span>
+            </div>
+            <pre class="iot-code-block"><code>// Task 03: ESP32 DHT11 Sensor & Cloud Telemetry
+#include &lt;WiFi.h&gt;
+#include &lt;DHT.h&gt;
+
+#define DHTPIN 4
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(115200);
+  dht.begin();
+  Serial.println("=== DHT11 Environmental Telemetry Active ===");
+}
+
+void loop() {
+  delay(2000); // 2 second sampling period
+
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+
+  if (isnan(h) || isnan(t)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  Serial.print("Humidity: ");
+  Serial.print(h);
+  Serial.print(" % | Temp: ");
+  Serial.print(t);
+  Serial.println(" °C");
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- 7. CONFIGURATION TIMELINE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-list-check"></i> 7. Execution Steps</h3>
+          <div class="iot-timeline">
+            <div class="timeline-step">
+              <div class="step-num">01</div>
+              <div class="step-body">
+                <h4>Sensor Interfacing</h4>
+                <p>Connected DHT11 to GPIO 4 with a 10kΩ pull-up resistor to stabilize the data bus.</p>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-num">02</div>
+              <div class="step-body">
+                <h4>Driver Integration</h4>
+                <p>Included Adafruit DHT sensor library and initialized serial communication.</p>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-num">03</div>
+              <div class="step-body">
+                <h4>Data Processing</h4>
+                <p>Converted raw pulse trains into calibrated Floating Point temperature and humidity values.</p>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-num">04</div>
+              <div class="step-body">
+                <h4>Cloud Visualization</h4>
+                <p>Streamed readings over Wi-Fi MQTT to Adafruit IO gauge dashboard widgets.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. VIDEO DEMONSTRATION -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-circle-play"></i> 8. Video Demonstration</h3>
+          
+          <!-- Featured Video Player Card -->
+          <div class="iot-video-featured-card" style="margin-bottom: 0;">
+            <div class="iot-video-wrapper">
+              <span class="iot-evidence-badge" style="top: 1rem; left: 1rem; right: auto;"><i class="fa-solid fa-video"></i> Video Demonstration</span>
+              <video controls autoplay loop muted playsinline class="iot-evidence-video">
+                <source src="images/iot/task-3/1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="iot-evidence-caption" style="margin-top: 0.75rem;"><i class="fa-solid fa-play"></i> Demonstration Video: ESP32 DHT11 Sensor & Environmental Cloud Telemetry in action.</div>
+          </div>
+        </div>
+
+        <!-- 9. CHALLENGES & FIXES -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-wrench"></i> 9. Challenges & Fixes</h3>
+          <div class="iot-challenge-container">
+            <div class="iot-challenge-card">
+              <div class="challenge-side">
+                <div class="challenge-tag"><i class="fa-solid fa-circle-exclamation"></i> Challenge</div>
+                <p>Sensor returning <code>NaN</code> (Not a Number) readings on execution loop.</p>
+              </div>
+              <div class="solution-side">
+                <div class="solution-tag"><i class="fa-solid fa-circle-check"></i> Fix / Solution</div>
+                <p>Added a 10kΩ pull-up resistor between the VCC line and Data signal pin, and enforced a minimum 2.0s loop delay.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10. REFLECTION -->
+        <div class="iot-detail-block full-width reflection-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-brain"></i> 10. Reflection</h3>
+          <p class="iot-text-content reflection-text">Task 3 demonstrated the integration of digital environmental sensors into cloud telemetry pipelines. Understanding timing delays and signal pull-up requirements ensures reliable sensor data logging for remote monitoring applications.</p>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="iot-detail-footer" style="margin-top: 2.5rem;">
+        <a href="index.html#iot-works" class="btn btn-primary">
+          <i class="fa-solid fa-arrow-left"></i> Back to Main Portfolio
+        </a>
+      </div>
+
+    </div>
+  </main>
+</body>
+</html>

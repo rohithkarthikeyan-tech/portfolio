@@ -42,6 +42,17 @@
   <h1>IoT Works — Task 01 Photo Evidence Setup</h1>
   <p>If you'd like to save these photos into your <code>images/iot/</code> folder manually, click the download buttons below and save them as <code>task1_demo.jpg</code> and <code>task1_hardware.jpg</code> inside <code>images/iot/</code>.</p>
 
+  <div class="photo-card" style="border-color: #0284c7; background: #0f172a;">
+    <h2 style="color: #38bdf8;">🔒 How to Make the ESP32 URL Secure with HTTPS</h2>
+    <p>By default, local ESP32 IP servers use unencrypted <strong>HTTP (Port 80)</strong>. To make the URL secure like <strong>HTTPS (Port 443 with SSL/TLS)</strong>:</p>
+    <ul>
+      <li><strong>Use SSL/TLS Library:</strong> Include <code>WiFiClientSecure.h</code> or <code>HTTPSServer.hpp</code> in Arduino IDE.</li>
+      <li><strong>Load SSL Certificate:</strong> Generate a self-signed SSL X.509 certificate & RSA private key in PEM format.</li>
+      <li><strong>Listen on Port 443:</strong> Initialize the ESP32 web server on Port 443 instead of Port 80.</li>
+      <li><strong>Secure URL format:</strong> Access via <code>https://172.20.103.235/</code> instead of <code>http://172.20.103.235/</code>.</li>
+    </ul>
+  </div>
+
   <div class="photo-card">
     <h2>Photo 1: Working Demonstration (Wide Laptop View)</h2>
     <img src="../../../.gemini/antigravity-ide/brain/92f4f735-28b9-440a-ba9d-351d8c6037ac/.user_uploaded/media_1790524369288.png" alt="Task 01 Demo Photo">

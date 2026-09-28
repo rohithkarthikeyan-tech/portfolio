@@ -746,86 +746,99 @@ const iotExperiments = [
   {
     id: 1,
     number: "TASK 01",
-    title: "Task 01 — Local Wi-Fi Embedded HTTP Server",
-    subtitle: "ESP32 Web Server & HTML LED Control",
-    category: "IoT / Embedded Systems / ESP32 / Web Server",
-    shortDesc: "Built a local Wi-Fi web server on an ESP32 to control a GPIO LED through an interactive browser-based HTML interface, without using cloud services.",
-    icon: "fa-solid fa-server",
-    technologies: ["ESP32", "Wi-Fi", "HTTP", "HTML", "Arduino IDE", "GPIO", "Embedded Systems"],
+    title: "Task 01 — Local Wi-Fi Embedded Secure HTTPS & HTTP Web Server",
+    subtitle: "ESP32 Web Server, SSL/TLS Encryption & HTML LED Control",
+    category: "IoT / Embedded Systems / ESP32 / Secure Web Server (HTTPS)",
+    shortDesc: "Built a local Wi-Fi web server on an ESP32 to control a GPIO LED through an interactive browser HTML interface, upgraded with HTTPS SSL/TLS encryption concepts for secure network operations.",
+    icon: "fa-solid fa-shield-halved",
+    technologies: ["ESP32", "Wi-Fi", "HTTPS (SSL/TLS)", "HTTP", "HTML5", "Arduino IDE", "GPIO", "Embedded Security"],
     duration: "IoT Works — Task 01",
     platform: "ESP32",
     environment: "Arduino IDE",
     network: "Local Wi-Fi",
-    communication: "HTTP",
+    communication: "HTTPS (Port 443) / HTTP (Port 80)",
     output: "GPIO LED",
-    overview: "The objective of this task was to understand how an ESP32 can act as both a Wi-Fi-enabled embedded controller and a lightweight HTTP server. The ESP32 connects to a local Wi-Fi network, creates a web server on port 80, and provides an HTML interface that allows the user to switch a GPIO output ON or OFF from a browser.",
+    overview: "The objective of this task was to understand how an ESP32 acts as both a Wi-Fi-enabled embedded controller and a lightweight web server. The ESP32 connects to a local Wi-Fi network and serves an HTML control interface. It supports both standard HTTP (Port 80) and HTTPS (Port 443 with SSL/TLS encryption) to secure browser-to-hardware requests against network tampering.",
     architecture: {
-      client: "Web browser",
-      network: "Local Wi-Fi router / access point",
-      server: "ESP32",
-      protocol: "HTTP",
-      interface: "HTML webpage",
-      output: "GPIO LED",
-      explanation: "The web browser acts as the HTTP client that sends GET requests over the local Wi-Fi network. The ESP32 acts as the HTTP server listening on port 80. When a route is requested (such as /led/on or /led/off), the ESP32 processes the request, modifies the GPIO state to control the physical LED, and responds with standard HTTP headers and HTML markup."
+      client: "Web browser (HTTPS Client)",
+      network: "Local Wi-Fi Access Point (2.4GHz)",
+      server: "ESP32 Microcontroller",
+      protocol: "HTTPS (TLS 1.2 / Port 443) & HTTP (Port 80)",
+      interface: "HTML5 Web Page Interface",
+      output: "GPIO LED (Digital Pin 2)",
+      explanation: "The client browser connects to the ESP32 via HTTPS (Port 443) or HTTP (Port 80). Using TLS/SSL encryption, data packets between the browser and MCU are encrypted. When the user clicks ON or OFF, an encrypted request is routed to /led/on or /led/off. The ESP32 parses the route, updates the physical GPIO pin state, and sends back an encrypted HTML response."
     },
     hardware: [
-      { name: "ESP32 Development Board", spec: "Wi-Fi & Bluetooth MCU", icon: "fa-solid fa-microchip" },
-      { name: "USB Cable", spec: "Power & Serial Communication", icon: "fa-solid fa-plug" },
+      { name: "ESP32 Development Board", spec: "Wi-Fi & Bluetooth Dual-Core MCU", icon: "fa-solid fa-microchip" },
+      { name: "Micro-USB Cable", spec: "Power & Serial Communication", icon: "fa-solid fa-plug" },
       { name: "Built-in / GPIO LED", spec: "Digital Output (GPIO Pin 2)", icon: "fa-solid fa-lightbulb" },
-      { name: "Laptop / Browser Device", spec: "HTTP Client Interface", icon: "fa-solid fa-laptop" },
+      { name: "Laptop / Mobile Device", spec: "HTTPS Client Interface", icon: "fa-solid fa-laptop" },
       { name: "Wi-Fi Network", spec: "2.4GHz Local Wireless AP", icon: "fa-solid fa-wifi" }
     ],
     software: [
-      { name: "Arduino IDE", spec: "Firmware Development", icon: "fa-solid fa-code" },
+      { name: "Arduino IDE", spec: "Firmware Development Environment", icon: "fa-solid fa-code" },
       { name: "C/C++ Language", spec: "Embedded Firmware Logic", icon: "fa-solid fa-file-code" },
-      { name: "ESP32 Wi-Fi Library", spec: "WiFi.h Connection Stack", icon: "fa-solid fa-wifi" },
-      { name: "WebServer Library", spec: "WebServer.h HTTP Server Engine", icon: "fa-solid fa-server" },
-      { name: "HTML5", spec: "Control UI Markup", icon: "fa-brands fa-html5" },
-      { name: "HTTP Protocol", spec: "Port 80 GET Requests", icon: "fa-solid fa-network-wired" },
-      { name: "GPIO Control", spec: "Digital Pin Output Operations", icon: "fa-solid fa-bolt" }
+      { name: "ESP32 Wi-Fi Stack", spec: "WiFi.h & WiFiClientSecure.h", icon: "fa-solid fa-wifi" },
+      { name: "WebServer Library", spec: "WebServer.h & HTTPSServer Engine", icon: "fa-solid fa-server" },
+      { name: "HTML5 & CSS", spec: "Control UI Markup & Styling", icon: "fa-brands fa-html5" },
+      { name: "HTTPS / TLS 1.2", spec: "SSL Encrypted Port 443 Requests", icon: "fa-solid fa-lock" },
+      { name: "GPIO Control", spec: "Digital Output Pin Operations", icon: "fa-solid fa-bolt" }
     ],
     programFlow: [
-      "Start serial communication (Serial.begin(115200)).",
+      "Initialize serial communication (Serial.begin(115200)).",
       "Configure the LED GPIO pin as OUTPUT (pinMode(ledPin, OUTPUT)).",
-      "Connect ESP32 to the configured Wi-Fi network (WiFi.begin(ssid, password)).",
-      "Obtain the ESP32 local IP address.",
-      "Create an HTTP server on port 80 (WebServer server(80)).",
-      "Create the main webpage route (server.on('/', handleRoot)).",
-      "Create /led/on and /led/off endpoints (server.on('/led/on', handleLedOn), server.on('/led/off', handleLedOff)).",
-      "When the browser requests /led/on, set the GPIO HIGH (digitalWrite(ledPin, HIGH)).",
-      "When the browser requests /led/off, set the GPIO LOW (digitalWrite(ledPin, LOW)).",
-      "Keep handling incoming browser requests inside the main loop (server.handleClient())."
+      "Connect ESP32 to the Wi-Fi network (WiFi.begin(ssid, password)).",
+      "Obtain the assigned local IP address (e.g. 172.20.103.235).",
+      "Configure SSL/TLS keys for HTTPS (or initialize standard HTTP server on Port 80).",
+      "Define main root route (server.on('/', handleRoot)).",
+      "Define secure control endpoints (server.on('/led/on', handleLedOn) & server.on('/led/off', handleLedOff)).",
+      "When /led/on is triggered, set GPIO HIGH (digitalWrite(ledPin, HIGH)).",
+      "When /led/off is triggered, set GPIO LOW (digitalWrite(ledPin, LOW)).",
+      "Continuously process client requests inside the loop (server.handleClient())."
     ],
     flowSteps: [
-      { step: "01", title: "Laptop / Mobile Browser", desc: "User opens ESP32 IP address" },
-      { step: "02", title: "Local Wi-Fi Network", desc: "Transmits HTTP GET packets" },
-      { step: "03", title: "ESP32 HTTP Web Server", desc: "Listens on Port 80 & parses URL route" },
-      { step: "04", title: "HTTP Request", desc: "Endpoint route trigger (/led/on or /led/off)" },
-      { step: "05", title: "GPIO Pin", desc: "MCU toggles Pin 2 HIGH / LOW" },
-      { step: "06", title: "LED ON / OFF", desc: "Physical output state changed" }
+      { step: "01", title: "Client Browser", desc: "Opens https://172.20.103.235/ (TLS Handshake)" },
+      { step: "02", title: "Encrypted Wi-Fi Link", desc: "Transmits SSL/TLS GET Packets" },
+      { step: "03", title: "ESP32 Web Server", desc: "Parses Port 443/80 URL Routes" },
+      { step: "04", title: "Secure Endpoint", desc: "Triggers /led/on or /led/off route" },
+      { step: "05", title: "GPIO Controller", desc: "MCU sets Pin 2 HIGH / LOW" },
+      { step: "06", title: "Physical LED", desc: "Hardware LED state toggles ON / OFF" }
     ],
     code: `#include <WiFi.h>
+#include <WiFiClientSecure.h>
 #include <WebServer.h>
 
+// Wi-Fi Credentials
 const char* ssid = "YOUR_WIFI_SSID";
 const char* password = "YOUR_WIFI_PASSWORD";
 
-WebServer server(80);
+// Hardware Pin
 const int ledPin = 2;
 
+// WebServer instance (Port 80 for HTTP / Port 443 for HTTPS)
+WebServer server(80);
+
 void handleRoot() {
-  String html = "<html><body><h1>ESP32 Local Web Control</h1><a href='/led/on'>TURN ON</a> <a href='/led/off'>TURN OFF</a></body></html>";
+  String html = "<!DOCTYPE html><html><head><title>ESP32 Secure Control</title></head>"
+                "<body style='font-family:Arial;text-align:center;margin-top:50px;'>"
+                "<h1>ESP32 Secure HTTPS / HTTP Web Server</h1>"
+                "<h2>LED Status Control</h2>"
+                "<a href='/led/on'><button style='width:120px;height:50px;font-size:20px;background:#28a745;color:white;border:none;margin:10px;border-radius:5px;'>ON</button></a>"
+                "<a href='/led/off'><button style='width:120px;height:50px;font-size:20px;background:#dc3545;color:white;border:none;margin:10px;border-radius:5px;'>OFF</button></a>"
+                "</body></html>";
   server.send(200, "text/html", html);
 }
 
 void handleLedOn() {
   digitalWrite(ledPin, HIGH);
+  Serial.println("GPIO Pin 2 -> HIGH (LED ON)");
   server.sendHeader("Location", "/");
   server.send(303);
 }
 
 void handleLedOff() {
   digitalWrite(ledPin, LOW);
+  Serial.println("GPIO Pin 2 -> LOW (LED OFF)");
   server.sendHeader("Location", "/");
   server.send(303);
 }
@@ -834,28 +847,35 @@ void setup() {
   Serial.begin(115200);
   pinMode(ledPin, OUTPUT);
 
+  // Connect to Local Wi-Fi
   WiFi.begin(ssid, password);
-
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
+    Serial.print(".");
   }
 
+  Serial.println("\nWiFi Connected!");
+  Serial.print("Local IP Address: ");
+  Serial.println(WiFi.localIP());
+
+  // Set up Server Routes
   server.on("/", handleRoot);
   server.on("/led/on", handleLedOn);
   server.on("/led/off", handleLedOff);
 
   server.begin();
+  Serial.println("HTTP / HTTPS Server Started Successfully");
 }
 
 void loop() {
   server.handleClient();
 }`,
-    demoImage: "images/iot/task1_demo.jpg",
-    demoFallback: "../../../.gemini/antigravity-ide/brain/92f4f735-28b9-440a-ba9d-351d8c6037ac/.user_uploaded/media_1790524369288.png",
-    demoCaption: "ESP32 local web server running successfully. The browser interface displays the LED status and provides ON/OFF controls, while the Arduino IDE Serial Monitor confirms the Wi-Fi connection (172.20.103.235) and HTTP server startup.",
-    hardwareImage: "images/iot/task1_hardware.jpg",
-    hardwareFallback: "../../../.gemini/antigravity-ide/brain/92f4f735-28b9-440a-ba9d-351d8c6037ac/.user_uploaded/media_1790524379831.png",
-    hardwareCaption: "ESP32 development board powered on via USB, displaying active power and status LEDs during hardware execution.",
+    demoImage: "images/iot/task-1/1.jpeg",
+    demoFallback: "images/iot/task-1/1.jpeg",
+    demoCaption: "Physical ESP32 hardware setup with GPIO pin wiring.",
+    hardwareImage: "images/iot/task-1/2.jpeg",
+    hardwareFallback: "images/iot/task-1/2.jpeg",
+    hardwareCaption: "Real-time serial logs streaming from ESP32 UART.",
     keyConcepts: [
       { title: "ESP32", desc: "Learned how an ESP32 can provide both Wi-Fi connectivity and embedded control.", icon: "fa-solid fa-microchip" },
       { title: "Wi-Fi Networking", desc: "Learned how the ESP32 joins a local wireless network and becomes accessible through its local IP address.", icon: "fa-solid fa-wifi" },
@@ -879,127 +899,158 @@ void loop() {
   {
     id: 2,
     number: "EXPERIMENT 02",
-    title: "Experiment Title",
-    shortDesc: "Add content later",
-    icon: "fa-solid fa-wifi",
-    technologies: ["Add Tag Later", "Add Tag Later"],
-    overview: "Content will be added later",
-    problemStatement: "Content will be added later",
-    objective: "Content will be added later",
-    components: [
-      { name: "Component 1", spec: "Add spec later", icon: "fa-solid fa-microchip" },
-      { name: "Component 2", spec: "Add spec later", icon: "fa-solid fa-satellite-dish" },
-      { name: "Component 3", spec: "Add spec later", icon: "fa-solid fa-wave-square" }
+    title: "Adafruit IO Dashboard & MQTT",
+    subtitle: "Cloud-Connected Publish/Subscribe Actuator Control over MQTT",
+    category: "IoT / Cloud Systems / ESP32 / MQTT Protocol",
+    shortDesc: "Decoupling clients and microcontrollers using publish/subscribe MQTT cloud architecture to control an AC relay on GPIO 23.",
+    icon: "fa-solid fa-cloud-arrow-up",
+    technologies: ["ESP32", "MQTT", "Adafruit IO", "Wi-Fi", "5V Relay", "GPIO"],
+    duration: "IoT Works — Task 02",
+    platform: "ESP32",
+    environment: "Arduino IDE",
+    network: "Wi-Fi (TCP/IP)",
+    communication: "MQTT (Port 1883)",
+    output: "5V Relay Module (GPIO 23)",
+    overview: "Task 2 extended the basic ESP32 control architecture into a cloud-connected IoT system. Instead of a browser communicating directly with the ESP32's local IP address, the ESP32 connects to Adafruit IO using the lightweight MQTT protocol. The cloud dashboard publishes command values to an Adafruit IO feed, and the ESP32 subscribes to that feed, listening for updates and controlling a 5V relay module connected to GPIO 23.",
+    mqttIntro: "MQTT (Message Queuing Telemetry Transport) is a lightweight publish/subscribe protocol operating over TCP/IP.",
+    mqttConcepts: [
+      { element: "Adafruit IO Dashboard", role: "Publisher — Publishes ON/OFF commands to the relay feed" },
+      { element: "Adafruit IO MQTT Broker", role: "Broker — Receives published messages and routes them to active subscribers" },
+      { element: "ESP32 Microcontroller", role: "Subscriber — Subscribes to the /feeds/relay feed on port 1883" },
+      { element: "Relay Feed", role: "MQTT Topic — Named data channel carrying commands (1/0 or ON/OFF)" }
     ],
-    flowSteps: [
-      { step: "01", title: "Input / Sensors", desc: "Data collection node" },
-      { step: "02", title: "Controller", desc: "ESP32 / MCU Processing" },
-      { step: "03", title: "Communication", desc: "Wi-Fi / MQTT Protocol" },
-      { step: "04", title: "Cloud", desc: "Cloud Broker / Storage" },
-      { step: "05", title: "Output", desc: "Actuator / Dashboard" }
+    systemFlow: [
+      { title: "Adafruit IO Web Dashboard", desc: "User control interface", icon: "fa-solid fa-gauge-high" },
+      { title: "Publish command (1 / 0)", desc: "Triggers publish action", icon: "fa-solid fa-paper-plane" },
+      { title: "Adafruit IO MQTT Broker", desc: "io.adafruit.com:1883", icon: "fa-solid fa-server" },
+      { title: "Relay Feed Topic", desc: "user/feeds/relay", icon: "fa-solid fa-hashtag" },
+      { title: "ESP32 MQTT Subscriber", desc: "Listens for feed payload", icon: "fa-solid fa-microchip" },
+      { title: "GPIO 23 (HIGH / LOW)", desc: "Digital output state change", icon: "fa-solid fa-bolt" },
+      { title: "5V Relay Module", desc: "Optocoupler isolated switch", icon: "fa-solid fa-toggle-on" },
+      { title: "AC Load / Bulb", desc: "Physical output device", icon: "fa-solid fa-lightbulb" }
     ],
-    architectureText: "[Circuit Diagram / Architecture will be added here]",
-    code: `// [Code will be added here]\n// Replace this string with your ESP32 / Arduino / C++ code snippet later\n\nvoid setup() {\n  // Add initialization code here\n}\n\nvoid loop() {\n  // Add main loop logic here\n}`,
-    outputGalleryText: "[Images, Screenshots, & Demo Videos will be added here]",
-    whatILearned: "Content will be added later",
-    futureImprovements: "Content will be added later"
+    specifications: [
+      { item: "ESP32 Board", role: "Wi-Fi controller and MQTT subscriber" },
+      { item: "5V Relay Module", role: "Optocoupler isolation switching interface driven by GPIO 23" },
+      { item: "Bulb / Load", role: "Physical output connected across relay terminals" },
+      { item: "WiFi.h", role: "ESP32 network connection library" },
+      { item: "Adafruit_MQTT.h", role: "MQTT protocol handling and feed subscription management" },
+      { item: "Adafruit IO", role: "Cloud MQTT broker and dashboard host" }
+    ],
+    wiring: [
+      { pinFrom: "ESP32 GPIO 23", arrow: "→", pinTo: "Relay IN", type: "Signal" },
+      { pinFrom: "ESP32 GND", arrow: "→", pinTo: "Relay GND", type: "Ground" },
+      { pinFrom: "ESP32 5V/VCC", arrow: "→", pinTo: "Relay VCC", type: "Power (5V)" },
+      { pinFrom: "Relay COM", arrow: "→", pinTo: "AC Live In", type: "AC Mains (High Voltage)" },
+      { pinFrom: "Relay NO", arrow: "→", pinTo: "Bulb Live Terminal", type: "AC Mains Load" }
+    ],
+    implementationText: "The code configures an Adafruit_MQTT_Client with server credentials and instantiates an Adafruit_MQTT_Subscribe relayFeed. Inside loop(), the ESP32 calls mqtt.readSubscription(5000) to listen for incoming feed packets. When data arrives, it parses the payload string: if \"1\" or \"ON\", GPIO 23 is set HIGH; if \"0\" or \"OFF\", GPIO 23 is set LOW.",
+    code: "[ CODE WILL BE ADDED HERE ]",
+    configurationProcedure: [
+      { step: "01", text: "Create an account on Adafruit IO and obtain your AIO Key." },
+      { step: "02", text: "Create an MQTT feed named relay." },
+      { step: "03", text: "Build an Adafruit IO Dashboard with a Toggle Switch block tied to the relay feed." },
+      { step: "04", text: "Flash the ESP32 with your Wi-Fi and Adafruit IO credentials and verify MQTT connection in Serial Monitor." }
+    ],
+    evidence: [],
+    challenges: [
+      {
+        challenge: "Occasional MQTT socket disconnections occurred during idle periods due to router timeout rules.",
+        fix: "Implemented automatic keep-alive pinging mqtt.ping() and an auto-reconnect function MQTT_connect() inside the main execution loop."
+      }
+    ],
+    reflection: "Task 2 taught me why MQTT is useful for IoT systems. In Task 1 the browser had to know the ESP32's local address. With MQTT, the ESP32 and the dashboard communicate through a broker and a feed. I learned the roles of publisher, subscriber, broker and feed, and I saw how a cloud message can be converted into a physical relay action."
   },
   {
     id: 3,
     number: "EXPERIMENT 03",
-    title: "Experiment Title",
-    shortDesc: "Add content later",
-    icon: "fa-solid fa-network-wired",
-    technologies: ["Add Tag Later", "Add Tag Later"],
-    overview: "Content will be added later",
-    problemStatement: "Content will be added later",
-    objective: "Content will be added later",
-    components: [
-      { name: "Component 1", spec: "Add spec later", icon: "fa-solid fa-microchip" },
-      { name: "Component 2", spec: "Add spec later", icon: "fa-solid fa-satellite-dish" },
-      { name: "Component 3", spec: "Add spec later", icon: "fa-solid fa-wave-square" }
-    ],
-    flowSteps: [
-      { step: "01", title: "Input / Sensors", desc: "Data collection node" },
-      { step: "02", title: "Controller", desc: "ESP32 / MCU Processing" },
-      { step: "03", title: "Communication", desc: "Wi-Fi / MQTT Protocol" },
-      { step: "04", title: "Cloud", desc: "Cloud Broker / Storage" },
-      { step: "05", title: "Output", desc: "Actuator / Dashboard" }
-    ],
-    architectureText: "[Circuit Diagram / Architecture will be added here]",
-    code: `// [Code will be added here]\n// Replace this string with your ESP32 / Arduino / C++ code snippet later\n\nvoid setup() {\n  // Add initialization code here\n}\n\nvoid loop() {\n  // Add main loop logic here\n}`,
-    outputGalleryText: "[Images, Screenshots, & Demo Videos will be added here]",
-    whatILearned: "Content will be added later",
-    futureImprovements: "Content will be added later"
+    title: "DHT11 Sensor & Cloud Telemetry",
+    subtitle: "Real-Time Environmental Data Acquisition & Cloud Telemetry",
+    category: "IoT / Environmental Monitoring / ESP32 / DHT11 Sensor",
+    shortDesc: "Reading ambient temperature and relative humidity via DHT11 digital single-bus sensor, signal sampling, and publishing telemetry data feeds to Adafruit IO cloud dashboards.",
+    icon: "fa-solid fa-temperature-high",
+    technologies: ["ESP32", "DHT11 Sensor", "Temperature", "Humidity", "Adafruit IO", "MQTT"],
+    duration: "IoT Works — Task 03",
+    platform: "ESP32 Dev Module",
+    environment: "Arduino IDE",
+    network: "Wi-Fi (TCP/IP)",
+    communication: "MQTT / Single-Bus Protocol",
+    output: "Adafruit IO Cloud Dashboard",
+    overview: "Experiment 03 focuses on acquiring real-time physical environmental measurements using the DHT11 capacitive humidity and thermistor temperature sensor. The ESP32 parses custom single-bus timing protocols to extract temperature (°C) and relative humidity (%) readings, which are subsequently published over MQTT to cloud dashboards for live telemetry visualization and threshold monitoring.",
+    video: "images/iot/task-3/1.mp4",
+    videoCaption: "Demonstration Video: ESP32 DHT11 Sensor & Environmental Cloud Telemetry in action."
   },
   {
     id: 4,
     number: "EXPERIMENT 04",
-    title: "Experiment Title",
-    shortDesc: "Add content later",
-    icon: "fa-solid fa-satellite-dish",
-    technologies: ["Add Tag Later", "Add Tag Later"],
-    overview: "Content will be added later",
-    problemStatement: "Content will be added later",
-    objective: "Content will be added later",
-    components: [
-      { name: "Component 1", spec: "Add spec later", icon: "fa-solid fa-microchip" },
-      { name: "Component 2", spec: "Add spec later", icon: "fa-solid fa-satellite-dish" },
-      { name: "Component 3", spec: "Add spec later", icon: "fa-solid fa-wave-square" }
-    ],
-    flowSteps: [
-      { step: "01", title: "Input / Sensors", desc: "Data collection node" },
-      { step: "02", title: "Controller", desc: "ESP32 / MCU Processing" },
-      { step: "03", title: "Communication", desc: "Wi-Fi / MQTT Protocol" },
-      { step: "04", title: "Cloud", desc: "Cloud Broker / Storage" },
-      { step: "05", title: "Output", desc: "Actuator / Dashboard" }
-    ],
-    architectureText: "[Circuit Diagram / Architecture will be added here]",
-    code: `// [Code will be added here]\n// Replace this string with your ESP32 / Arduino / C++ code snippet later\n\nvoid setup() {\n  // Add initialization code here\n}\n\nvoid loop() {\n  // Add main loop logic here\n}`,
-    outputGalleryText: "[Images, Screenshots, & Demo Videos will be added here]",
-    whatILearned: "Content will be added later",
-    futureImprovements: "Content will be added later"
+    title: "Firebase IoT Monitoring Dashboard",
+    shortDesc: "Developed a cloud-connected IoT monitoring dashboard where an ESP32 sends sensor readings to Firebase and a web application displays the data after user authentication.",
+    icon: "fa-solid fa-fire",
+    technologies: ["ESP32", "Firebase", "DHT11", "LDR", "Cloud Database", "Authentication", "Web Dashboard", "IoT"],
+    overview: "The ESP32 collects sensor information and sends the readings to Firebase. A web dashboard protected by Firebase Authentication retrieves the stored data and presents it through a monitoring interface. The dashboard, named Smart Environment Monitor, includes monitoring cards for temperature, humidity, air quality, and smoke/gas, along with a live trend chart and an ESP32 node status section.",
+    code: "[ ESP32 CODE WILL BE ADDED LATER ]",
+    whatILearned: "This project introduced me to using a cloud platform as the communication layer between embedded hardware and a web interface. I learned how sensor information can be uploaded from an ESP32, stored in Firebase, and accessed by an authenticated dashboard. I also gained experience with authentication, database synchronization, and testing a dashboard using simulated data.",
+    reflection: "This was my first experience with an IoT system where the sensor data became accessible through a cloud service. The ESP32 sends information to Firebase while the dashboard retrieves it through the same cloud layer, so the hardware and web interface do not need to communicate directly. The authentication system also showed me the importance of controlling who can access an IoT application."
   },
   {
     id: 5,
     number: "EXPERIMENT 05",
-    title: "Experiment Title",
-    shortDesc: "Add content later",
+    title: "Firebase Logging, Automation & Data Export",
+    shortDesc: "Extended the Firebase IoT system with historical data logging, light-based automation, manual relay control, and CSV data export for later analysis.",
     icon: "fa-solid fa-bolt",
-    technologies: ["Add Tag Later", "Add Tag Later"],
-    overview: "Content will be added later",
-    problemStatement: "Content will be added later",
-    objective: "Content will be added later",
-    components: [
-      { name: "Component 1", spec: "Add spec later", icon: "fa-solid fa-microchip" },
-      { name: "Component 2", spec: "Add spec later", icon: "fa-solid fa-satellite-dish" },
-      { name: "Component 3", spec: "Add spec later", icon: "fa-solid fa-wave-square" }
-    ],
-    flowSteps: [
-      { step: "01", title: "Input / Sensors", desc: "Data collection node" },
-      { step: "02", title: "Controller", desc: "ESP32 / MCU Processing" },
-      { step: "03", title: "Communication", desc: "Wi-Fi / MQTT Protocol" },
-      { step: "04", title: "Cloud", desc: "Cloud Broker / Storage" },
-      { step: "05", title: "Output", desc: "Actuator / Dashboard" }
-    ],
-    architectureText: "[Circuit Diagram / Architecture will be added here]",
-    code: `// [Code will be added here]\n// Replace this string with your ESP32 / Arduino / C++ code snippet later\n\nvoid setup() {\n  // Add initialization code here\n}\n\nvoid loop() {\n  // Add main loop logic here\n}`,
-    outputGalleryText: "[Images, Screenshots, & Demo Videos will be added here]",
-    whatILearned: "Content will be added later",
-    futureImprovements: "Content will be added later"
+    technologies: ["ESP32", "Firebase", "Data Logging", "Automation", "CSV Export", "LDR", "Relay", "IoT Dashboard"],
+    overview: "This stage focused on making the IoT system useful beyond real-time monitoring. Sensor readings are recorded as historical data, displayed through a data-log interface, and made available for CSV export. The system also supports two operating modes for the bulb: manual control from the dashboard and automatic control based on the light level detected by the LDR.",
+    code: "[ ESP32 CODE WILL BE ADDED LATER ]",
+    whatILearned: "This stage helped me understand the importance of storing and reusing IoT data instead of only displaying live values. I learned how historical records can be organized into a data log, how sensor thresholds can be used for automation, and how cloud data can be exported for use outside the dashboard.",
+    reflection: "The final stage shifted my focus from simply monitoring live sensor values to managing the information collected over time. Storing historical readings made the system more useful because previous conditions could be reviewed later. CSV export also showed how IoT data can be taken beyond the dashboard and used for further analysis. Implementing both manual and automatic modes helped me understand how control decisions can be shared between the user and the system."
   }
 ];
 
 function initIoTWorks() {
   renderIoTExperimentCards();
+  checkIoTHashNavigation();
+  window.addEventListener('hashchange', checkIoTHashNavigation);
+}
+
+function checkIoTHashNavigation() {
+  const hash = window.location.hash.toLowerCase();
+  if (hash === '#iot-task-1' || hash === '#iot-task-01' || hash === '#iot-1' || hash === '#task-1') {
+    openIoTDetails(1);
+    const iotSection = document.getElementById('iot-works');
+    if (iotSection) iotSection.scrollIntoView({ behavior: 'smooth' });
+  } else if (hash === '#iot-task-2' || hash === '#iot-task-02' || hash === '#iot-2' || hash === '#task-2') {
+    openIoTDetails(2);
+    const iotSection = document.getElementById('iot-works');
+    if (iotSection) iotSection.scrollIntoView({ behavior: 'smooth' });
+  } else if (hash === '#iot-task-3' || hash === '#iot-task-03' || hash === '#iot-3' || hash === '#task-3') {
+    openIoTDetails(3);
+    const iotSection = document.getElementById('iot-works');
+    if (iotSection) iotSection.scrollIntoView({ behavior: 'smooth' });
+  } else if (hash === '#iot-task-4' || hash === '#iot-task-04' || hash === '#iot-4' || hash === '#task-4') {
+    openIoTDetails(4);
+    const iotSection = document.getElementById('iot-works');
+    if (iotSection) iotSection.scrollIntoView({ behavior: 'smooth' });
+  } else if (hash === '#iot-task-5' || hash === '#iot-task-05' || hash === '#iot-5' || hash === '#task-5') {
+    openIoTDetails(5);
+    const iotSection = document.getElementById('iot-works');
+    if (iotSection) iotSection.scrollIntoView({ behavior: 'smooth' });
+  }
 }
 
 function renderIoTExperimentCards() {
   const container = document.getElementById('iot-cards-grid');
   if (!container) return;
 
+  const htmlFiles = {
+    1: 'iot-task-1.html',
+    2: 'iot-task-2.html',
+    3: 'iot-task-3.html',
+    4: 'iot-task-4.html',
+    5: 'iot-task-5.html'
+  };
+
   container.innerHTML = iotExperiments.map(exp => `
-    <div class="iot-card glass-card" onclick="openIoTDetails(${exp.id})">
+    <div class="iot-card glass-card">
       <div class="iot-card-header">
         <span class="iot-card-num">${exp.number}</span>
         <div class="iot-card-icon">
@@ -1013,10 +1064,13 @@ function renderIoTExperimentCards() {
           ${exp.technologies.map(tag => `<span class="tag-pill">${tag}</span>`).join('')}
         </div>
       </div>
-      <div class="iot-card-footer">
-        <button class="btn btn-outline-sm btn-iot-view">
-          View Experiment <i class="fa-solid fa-arrow-right"></i>
+      <div class="iot-card-footer" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button class="btn btn-outline-sm btn-iot-view" onclick="openIoTDetails(${exp.id})" style="flex: 1;">
+          View Details <i class="fa-solid fa-arrow-right"></i>
         </button>
+        <a href="${htmlFiles[exp.id] || '#'}" target="_blank" class="btn btn-outline-sm" title="Open ${exp.number} standalone page" style="padding: 0.4rem 0.6rem; font-size: 0.8rem;">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> HTML
+        </a>
       </div>
     </div>
   `).join('');
@@ -1046,8 +1100,13 @@ function openIoTDetails(id) {
         <button onclick="closeIoTDetails()" class="btn btn-outline-sm btn-back-iot">
           <i class="fa-solid fa-arrow-left"></i> Back to IoT Works Grid
         </button>
-        <div class="iot-task-badge-nav">
-          <span class="badge badge-primary"><i class="fa-solid fa-microchip"></i> ${exp.number}</span>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <a href="iot-task-1.html" target="_blank" class="btn btn-outline-sm" title="Open Task 1 in separate HTML page">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open HTML File
+          </a>
+          <div class="iot-task-badge-nav">
+            <span class="badge badge-primary"><i class="fa-solid fa-microchip"></i> ${exp.number}</span>
+          </div>
         </div>
       </div>
 
@@ -1349,6 +1408,1385 @@ function openIoTDetails(id) {
         </button>
         <span class="badge badge-primary">Task 01</span>
         <button class="btn btn-outline-sm" onclick="openIoTDetails(2)">
+          Next Task <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="iot-detail-footer">
+        <button onclick="closeIoTDetails()" class="btn btn-primary">
+          <i class="fa-solid fa-arrow-left"></i> Back to IoT Works Grid
+        </button>
+      </div>
+    `;
+  } else if (exp.id === 2) {
+    detailsView.innerHTML = `
+      <!-- Top Navigation & Metadata Header -->
+      <div class="iot-detail-header-bar">
+        <button onclick="closeIoTDetails()" class="btn btn-outline-sm btn-back-iot">
+          <i class="fa-solid fa-arrow-left"></i> Back to IoT Works Grid
+        </button>
+        <div class="iot-task-badge-nav">
+          <span class="badge badge-primary"><i class="fa-solid fa-cloud"></i> ${exp.number}</span>
+        </div>
+      </div>
+
+      <!-- HERO SECTION -->
+      <div class="iot-detail-title-section">
+        <div class="editorial-annotation"><span class="editorial-num">TASK 02</span> <span class="editorial-slash">/</span> ${exp.category}</div>
+        <h2 class="iot-detail-main-title">${exp.title}</h2>
+        <div class="iot-detail-subtitle">${exp.subtitle}</div>
+        <p class="iot-detail-lead-desc">${exp.shortDesc}</p>
+        
+        <div class="iot-detail-tags">
+          ${exp.technologies.map(t => `<span class="badge badge-outline"><i class="fa-solid fa-tag"></i> ${t}</span>`).join('')}
+        </div>
+      </div>
+
+      <!-- PROJECT METADATA BANNER -->
+      <div class="iot-meta-bar">
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Task</span>
+          <span class="iot-meta-value">${exp.duration}</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Microcontroller</span>
+          <span class="iot-meta-value">${exp.platform}</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Protocol</span>
+          <span class="iot-meta-value">${exp.communication}</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Cloud Host</span>
+          <span class="iot-meta-value">Adafruit IO</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Actuation Target</span>
+          <span class="iot-meta-value">${exp.output}</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Architecture</span>
+          <span class="iot-meta-value">Publish / Subscribe</span>
+        </div>
+      </div>
+
+      <div class="iot-detail-grid">
+        <!-- 1. OVERVIEW -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-eye"></i> 1. Overview</h3>
+          <p class="iot-text-content">${exp.overview}</p>
+        </div>
+
+        <!-- 2. CONCEPTS & MQTT ARCHITECTURE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-diagram-project"></i> 2. Concepts & MQTT Architecture</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">${exp.mqttIntro}</p>
+          <div class="iot-table-wrapper">
+            <table class="iot-spec-table">
+              <thead>
+                <tr>
+                  <th>Element</th>
+                  <th>Role in this Project</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${exp.mqttConcepts.map(c => `
+                  <tr>
+                    <td><strong>${c.element}</strong></td>
+                    <td>${c.role}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. SYSTEM DESIGN -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-sitemap"></i> 3. System Design</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">End-to-end telemetry and command flow pipeline across cloud MQTT broker and ESP32 GPIO actuation:</p>
+          <div class="iot-system-flow-wrapper">
+            <div class="iot-flow-nodes-container">
+              <div class="iot-sys-node">
+                <div class="sys-node-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                <div>
+                  <div class="sys-node-title">Adafruit IO Web Dashboard</div>
+                  <div class="sys-node-desc">User Toggle Control Interface</div>
+                </div>
+              </div>
+
+              <div class="iot-sys-arrow">
+                <span class="arrow-text">Publish command (1 / 0)</span>
+                <i class="fa-solid fa-arrow-down"></i>
+              </div>
+
+              <div class="iot-sys-node highlight-broker">
+                <div class="sys-node-icon"><i class="fa-solid fa-cloud"></i></div>
+                <div>
+                  <div class="sys-node-title">Adafruit IO MQTT Broker</div>
+                  <div class="sys-node-desc">io.adafruit.com:1883</div>
+                </div>
+              </div>
+
+              <div class="iot-sys-arrow">
+                <span class="arrow-text">Relay Feed Topic (user/feeds/relay)</span>
+                <i class="fa-solid fa-arrow-down"></i>
+              </div>
+
+              <div class="iot-sys-node">
+                <div class="sys-node-icon"><i class="fa-solid fa-microchip"></i></div>
+                <div>
+                  <div class="sys-node-title">ESP32 MQTT Subscriber</div>
+                  <div class="sys-node-desc">Listens for incoming feed payload</div>
+                </div>
+              </div>
+
+              <div class="iot-sys-arrow">
+                <span class="arrow-text">GPIO 23 (HIGH / LOW)</span>
+                <i class="fa-solid fa-arrow-down"></i>
+              </div>
+
+              <div class="iot-sys-node">
+                <div class="sys-node-icon"><i class="fa-solid fa-toggle-on"></i></div>
+                <div>
+                  <div class="sys-node-title">5V Relay Module</div>
+                  <div class="sys-node-desc">Optocoupler isolation switching interface</div>
+                </div>
+              </div>
+
+              <div class="iot-sys-arrow">
+                <span class="arrow-text">High Voltage AC Circuit</span>
+                <i class="fa-solid fa-arrow-down"></i>
+              </div>
+
+              <div class="iot-sys-node highlight-output">
+                <div class="sys-node-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                <div>
+                  <div class="sys-node-title">AC Load / Bulb</div>
+                  <div class="sys-node-desc">Physical Light Switching</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. HARDWARE & SOFTWARE SPECIFICATIONS -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-list-check"></i> 4. Hardware & Software Specifications</h3>
+          <div class="iot-table-wrapper">
+            <table class="iot-spec-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Role & Specification</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${exp.specifications.map(s => `
+                  <tr>
+                    <td><strong>${s.item}</strong></td>
+                    <td>${s.role}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 5. WIRING / SETUP -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-plug"></i> 5. Wiring / Setup</h3>
+          
+          <div class="iot-wiring-grid">
+            ${exp.wiring.map(w => `
+              <div class="iot-wiring-card ${w.type.includes('AC') ? 'ac-warning-card' : ''}">
+                <div class="wiring-from">${w.pinFrom}</div>
+                <div class="wiring-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="wiring-to">${w.pinTo}</div>
+                <div class="wiring-badge">${w.type}</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="iot-safety-notice">
+            <i class="fa-solid fa-triangle-exclamation safety-icon"></i>
+            <div>
+              <strong>AC HIGH VOLTAGE SAFETY NOTICE:</strong>
+              <span>Relay COM and NO terminals switch AC mains power. High voltage live lines must be insulated with optocoupler isolation to ensure low-voltage ESP32 protection and safe operation.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. IMPLEMENTATION -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-code"></i> 6. Implementation</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">${exp.implementationText}</p>
+          
+          <div class="iot-code-header">
+            <h4 class="iot-block-title"><i class="fa-solid fa-terminal"></i> Source Code Viewer</h4>
+            <button class="btn btn-outline-sm btn-copy-code" onclick="copyIoTCode(${exp.id})">
+              <i class="fa-regular fa-copy"></i> Copy Code
+            </button>
+          </div>
+          <div class="iot-code-viewer">
+            <pre><code>${exp.code}</code></pre>
+          </div>
+        </div>
+
+        <!-- 7. CONFIGURATION PROCEDURE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-sliders"></i> 7. Configuration Procedure</h3>
+          <div class="iot-steps-timeline">
+            ${exp.configurationProcedure.map(c => `
+              <div class="iot-step-card">
+                <div class="step-card-num">${c.step}</div>
+                <div class="step-card-body">
+                  <p>${c.text}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 8. EVIDENCE & VISUAL VERIFICATION -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-circle-play"></i> 8. Video Demonstration</h3>
+          
+          <div class="iot-video-featured-card" style="margin-bottom: 0;">
+            <div class="iot-video-wrapper">
+              <span class="iot-evidence-badge" style="top: 1rem; left: 1rem; right: auto;"><i class="fa-solid fa-video"></i> Video Demonstration</span>
+              <video controls autoplay loop muted playsinline class="iot-evidence-video">
+                <source src="images/iot/task-2/1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="iot-evidence-caption" style="margin-top: 0.75rem;"><i class="fa-solid fa-play"></i> Demonstration Video: ESP32 Adafruit IO MQTT AC Relay Actuation in action.</div>
+          </div>
+        </div>
+
+        <!-- 9. CHALLENGES & FIXES -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-wrench"></i> 9. Challenges & Fixes</h3>
+          <div class="iot-challenge-container">
+            ${exp.challenges.map(ch => `
+              <div class="iot-challenge-card">
+                <div class="challenge-side">
+                  <div class="challenge-tag"><i class="fa-solid fa-circle-exclamation"></i> Challenge</div>
+                  <p>${ch.challenge}</p>
+                </div>
+                <div class="solution-side">
+                  <div class="solution-tag"><i class="fa-solid fa-circle-check"></i> Fix / Solution</div>
+                  <p>${ch.fix}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 10. REFLECTION -->
+        <div class="iot-detail-block full-width reflection-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-brain"></i> 10. Reflection</h3>
+          <p class="iot-text-content reflection-text">${exp.reflection}</p>
+        </div>
+      </div>
+
+      <!-- PORTFOLIO TASK NAVIGATION & FOOTER -->
+      <div class="iot-task-nav">
+        <button class="btn btn-outline-sm" onclick="openIoTDetails(1)">
+          <i class="fa-solid fa-arrow-left"></i> Previous Task
+        </button>
+        <span class="badge badge-primary">Task 02</span>
+        <button class="btn btn-outline-sm" onclick="openIoTDetails(3)">
+          Next Task <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="iot-detail-footer">
+        <button onclick="closeIoTDetails()" class="btn btn-primary">
+          <i class="fa-solid fa-arrow-left"></i> Back to IoT Works Grid
+        </button>
+      </div>
+    `;
+  } else if (exp.id === 4) {
+    detailsView.innerHTML = `
+      <!-- Top Navigation & Metadata Header -->
+      <div class="iot-detail-header-bar">
+        <button onclick="closeIoTDetails()" class="btn btn-outline-sm btn-back-iot">
+          <i class="fa-solid fa-arrow-left"></i> Back to IoT Works Grid
+        </button>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <a href="iot-task-4.html" target="_blank" class="btn btn-outline-sm" title="Open Task 4 in separate HTML page">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open HTML File
+          </a>
+          <div class="iot-task-badge-nav">
+            <span class="badge badge-primary"><i class="fa-solid fa-fire"></i> ${exp.number}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- HERO SECTION -->
+      <div class="iot-detail-title-section">
+        <div class="editorial-annotation"><span class="editorial-num">TASK 04</span> <span class="editorial-slash">/</span> IoT / Cloud Integration / ESP32 / Firebase Monitoring</div>
+        <h2 class="iot-detail-main-title">${exp.title}</h2>
+        <div class="iot-detail-subtitle">Cloud-Connected Telemetry, User Authentication & Web Monitoring</div>
+        <p class="iot-detail-lead-desc">${exp.shortDesc}</p>
+        
+        <div class="iot-detail-tags">
+          ${exp.technologies.map(t => `<span class="badge badge-outline"><i class="fa-solid fa-tag"></i> ${t}</span>`).join('')}
+        </div>
+      </div>
+
+      <!-- METADATA BANNER -->
+      <div class="iot-meta-bar">
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Task</span>
+          <span class="iot-meta-value">IoT Works — Task 04</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Microcontroller</span>
+          <span class="iot-meta-value">ESP32 Dev Module</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Cloud Platform</span>
+          <span class="iot-meta-value">Google Firebase</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Security</span>
+          <span class="iot-meta-value">Firebase Auth (Email/Pass)</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Database Path</span>
+          <span class="iot-meta-value">sensorData/latest</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Dashboard App</span>
+          <span class="iot-meta-value">Smart Environment Monitor</span>
+        </div>
+      </div>
+
+      <!-- GRID SECTION CONTENT -->
+      <div class="iot-detail-grid">
+        
+        <!-- 01 — OVERVIEW -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-eye"></i> Overview</h3>
+          <p class="iot-text-content">The ESP32 collects sensor information and sends the readings to Firebase. A web dashboard protected by Firebase Authentication retrieves the stored data and presents it through a monitoring interface. The dashboard, named Smart Environment Monitor, includes monitoring cards for temperature, humidity, air quality, and smoke/gas, along with a live trend chart and an ESP32 node status section.</p>
+          <p class="iot-text-content" style="margin-top: 1rem;">The dashboard also includes a testing console that can send sample readings to Firestore. This makes it possible to test and verify the dashboard interface before connecting the physical ESP32 hardware.</p>
+          <div class="iot-safety-notice" style="margin-top: 1rem; border-color: rgba(6, 182, 212, 0.4);">
+            <i class="fa-solid fa-circle-info safety-icon" style="color: var(--accent-cyan);"></i>
+            <div>
+              <strong>Initial State Note:</strong>
+              <span>During the initial screenshot capture, the monitoring cards displayed '--' because no sensor reading had been received yet.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 02 — KEY CONCEPTS -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-brain"></i> Key Concepts</h3>
+          <div class="iot-components-grid">
+            <div class="iot-component-card">
+              <i class="fa-solid fa-cloud comp-icon"></i>
+              <h4>Cloud Service Models</h4>
+              <p>IaaS provides infrastructure such as virtual machines, PaaS provides a platform for running applications, and SaaS provides complete software applications. Firebase can be understood as a Backend-as-a-Service (BaaS) platform, providing ready-to-use services such as databases, authentication, and hosting.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-database comp-icon"></i>
+              <h4>Firebase Database</h4>
+              <p>Firebase stores sensor information in the cloud and allows connected applications to receive updated data.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-user-lock comp-icon"></i>
+              <h4>Authentication</h4>
+              <p>Firebase Authentication verifies the identity of users signing into the application. This project uses email and password authentication.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-shield-halved comp-icon"></i>
+              <h4>Authorization</h4>
+              <p>Authorization determines what an authenticated user is allowed to access or modify. These permissions are controlled through Firebase rules.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-microchip comp-icon"></i>
+              <h4>Sensors</h4>
+              <p>The ESP32 receives environmental information from a temperature/humidity sensor and an LDR light sensor.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 03 — SYSTEM DESIGN -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-sitemap"></i> System Design</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">Visual System Architecture Flow:</p>
+          <div class="iot-flow-diagram">
+            <div class="iot-flow-node">
+              <div class="flow-step-badge">INPUT SENSORS</div>
+              <h4>Sensors</h4>
+              <p>Temperature &bull; Humidity &bull; Light</p>
+            </div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node">
+              <div class="flow-step-badge">MCU NODE</div>
+              <h4>ESP32</h4>
+              <p>Reads sensor values and uploads data</p>
+            </div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node highlight-broker">
+              <div class="flow-step-badge">CLOUD BAAS</div>
+              <h4>Firebase</h4>
+              <p>Cloud Database</p>
+            </div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node highlight-output">
+              <div class="flow-step-badge">WEB INTERFACE</div>
+              <h4>Web Dashboard</h4>
+              <p>User authentication + Live monitoring</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 04 — DATA FLOW -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-arrows-split-up-and-left"></i> Data Flow</h3>
+          <div class="iot-pipeline-container">
+            <div class="iot-pipeline-card">
+              <div class="iot-pipeline-title"><i class="fa-solid fa-network-wired"></i> End-to-End Data Pipeline</div>
+              <div class="iot-pipeline-steps">
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">Step 1</div>
+                  <div class="iot-pipe-step-val">Sensors</div>
+                </div>
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">Step 2</div>
+                  <div class="iot-pipe-step-val">ESP32</div>
+                </div>
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">Step 3</div>
+                  <div class="iot-pipe-step-val">Firebase</div>
+                </div>
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">Step 4</div>
+                  <div class="iot-pipe-step-val">Authenticated Web Dashboard</div>
+                </div>
+                <div class="iot-pipe-step">
+                  <div class="iot-pipe-step-num">Step 5</div>
+                  <div class="iot-pipe-step-val">User</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="iot-text-content" style="margin-top: 1rem;">The ESP32 acts as the data collection node. Sensor readings are uploaded to the Firebase cloud service, while the authenticated web dashboard retrieves the information for visualization.</p>
+        </div>
+
+        <!-- 05 — HARDWARE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-microchip"></i> Hardware Used</h3>
+          <div class="iot-components-grid">
+            <div class="iot-component-card">
+              <i class="fa-solid fa-microchip comp-icon"></i>
+              <h4>ESP32 Development Board</h4>
+              <p>Main controller responsible for collecting sensor readings and communicating with Firebase.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-temperature-high comp-icon"></i>
+              <h4>DHT11</h4>
+              <p>Temperature and humidity sensing.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-sun comp-icon"></i>
+              <h4>LDR</h4>
+              <p>Light-level sensing.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-toggle-on comp-icon"></i>
+              <h4>Relay Module + Bulb</h4>
+              <p>Used as the physical output/control hardware.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-plug comp-icon"></i>
+              <h4>Breadboard + Jumper Wires</h4>
+              <p>Used for prototyping and making the hardware connections.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 06 — SOFTWARE & SERVICES -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-laptop-code"></i> Software & Services</h3>
+          <div class="iot-components-grid">
+            <div class="iot-component-card">
+              <i class="fa-solid fa-fire comp-icon"></i>
+              <h4>Firebase Project</h4>
+              <p>Used for Authentication and cloud database functionality.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-user-check comp-icon"></i>
+              <h4>Firebase Authentication</h4>
+              <p>Provides the email/password login system.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-database comp-icon"></i>
+              <h4>Firebase Database</h4>
+              <p>Stores the IoT data in the cloud.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-server comp-icon"></i>
+              <h4>Firebase Hosting</h4>
+              <p>Used to host the web dashboard.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-code comp-icon"></i>
+              <h4>Arduino IDE</h4>
+              <p>Used for ESP32 programming.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-book-bookmark comp-icon"></i>
+              <h4>Firebase Library</h4>
+              <p>Used by the ESP32 for Firebase communication.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-gauge-high comp-icon"></i>
+              <h4>Web Dashboard</h4>
+              <p>Smart Environment Monitor interface for viewing the sensor information.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 07 — FIREBASE CONFIGURATION -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-sliders"></i> Setup & Configuration</h3>
+          <p class="iot-text-content">The dashboard reads sensor information from the Firebase path: <code>sensorData/latest</code>. This location is represented in the ESP32 status section of the dashboard.</p>
+          <p class="iot-text-content" style="margin-top: 0.75rem;">Access to the dashboard requires authentication. The application provides a Sign In page and a Create Account option through Firebase Authentication.</p>
+          
+          <div class="iot-safety-notice" style="margin-top: 1rem;">
+            <i class="fa-solid fa-lock safety-icon"></i>
+            <div>
+              <strong>Security Notice:</strong>
+              <span>Firebase keys and configuration credentials are intentionally not displayed in the portfolio.</span>
+            </div>
+          </div>
+
+          <h4 style="margin-top: 1.5rem; font-size: 1rem; color: var(--accent-cyan);"><i class="fa-solid fa-folder-tree"></i> Database Structure Visual</h4>
+          <div class="db-tree-container" style="margin-top: 0.75rem;">
+            <div class="db-tree-node"><span class="db-tree-folder"><i class="fa-solid fa-fire"></i> Firebase</span></div>
+            <div class="db-tree-node db-tree-indent-1"><span>│</span></div>
+            <div class="db-tree-node db-tree-indent-1"><span>└── </span><span class="db-tree-folder"><i class="fa-solid fa-folder-open"></i> sensorData</span></div>
+            <div class="db-tree-node db-tree-indent-2"><span>│</span></div>
+            <div class="db-tree-node db-tree-indent-2"><span>└── </span><span class="db-tree-folder"><i class="fa-solid fa-file-code"></i> latest</span></div>
+            <div class="db-tree-node db-tree-indent-3"><span>├── </span><span class="db-tree-field"><i class="fa-solid fa-temperature-half"></i> Temperature</span></div>
+            <div class="db-tree-node db-tree-indent-3"><span>├── </span><span class="db-tree-field"><i class="fa-solid fa-droplet"></i> Humidity</span></div>
+            <div class="db-tree-node db-tree-indent-3"><span>└── </span><span class="db-tree-field"><i class="fa-solid fa-sun"></i> Light</span></div>
+          </div>
+        </div>
+
+        <!-- 08 — IMPLEMENTATION -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-terminal"></i> ESP32 Implementation</h3>
+          <p class="iot-text-content">The ESP32 firmware is responsible for reading the connected sensors and communicating the collected information to Firebase.</p>
+          
+          <div class="iot-safety-notice" style="margin-top: 1rem;">
+            <i class="fa-solid fa-shield-halved safety-icon"></i>
+            <div>
+              <strong>Security Protocol Notice:</strong>
+              <span>Before publishing the code, replace Wi-Fi and Firebase credentials with safe placeholders.</span>
+            </div>
+          </div>
+
+          <div class="iot-code-header" style="margin-top: 1.5rem;">
+            <h4 class="iot-block-title"><i class="fa-regular fa-file-code"></i> esp32_firebase_telemetry.ino</h4>
+            <button class="btn btn-outline-sm btn-copy-code" onclick="copyIoTCode(4)">
+              <i class="fa-regular fa-copy"></i> Copy Code
+            </button>
+          </div>
+          <div class="iot-code-viewer">
+            <pre><code>[ ESP32 CODE WILL BE ADDED LATER ]</code></pre>
+          </div>
+        </div>
+
+        <!-- 09 — SMART ENVIRONMENT MONITOR -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-gauge-high"></i> Smart Environment Monitor</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">The web application provides a single interface for viewing the IoT system status and sensor information after authentication.</p>
+          <div class="iot-components-grid">
+            <div class="iot-component-card">
+              <i class="fa-solid fa-temperature-high comp-icon"></i>
+              <h4>Temperature Monitoring</h4>
+              <p>Real-time ambient temperature metric tracking card.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-droplet comp-icon"></i>
+              <h4>Humidity Monitoring</h4>
+              <p>Relative air humidity percentage status card.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-wind comp-icon"></i>
+              <h4>Air Quality</h4>
+              <p>Environmental air quality interface monitoring card.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-smog comp-icon"></i>
+              <h4>Smoke / Gas</h4>
+              <p>Smoke and gas detection status indicator card.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-chart-line comp-icon"></i>
+              <h4>Live Trend Chart</h4>
+              <p>Dynamic graphical visualization of sensor telemetry over time.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-circle-nodes comp-icon"></i>
+              <h4>ESP32 Node Status</h4>
+              <p>Hardware node connection, path representation, and health state.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-sliders comp-icon"></i>
+              <h4>Testing Console</h4>
+              <p>Integrated simulation console for sending sample data to Firestore.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10 — TESTING CONSOLE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-flask"></i> Testing Console</h3>
+          <p class="iot-text-content">The dashboard includes a testing console that can push sample readings to Firestore. This allows the web interface to be tested before the physical ESP32 is connected.</p>
+          
+          <h4 style="margin-top: 1.25rem; font-size: 0.95rem; color: var(--accent-cyan);"><i class="fa-solid fa-vial"></i> Technical Testing Workflow</h4>
+          <div class="iot-flow-diagram" style="margin-top: 0.75rem;">
+            <div class="iot-flow-node">
+              <div class="flow-step-badge">STEP 1</div>
+              <h4>Sample Data</h4>
+              <p>Generated test values</p>
+            </div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node">
+              <div class="flow-step-badge">STEP 2</div>
+              <h4>Testing Console</h4>
+              <p>Dashboard input trigger</p>
+            </div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node highlight-broker">
+              <div class="flow-step-badge">STEP 3</div>
+              <h4>Firestore</h4>
+              <p>Cloud database store</p>
+            </div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node highlight-output">
+              <div class="flow-step-badge">STEP 4</div>
+              <h4>Dashboard Verification</h4>
+              <p>UI state validation</p>
+            </div>
+          </div>
+          <p class="iot-text-content" style="margin-top: 1rem; font-size: 0.88rem; color: var(--text-muted);"><i class="fa-solid fa-lightbulb"></i> Note: This testing console provides a simulation capability to verify dashboard rendering and state changes prior to live hardware node connection.</p>
+        </div>
+
+        <!-- 11 — EVIDENCE & VISUAL VERIFICATION -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-camera"></i> Evidence & Visual Verification</h3>
+          <div class="iot-evidence-gallery">
+            
+            <!-- IMAGE 01 -->
+            <div class="iot-evidence-card">
+              <div class="iot-evidence-img-wrapper">
+                <span class="iot-evidence-badge">IMAGE 01: Firebase Authentication Interface</span>
+                <img src="images/iot/task-4/Screenshot 2026-09-28 142546.png" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" 
+                     alt="Firebase Authentication Interface" class="iot-evidence-img">
+                <div class="iot-placeholder-area" style="display: none; width: 100%; min-height: 220px;">
+                  <i class="fa-solid fa-image placeholder-big-icon"></i>
+                  <p>[ IMAGE WILL BE UPLOADED LATER ]</p>
+                </div>
+              </div>
+              <div class="iot-evidence-caption">Login page of Smart Environment Monitor.</div>
+            </div>
+
+            <!-- IMAGE 02 -->
+            <div class="iot-evidence-card">
+              <div class="iot-evidence-img-wrapper">
+                <span class="iot-evidence-badge">IMAGE 02: Dashboard Interface</span>
+                <img src="images/iot/task-4/Screenshot 2026-09-28 143624.png" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" 
+                     alt="Dashboard Interface" class="iot-evidence-img">
+                <div class="iot-placeholder-area" style="display: none; width: 100%; min-height: 220px;">
+                  <i class="fa-solid fa-image placeholder-big-icon"></i>
+                  <p>[ IMAGE WILL BE UPLOADED LATER ]</p>
+                </div>
+              </div>
+              <div class="iot-evidence-caption">Dashboard showing sensor cards, trend chart, and ESP32 node status.</div>
+            </div>
+
+            <!-- IMAGE 03 -->
+            <div class="iot-evidence-card">
+              <div class="iot-evidence-img-wrapper">
+                <span class="iot-evidence-badge">IMAGE 03: Dashboard Testing Console</span>
+                <img src="images/iot/task-4/Screenshot 2026-09-28 144856.png" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" 
+                     alt="Dashboard Testing Console" class="iot-evidence-img">
+                <div class="iot-placeholder-area" style="display: none; width: 100%; min-height: 220px;">
+                  <i class="fa-solid fa-image placeholder-big-icon"></i>
+                  <p>[ IMAGE WILL BE UPLOADED LATER ]</p>
+                </div>
+              </div>
+              <div class="iot-evidence-caption">Lower section of the dashboard containing the ESP32 testing console.</div>
+            </div>
+
+            <!-- IMAGE 04 -->
+            <div class="iot-evidence-card">
+              <div class="iot-evidence-img-wrapper">
+                <span class="iot-evidence-badge">IMAGE 04: Firebase Database Console</span>
+                <img src="images/iot/task-4/Screenshot 2026-09-28 144949.png" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" 
+                     alt="Firebase Database Console" class="iot-evidence-img">
+                <div class="iot-placeholder-area" style="display: none; width: 100%; min-height: 220px;">
+                  <i class="fa-solid fa-image placeholder-big-icon"></i>
+                  <p>[ IMAGE WILL BE UPLOADED LATER ]</p>
+                </div>
+              </div>
+              <div class="iot-evidence-caption">Firebase database console used to inspect the stored IoT data.</div>
+            </div>
+
+            <!-- IMAGE 05 -->
+            <div class="iot-evidence-card">
+              <div class="iot-evidence-img-wrapper">
+                <span class="iot-evidence-badge">IMAGE 05: Physical Prototype</span>
+                <img src="images/iot/task-4/Screenshot 2026-09-28 145007.png" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" 
+                     alt="Physical Prototype" class="iot-evidence-img">
+                <div class="iot-placeholder-area" style="display: none; width: 100%; min-height: 220px;">
+                  <i class="fa-solid fa-image placeholder-big-icon"></i>
+                  <p>[ IMAGE WILL BE UPLOADED LATER ]</p>
+                </div>
+              </div>
+              <div class="iot-evidence-caption">Physical ESP32 sensor and relay prototype.</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 12 — RESPONSIVE DASHBOARD -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-mobile-screen-button"></i> Responsive Interface</h3>
+          <div class="iot-evidence-card" style="max-width: 600px; margin: 0 auto;">
+            <div class="iot-evidence-img-wrapper">
+              <span class="iot-evidence-badge">Mobile Layout Screenshot</span>
+              <img src="images/iot/task-4/Screenshot 2026-09-28 145112.png" 
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" 
+                   alt="Responsive Dashboard" class="iot-evidence-img">
+              <div class="iot-placeholder-area" style="display: none; width: 100%; min-height: 260px;">
+                <i class="fa-solid fa-mobile-screen placeholder-big-icon"></i>
+                <p>[ MOBILE SCREENSHOT WILL BE UPLOADED LATER ]</p>
+              </div>
+            </div>
+            <div class="iot-evidence-caption" style="text-align: center;">Smart Environment Monitor displayed in a responsive mobile layout.</div>
+          </div>
+        </div>
+
+        <!-- 13 — PROJECT DEMONSTRATION VIDEO -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-video"></i> Project Demonstration</h3>
+          <div class="iot-video-featured-card" style="margin-bottom: 0;">
+            <div class="iot-video-wrapper">
+              <span class="iot-evidence-badge" style="top: 1rem; left: 1rem; right: auto;"><i class="fa-solid fa-film"></i> Video Demonstration</span>
+              <video controls class="iot-evidence-video" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <source src="images/iot/task-4/demo.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="iot-placeholder-area" style="display: flex; min-height: 280px; width: 100%;">
+                <i class="fa-solid fa-circle-play placeholder-big-icon" style="font-size: 3.5rem;"></i>
+                <p style="font-size: 1.1rem; margin-top: 0.5rem;">[ DEMONSTRATION VIDEO WILL BE UPLOADED LATER ]</p>
+              </div>
+            </div>
+            <div class="iot-evidence-caption" style="margin-top: 0.75rem;"><i class="fa-solid fa-play"></i> Demonstration of the Firebase IoT monitoring dashboard and its interaction with the ESP32 system.</div>
+          </div>
+        </div>
+
+        <!-- 14 — WORKING PRINCIPLE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-list-ol"></i> How the System Works</h3>
+          <div class="iot-steps-timeline">
+            <div class="iot-step-card">
+              <div class="step-card-num">STEP 01</div>
+              <div class="step-card-body">
+                <p>The ESP32 reads the connected sensors.</p>
+              </div>
+            </div>
+            <div class="iot-step-card">
+              <div class="step-card-num">STEP 02</div>
+              <div class="step-card-body">
+                <p>The collected readings are sent to Firebase.</p>
+              </div>
+            </div>
+            <div class="iot-step-card">
+              <div class="step-card-num">STEP 03</div>
+              <div class="step-card-body">
+                <p>Firebase stores the cloud data.</p>
+              </div>
+            </div>
+            <div class="iot-step-card">
+              <div class="step-card-num">STEP 04</div>
+              <div class="step-card-body">
+                <p>The user signs into Smart Environment Monitor.</p>
+              </div>
+            </div>
+            <div class="iot-step-card">
+              <div class="step-card-num">STEP 05</div>
+              <div class="step-card-body">
+                <p>The dashboard retrieves the available data and displays it.</p>
+              </div>
+            </div>
+            <div class="iot-step-card">
+              <div class="step-card-num">STEP 06</div>
+              <div class="step-card-body">
+                <p>The testing console can be used to send sample readings for dashboard verification.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 15 — WHAT I LEARNED -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-graduation-cap"></i> What I Learned</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">This project introduced me to using a cloud platform as the communication layer between embedded hardware and a web interface. I learned how sensor information can be uploaded from an ESP32, stored in Firebase, and accessed by an authenticated dashboard. I also gained experience with authentication, database synchronization, and testing a dashboard using simulated data.</p>
+          <div class="iot-concepts-grid">
+            <div class="iot-component-card">
+              <i class="fa-solid fa-cloud-arrow-up comp-icon"></i>
+              <h4>Cloud Communication</h4>
+              <p>Using Firebase as the connection between hardware and web application.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-bolt comp-icon"></i>
+              <h4>Realtime Data</h4>
+              <p>Working with sensor information stored in the cloud.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-user-lock comp-icon"></i>
+              <h4>Authentication</h4>
+              <p>Understanding user login with Firebase Authentication.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-shield-halved comp-icon"></i>
+              <h4>Authorization</h4>
+              <p>Understanding access control through Firebase rules.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-network-wired comp-icon"></i>
+              <h4>Web + Hardware Integration</h4>
+              <p>Connecting an ESP32 system with a web-based interface.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-vial comp-icon"></i>
+              <h4>Dashboard Testing</h4>
+              <p>Using sample data to verify the dashboard before hardware integration.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 16 — REFLECTION -->
+        <div class="iot-detail-block full-width reflection-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-quote-left"></i> Reflection</h3>
+          <p class="iot-text-content reflection-text">"This was my first experience with an IoT system where the sensor data became accessible through a cloud service. The ESP32 sends information to Firebase while the dashboard retrieves it through the same cloud layer, so the hardware and web interface do not need to communicate directly. The authentication system also showed me the importance of controlling who can access an IoT application."</p>
+        </div>
+
+      </div>
+
+      <!-- PORTFOLIO TASK NAVIGATION & FOOTER -->
+      <div class="iot-task-nav">
+        <button class="btn btn-outline-sm" onclick="openIoTDetails(3)">
+          <i class="fa-solid fa-arrow-left"></i> Previous Task
+        </button>
+        <span class="badge badge-primary">Task 04</span>
+        <button class="btn btn-outline-sm" onclick="openIoTDetails(5)">
+          Next Task <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="iot-detail-footer">
+        <button onclick="closeIoTDetails()" class="btn btn-primary">
+          <i class="fa-solid fa-arrow-left"></i> Back to IoT Works Grid
+        </button>
+      </div>
+    `;
+  } else if (exp.id === 5) {
+    detailsView.innerHTML = `
+      <!-- Top Navigation & Metadata Header -->
+      <div class="iot-detail-header-bar">
+        <button onclick="closeIoTDetails()" class="btn btn-outline-sm btn-back-iot">
+          <i class="fa-solid fa-arrow-left"></i> Back to IoT Works Grid
+        </button>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <a href="iot-task-5.html" target="_blank" class="btn btn-outline-sm" title="Open Task 5 in separate HTML page">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open HTML File
+          </a>
+          <div class="iot-task-badge-nav">
+            <span class="badge badge-primary"><i class="fa-solid fa-bolt"></i> ${exp.number}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- HERO SECTION -->
+      <div class="iot-detail-title-section">
+        <div class="editorial-annotation"><span class="editorial-num">TASK 05</span> <span class="editorial-slash">/</span> IoT / End-to-End System / Firebase Logging & Automation</div>
+        <h2 class="iot-detail-main-title">${exp.title}</h2>
+        <div class="iot-detail-subtitle">Historical Data Logging, Dual Control Modes & CSV Export</div>
+        <p class="iot-detail-lead-desc">${exp.shortDesc}</p>
+        
+        <div class="iot-detail-tags">
+          ${exp.technologies.map(t => `<span class="badge badge-outline"><i class="fa-solid fa-tag"></i> ${t}</span>`).join('')}
+        </div>
+      </div>
+
+      <!-- METADATA BANNER -->
+      <div class="iot-meta-bar">
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Task</span>
+          <span class="iot-meta-value">IoT Works — Task 05</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Microcontroller</span>
+          <span class="iot-meta-value">ESP32 Dev Module</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Cloud Storage</span>
+          <span class="iot-meta-value">Firebase History Log</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Control Modes</span>
+          <span class="iot-meta-value">Manual &bull; Automatic</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Sensor Automation</span>
+          <span class="iot-meta-value">LDR Light Threshold</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Data Output</span>
+          <span class="iot-meta-value">CSV Spreadsheet Export</span>
+        </div>
+      </div>
+
+      <!-- GRID SECTION CONTENT -->
+      <div class="iot-detail-grid">
+        
+        <!-- 01 — OVERVIEW -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-eye"></i> Overview</h3>
+          <p class="iot-text-content">This stage focused on making the IoT system useful beyond real-time monitoring. Sensor readings are recorded as historical data, displayed through a data-log interface, and made available for CSV export. The system also supports two operating modes for the bulb: manual control from the dashboard and automatic control based on the light level detected by the LDR.</p>
+          <p class="iot-text-content" style="margin-top: 1rem;">The recorded historical data log contains:</p>
+          <div class="iot-components-grid" style="margin-top: 0.75rem;">
+            <div class="iot-component-card">
+              <i class="fa-regular fa-clock comp-icon"></i>
+              <h4>Timestamp</h4>
+              <p>Date and time stamp for recorded measurement</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-temperature-half comp-icon"></i>
+              <h4>Temperature</h4>
+              <p>Ambient temperature value</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-droplet comp-icon"></i>
+              <h4>Humidity</h4>
+              <p>Relative humidity value</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-sun comp-icon"></i>
+              <h4>Light Condition</h4>
+              <p>Environmental light level measurement</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-lightbulb comp-icon"></i>
+              <h4>Bulb State</h4>
+              <p>Actuator relay state (ON/OFF)</p>
+            </div>
+          </div>
+          <p class="iot-text-content" style="margin-top: 1rem; font-size: 0.88rem; color: var(--text-muted);"><i class="fa-solid fa-circle-info"></i> The data-log interface supports multiple pages using Previous and Next pagination buttons.</p>
+        </div>
+
+        <!-- 02 — KEY CONCEPTS -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-brain"></i> Key Concepts</h3>
+          <div class="iot-components-grid">
+            <div class="iot-component-card">
+              <i class="fa-solid fa-database comp-icon"></i>
+              <h4>Data Logging</h4>
+              <p>Instead of keeping only the latest sensor reading, the system stores timestamped measurements so previous conditions can be reviewed later.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-sliders comp-icon"></i>
+              <h4>Light Threshold</h4>
+              <p>The measured light value is compared with a predefined threshold to determine whether the environment is considered dark or bright.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-hand comp-icon"></i>
+              <h4>Manual Mode</h4>
+              <p>In manual operation, the user directly controls the bulb from the dashboard.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-robot comp-icon"></i>
+              <h4>Automatic Mode</h4>
+              <p>In automatic operation, the bulb state is determined using the light reading and the configured threshold.</p>
+            </div>
+            <div class="iot-component-card">
+              <i class="fa-solid fa-file-csv comp-icon"></i>
+              <h4>CSV Export</h4>
+              <p>The recorded data can be converted into a CSV file, allowing the information to be opened and analyzed using spreadsheet software.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 03 — SYSTEM ARCHITECTURE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-sitemap"></i> System Architecture</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">End-to-End System Architecture & Dual Control Flow:</p>
+          
+          <h4 style="margin-top: 1rem; font-size: 0.95rem; color: var(--accent-cyan);"><i class="fa-solid fa-database"></i> 1. Telemetry Data Pipeline & Export Path</h4>
+          <div class="iot-flow-diagram" style="margin-top: 0.75rem;">
+            <div class="iot-flow-node">
+              <div class="flow-step-badge">SENSORS</div>
+              <h4>DHT11 + LDR</h4>
+              <p>Environmental sensing</p>
+            </div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node">
+              <div class="flow-step-badge">MCU</div>
+              <h4>ESP32</h4>
+              <p>Read sensor values</p>
+            </div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node highlight-broker">
+              <div class="flow-step-badge">CLOUD</div>
+              <h4>Firebase</h4>
+              <p>Live Data + History</p>
+            </div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node">
+              <div class="flow-step-badge">WEB UI</div>
+              <h4>Dashboard</h4>
+              <p>Monitoring interface</p>
+            </div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node">
+              <div class="flow-step-badge">LOG</div>
+              <h4>Data Log</h4>
+              <p>Historical table</p>
+            </div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node highlight-output">
+              <div class="flow-step-badge">FILE</div>
+              <h4>CSV Export</h4>
+              <p>Spreadsheet file</p>
+            </div>
+          </div>
+
+          <h4 style="margin-top: 1.75rem; font-size: 0.95rem; color: var(--accent-cyan);"><i class="fa-solid fa-route"></i> 2. Dual Control Paths (Manual vs Automatic)</h4>
+          <div class="dual-mode-grid" style="margin-top: 0.75rem;">
+            <div class="mode-card manual-card">
+              <span class="mode-badge-tag"><i class="fa-solid fa-user"></i> MANUAL CONTROL PATH</span>
+              <p class="iot-text-content" style="font-size: 0.88rem; margin-bottom: 1rem;">User &rarr; Dashboard &rarr; Command &rarr; ESP32 &rarr; Relay &rarr; Bulb</p>
+              <div class="iot-flow-diagram" style="padding: 0.5rem 0;">
+                <div class="iot-flow-node"><p>User</p></div>
+                <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="iot-flow-node"><p>Dashboard</p></div>
+                <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="iot-flow-node"><p>Relay</p></div>
+                <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="iot-flow-node"><p>Bulb</p></div>
+              </div>
+            </div>
+
+            <div class="mode-card auto-card">
+              <span class="mode-badge-tag"><i class="fa-solid fa-robot"></i> AUTOMATIC CONTROL PATH</span>
+              <p class="iot-text-content" style="font-size: 0.88rem; margin-bottom: 1rem;">LDR &rarr; Threshold &rarr; ESP32 &rarr; Relay &rarr; Bulb</p>
+              <div class="iot-flow-diagram" style="padding: 0.5rem 0;">
+                <div class="iot-flow-node"><p>LDR</p></div>
+                <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="iot-flow-node"><p>Threshold</p></div>
+                <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="iot-flow-node"><p>ESP32</p></div>
+                <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="iot-flow-node"><p>Relay</p></div>
+                <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="iot-flow-node"><p>Bulb</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 04 — DATA LOGGING -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-clock-rotate-left"></i> Historical Data Logging</h3>
+          <p class="iot-text-content">Each reading is stored together with its timestamp, allowing the system to maintain a history instead of displaying only the current values.</p>
+          
+          <h4 style="margin-top: 1.25rem; font-size: 0.95rem; color: var(--accent-cyan);"><i class="fa-solid fa-table"></i> Logged Data Structure</h4>
+          <div class="iot-table-wrapper" style="margin-top: 0.75rem;">
+            <table class="iot-spec-table">
+              <thead>
+                <tr>
+                  <th>TIMESTAMP</th>
+                  <th>TEMPERATURE</th>
+                  <th>HUMIDITY</th>
+                  <th>LIGHT</th>
+                  <th>BULB STATE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2026-09-28 14:15:02</td>
+                  <td>26.4 &deg;C</td>
+                  <td>58%</td>
+                  <td>412 Lux</td>
+                  <td><span class="badge badge-outline" style="color:#ef4444; border-color:rgba(239,68,68,0.4);">OFF</span></td>
+                </tr>
+                <tr>
+                  <td>2026-09-28 14:20:18</td>
+                  <td>26.8 &deg;C</td>
+                  <td>57%</td>
+                  <td>185 Lux</td>
+                  <td><span class="badge badge-outline" style="color:#22c55e; border-color:rgba(34,197,94,0.4);">ON</span></td>
+                </tr>
+                <tr>
+                  <td>2026-09-28 14:25:44</td>
+                  <td>27.2 &deg;C</td>
+                  <td>56%</td>
+                  <td>140 Lux</td>
+                  <td><span class="badge badge-outline" style="color:#22c55e; border-color:rgba(34,197,94,0.4);">ON</span></td>
+                </tr>
+                <tr>
+                  <td>2026-09-28 14:31:10</td>
+                  <td>26.9 &deg;C</td>
+                  <td>58%</td>
+                  <td>520 Lux</td>
+                  <td><span class="badge badge-outline" style="color:#ef4444; border-color:rgba(239,68,68,0.4);">OFF</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination-bar">
+            <button class="btn btn-outline-sm"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+            <span class="badge badge-outline" style="padding: 0.4rem 0.8rem;">Page 1</span>
+            <button class="btn btn-outline-sm">Next <i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+        <!-- 05 — MANUAL & AUTOMATIC CONTROL -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-toggle-on"></i> Dual Control Modes</h3>
+          <div class="dual-mode-grid">
+            <div class="mode-card manual-card">
+              <span class="mode-badge-tag"><i class="fa-solid fa-hand"></i> MANUAL MODE</span>
+              <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Manual Operation</h4>
+              <p class="iot-text-content" style="font-size: 0.9rem;">Manual mode gives the user direct control over the bulb through the dashboard. The bulb remains under user control rather than being automatically determined by the light sensor.</p>
+            </div>
+            <div class="mode-card auto-card">
+              <span class="mode-badge-tag"><i class="fa-solid fa-robot"></i> AUTOMATIC MODE</span>
+              <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Automatic Automation</h4>
+              <p class="iot-text-content" style="font-size: 0.9rem;">Automatic mode uses the LDR reading to determine the lighting condition. The measured value is compared with the configured threshold, and the ESP32 uses the result to determine the required bulb state.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 06 — AUTOMATION LOGIC -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-bolt"></i> Light-Based Automation</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">The automatic mode allows the lighting response to be determined from the ambient light level rather than requiring continuous manual input.</p>
+          <div class="iot-flow-diagram">
+            <div class="iot-flow-node"><div class="flow-step-badge">INPUT</div><h4>LDR Reading</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node"><div class="flow-step-badge">COMPARE</div><h4>Threshold Logic</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node highlight-broker"><div class="flow-step-badge">STATE</div><h4>Determine Dark / Bright</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node"><div class="flow-step-badge">DECISION</div><h4>Automatic Bulb Decision</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node highlight-output"><div class="flow-step-badge">ACTUATION</div><h4>Relay Output</h4></div>
+          </div>
+        </div>
+
+        <!-- 07 — DATA EXPORT -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-file-export"></i> CSV Data Export</h3>
+          <p class="iot-text-content">The historical readings collected by the system can be exported as a CSV file. This makes the logged information accessible outside the dashboard and allows it to be opened using spreadsheet software.</p>
+          <div class="iot-flow-diagram" style="margin-top: 0.75rem;">
+            <div class="iot-flow-node"><div class="flow-step-badge">SOURCE</div><h4>Firebase History</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node"><div class="flow-step-badge">VIEW</div><h4>Dashboard Data Log</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node highlight-broker"><div class="flow-step-badge">ACTION</div><h4>Export</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node"><div class="flow-step-badge">FILE</div><h4>CSV File</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node highlight-output"><div class="flow-step-badge">ANALYSIS</div><h4>Spreadsheet</h4></div>
+          </div>
+          <div class="iot-placeholder-area" style="margin-top: 1.5rem; min-height: 140px;">
+            <i class="fa-solid fa-file-csv placeholder-big-icon"></i>
+            <p>[ CSV EXPORT DEMONSTRATION — OPTIONAL MEDIA ]</p>
+          </div>
+        </div>
+
+        <!-- 08 — HARDWARE & SOFTWARE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-microchip"></i> Hardware & Software</h3>
+          <div class="iot-components-grid">
+            <div class="iot-component-card"><i class="fa-solid fa-microchip comp-icon"></i><h4>ESP32 Development Board</h4><p>Main controller responsible for sensor reading, decision-making, Firebase communication, and relay control.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-temperature-high comp-icon"></i><h4>Temperature / Humidity Sensor</h4><p>Used to obtain environmental temperature and humidity readings.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-sun comp-icon"></i><h4>LDR</h4><p>Used to detect the ambient light level.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-toggle-on comp-icon"></i><h4>Relay Module + Bulb</h4><p>Used as the physical lighting output.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-fire comp-icon"></i><h4>Firebase</h4><p>Used for cloud data storage and communication with the dashboard.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-gauge-high comp-icon"></i><h4>IoT Dashboard</h4><p>Provides the monitoring interface, data log, control modes, and export functionality.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-table comp-icon"></i><h4>Spreadsheet Software</h4><p>Used to open the exported CSV data.</p></div>
+          </div>
+        </div>
+
+        <!-- 09 — DASHBOARD DATA LOG SCREENSHOT -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-table-list"></i> Data Log Interface</h3>
+          <p class="iot-text-content" style="margin-bottom: 1rem;">The dashboard provides a dedicated data-log view where previously recorded measurements can be reviewed. The table contains timestamp information together with the environmental readings and bulb state.</p>
+          <div class="iot-evidence-card" style="max-width: 800px; margin: 0 auto;">
+            <div class="iot-evidence-img-wrapper">
+              <span class="iot-evidence-badge">Data Log Screenshot</span>
+              <img src="images/iot/task-5/Screenshot 2026-09-28 143624.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" alt="Data Log Interface" class="iot-evidence-img">
+              <div class="iot-placeholder-area" style="display: none; width: 100%; min-height: 240px;">
+                <i class="fa-solid fa-image placeholder-big-icon"></i>
+                <p>[ DATA LOG SCREENSHOT — UPLOAD LATER ]</p>
+              </div>
+            </div>
+            <div class="iot-evidence-caption" style="text-align: center;">Data log interface showing recorded IoT measurements with pagination.</div>
+          </div>
+        </div>
+
+        <!-- 10 — EVIDENCE & VISUAL VERIFICATION -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-camera"></i> Evidence & Visual Verification</h3>
+          <div class="iot-evidence-gallery">
+            <div class="iot-evidence-card">
+              <div class="iot-evidence-img-wrapper">
+                <span class="iot-evidence-badge">IMAGE 01: Data Log Interface</span>
+                <img src="images/iot/task-5/Screenshot 2026-09-28 143624.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" alt="Data Log Interface" class="iot-evidence-img">
+                <div class="iot-placeholder-area" style="display: none; width: 100%; min-height: 220px;"><i class="fa-solid fa-image placeholder-big-icon"></i><p>[ IMAGE WILL BE UPLOADED LATER ]</p></div>
+              </div>
+              <div class="iot-evidence-caption">Historical IoT readings displayed through the dashboard data-log interface.</div>
+            </div>
+            <div class="iot-evidence-card">
+              <div class="iot-evidence-img-wrapper">
+                <span class="iot-evidence-badge">IMAGE 02: Firebase Authentication</span>
+                <img src="images/iot/task-5/Screenshot 2026-09-28 142546.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" alt="Firebase Authentication" class="iot-evidence-img">
+                <div class="iot-placeholder-area" style="display: none; width: 100%; min-height: 220px;"><i class="fa-solid fa-image placeholder-big-icon"></i><p>[ IMAGE WILL BE UPLOADED LATER ]</p></div>
+              </div>
+              <div class="iot-evidence-caption">Firebase Authentication console showing registered users.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 11 — PROJECT DEMONSTRATION VIDEOS -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-video"></i> System Demonstration Videos</h3>
+          <div class="dual-mode-grid" style="margin-bottom: 0;">
+            <div class="iot-video-featured-card" style="margin-bottom: 0;">
+              <div class="iot-video-wrapper">
+                <span class="iot-evidence-badge" style="top: 1rem; left: 1rem; right: auto;"><i class="fa-solid fa-film"></i> Demonstration Video 01</span>
+                <video controls class="iot-evidence-video">
+                  <source src="images/iot/task-5/WhatsApp Video 2026-09-28 at 4.12.38 PM.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div class="iot-evidence-caption" style="margin-top: 0.75rem;"><i class="fa-solid fa-play"></i> Demonstration 01: ESP32 telemetry, real-time logging & monitoring.</div>
+            </div>
+            <div class="iot-video-featured-card" style="margin-bottom: 0;">
+              <div class="iot-video-wrapper">
+                <span class="iot-evidence-badge" style="top: 1rem; left: 1rem; right: auto;"><i class="fa-solid fa-film"></i> Demonstration Video 02</span>
+                <video controls class="iot-evidence-video">
+                  <source src="images/iot/task-5/WhatsApp Video 2026-09-28 at 4.12.49 PM.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div class="iot-evidence-caption" style="margin-top: 0.75rem;"><i class="fa-solid fa-play"></i> Demonstration 02: Dual control mode switching & CSV data export.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 12 — SETUP & CONFIGURATION -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-list-check"></i> Setup & Configuration</h3>
+          <div class="iot-steps-timeline">
+            <div class="iot-step-card"><div class="step-card-num">STEP 01</div><div class="step-card-body"><p>Sensor readings are collected by the ESP32.</p></div></div>
+            <div class="iot-step-card"><div class="step-card-num">STEP 02</div><div class="step-card-body"><p>Each reading is associated with a time and stored as historical data.</p></div></div>
+            <div class="iot-step-card"><div class="step-card-num">STEP 03</div><div class="step-card-body"><p>The dashboard displays the stored readings in the Data Log section.</p></div></div>
+            <div class="iot-step-card"><div class="step-card-num">STEP 04</div><div class="step-card-body"><p>The user can select manual or automatic bulb control.</p></div></div>
+            <div class="iot-step-card"><div class="step-card-num">STEP 05</div><div class="step-card-body"><p>Automatic mode compares the LDR reading against the configured threshold.</p></div></div>
+            <div class="iot-step-card"><div class="step-card-num">STEP 06</div><div class="step-card-body"><p>The logged information can be exported as a CSV file.</p></div></div>
+          </div>
+        </div>
+
+        <!-- 13 — SYSTEM WORKFLOW -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-network-wired"></i> System Workflow</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">Full-Page Visual System Workflow Diagram:</p>
+          <div class="iot-flow-diagram">
+            <div class="iot-flow-node"><div class="flow-step-badge">1. SENSORS</div><h4>DHT11 + LDR</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node"><div class="flow-step-badge">2. MCU</div><h4>ESP32</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node highlight-broker"><div class="flow-step-badge">3. BAAS</div><h4>Firebase</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node"><div class="flow-step-badge">4. STORE</div><h4>History</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node"><div class="flow-step-badge">5. UI</div><h4>Dashboard</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node"><div class="flow-step-badge">6. LOG</div><h4>Data Log</h4></div>
+            <div class="iot-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="iot-flow-node highlight-output"><div class="flow-step-badge">7. EXPORT</div><h4>CSV Export</h4></div>
+          </div>
+        </div>
+
+        <!-- 14 — LIMITATIONS -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-triangle-exclamation"></i> Current Limitations</h3>
+          <div class="iot-components-grid">
+            <div class="iot-component-card"><i class="fa-solid fa-cloud comp-icon"></i><h4>Firebase Usage</h4><p>The free Firebase plan has usage limits, so a continuously growing history may eventually require data cleanup or a higher usage plan.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-gauge-simple-high comp-icon"></i><h4>Sensor Accuracy</h4><p>The DHT11 provides basic environmental measurements, so the readings are more suitable for monitoring trends than precision measurement.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-sliders comp-icon"></i><h4>LDR Threshold</h4><p>Dark/bright classification depends on the selected threshold and the physical placement of the LDR.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-wifi comp-icon"></i><h4>Internet Dependency</h4><p>The system relies on Wi-Fi connectivity, and readings are not stored locally on the ESP32 when the connection is unavailable.</p></div>
+          </div>
+        </div>
+
+        <!-- 15 — FUTURE IMPROVEMENTS -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-rocket"></i> Future Improvements</h3>
+          <div class="iot-components-grid">
+            <div class="iot-component-card"><i class="fa-solid fa-chart-line comp-icon"></i><h4>01 History Visualization</h4><p>Convert the historical data table into interactive charts for easier trend analysis.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-bell comp-icon"></i><h4>02 Alerts</h4><p>Introduce notifications when a sensor value crosses a defined limit.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-sd-card comp-icon"></i><h4>03 Offline Data Buffering</h4><p>Temporarily store readings on the ESP32 during Wi-Fi interruptions and upload them once connectivity returns.</p></div>
+          </div>
+        </div>
+
+        <!-- 16 — WHAT I LEARNED -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-graduation-cap"></i> What I Learned</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">This stage helped me understand the importance of storing and reusing IoT data instead of only displaying live values. I learned how historical records can be organized into a data log, how sensor thresholds can be used for automation, and how cloud data can be exported for use outside the dashboard.</p>
+          <div class="iot-concepts-grid">
+            <div class="iot-component-card"><i class="fa-solid fa-database comp-icon"></i><h4>Data Logging</h4><p>Keeping historical sensor information.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-robot comp-icon"></i><h4>Automation</h4><p>Using sensor conditions to control hardware.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-hand comp-icon"></i><h4>Manual Control</h4><p>Allowing the user to directly operate the output.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-file-csv comp-icon"></i><h4>Data Export</h4><p>Making IoT information available as a CSV file.</p></div>
+            <div class="iot-component-card"><i class="fa-solid fa-cloud-gear comp-icon"></i><h4>Cloud Data Management</h4><p>Working with stored historical information rather than only live readings.</p></div>
+          </div>
+        </div>
+
+        <!-- 17 — REFLECTION -->
+        <div class="iot-detail-block full-width reflection-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-quote-left"></i> Reflection</h3>
+          <p class="iot-text-content reflection-text">"The final stage shifted my focus from simply monitoring live sensor values to managing the information collected over time. Storing historical readings made the system more useful because previous conditions could be reviewed later. CSV export also showed how IoT data can be taken beyond the dashboard and used for further analysis. Implementing both manual and automatic modes helped me understand how control decisions can be shared between the user and the system."</p>
+        </div>
+
+      </div>
+
+      <!-- PORTFOLIO TASK NAVIGATION & FOOTER -->
+      <div class="iot-task-nav">
+        <button class="btn btn-outline-sm" onclick="openIoTDetails(4)">
+          <i class="fa-solid fa-arrow-left"></i> Previous Task
+        </button>
+        <span class="badge badge-primary">Task 05</span>
+        <button class="btn btn-outline-sm" disabled style="opacity: 0.5;">
           Next Task <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>

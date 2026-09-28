@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT Works — Task 02: Adafruit IO Dashboard & MQTT | Rohith Karthikeyan</title>
+  <meta name="description" content="Detailed engineering report for IoT Task 02 - Adafruit IO Dashboard & MQTT Protocol, ESP32 Cloud Telemetry, and 5V Relay Actuation by Rohith Karthikeyan.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <style>
+    body {
+      padding-top: 2rem;
+      padding-bottom: 4rem;
+    }
+    .standalone-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .back-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-glass);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Engineering Background Container -->
+  <div id="bg-system-container" class="bg-system-container cyber-mode">
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    <div class="mechatronics-scanbeam"></div>
+  </div>
+
+  <main class="standalone-container">
+    
+    <!-- Top Navigation Header -->
+    <div class="back-nav-bar">
+      <a href="index.html#iot-works" class="btn btn-outline-sm">
+        <i class="fa-solid fa-arrow-left"></i> Back to Main Portfolio
+      </a>
+      <div class="iot-task-badge-nav">
+        <span class="badge badge-primary"><i class="fa-solid fa-cloud"></i> EXPERIMENT 02</span>
+      </div>
+    </div>
+
+    <!-- Details Glass Card Container -->
+    <div class="iot-details-view glass-card" style="display: block; margin-top: 0;">
+      
+      <!-- HERO SECTION -->
+      <div class="iot-detail-title-section">
+        <div class="editorial-annotation"><span class="editorial-num">TASK 02</span> <span class="editorial-slash">/</span> IoT / Cloud Systems / ESP32 / MQTT Protocol</div>
+        <h2 class="iot-detail-main-title">Adafruit IO Dashboard & MQTT</h2>
+        <div class="iot-detail-subtitle">Cloud-Connected Publish/Subscribe Actuator Control over MQTT</div>
+        <p class="iot-detail-lead-desc">Decoupling clients and microcontrollers using publish/subscribe MQTT cloud architecture to control an AC relay on GPIO 23.</p>
+        
+        <div class="iot-detail-tags">
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> ESP32</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> MQTT</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> Adafruit IO</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> Wi-Fi</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> 5V Relay</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> GPIO</span>
+        </div>
+      </div>
+
+      <!-- METADATA BANNER -->
+      <div class="iot-meta-bar">
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Task</span>
+          <span class="iot-meta-value">IoT Works — Task 02</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Microcontroller</span>
+          <span class="iot-meta-value">ESP32</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Protocol</span>
+          <span class="iot-meta-value">MQTT (Port 1883)</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Cloud Host</span>
+          <span class="iot-meta-value">Adafruit IO</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Actuation Target</span>
+          <span class="iot-meta-value">5V Relay Module (GPIO 23)</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Architecture</span>
+          <span class="iot-meta-value">Publish / Subscribe</span>
+        </div>
+      </div>
+
+      <div class="iot-detail-grid">
+        <!-- 1. OVERVIEW -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-eye"></i> 1. Overview</h3>
+          <p class="iot-text-content">Task 2 extended the basic ESP32 control architecture into a cloud-connected IoT system. Instead of a browser communicating directly with the ESP32's local IP address, the ESP32 connects to Adafruit IO using the lightweight MQTT protocol. The cloud dashboard publishes command values to an Adafruit IO feed, and the ESP32 subscribes to that feed, listening for updates and controlling a 5V relay module connected to GPIO 23.</p>
+        </div>
+
+        <!-- 2. CONCEPTS & MQTT ARCHITECTURE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-diagram-project"></i> 2. Concepts & MQTT Architecture</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">MQTT (Message Queuing Telemetry Transport) is a lightweight publish/subscribe protocol operating over TCP/IP.</p>
+          <div class="iot-table-wrapper">
+            <table class="iot-spec-table">
+              <thead>
+                <tr>
+                  <th>Element</th>
+                  <th>Role in this Project</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Adafruit IO Dashboard</strong></td>
+                  <td>Publisher — Publishes ON/OFF commands to the relay feed</td>
+                </tr>
+                <tr>
+                  <td><strong>Adafruit IO MQTT Broker</strong></td>
+                  <td>Broker — Receives published messages and routes them to active subscribers</td>
+                </tr>
+                <tr>
+                  <td><strong>ESP32 Microcontroller</strong></td>
+                  <td>Subscriber — Subscribes to the /feeds/relay feed on port 1883</td>
+                </tr>
+                <tr>
+                  <td><strong>Relay Feed</strong></td>
+                  <td>MQTT Topic — Named data channel carrying commands (1/0 or ON/OFF)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. SYSTEM DESIGN -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-sitemap"></i> 3. System Design</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">End-to-end telemetry and command flow pipeline across cloud MQTT broker and ESP32 GPIO actuation:</p>
+          <div class="iot-system-flow-wrapper">
+            <div class="iot-flow-nodes-container">
+              <div class="iot-sys-node">
+                <div class="sys-node-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                <div>
+                  <div class="sys-node-title">Adafruit IO Web Dashboard</div>
+                  <div class="sys-node-desc">User Toggle Control Interface</div>
+                </div>
+              </div>
+
+              <div class="iot-sys-arrow">
+                <span class="arrow-text">Publish command (1 / 0)</span>
+                <i class="fa-solid fa-arrow-down"></i>
+              </div>
+
+              <div class="iot-sys-node highlight-broker">
+                <div class="sys-node-icon"><i class="fa-solid fa-cloud"></i></div>
+                <div>
+                  <div class="sys-node-title">Adafruit IO MQTT Broker</div>
+                  <div class="sys-node-desc">io.adafruit.com:1883</div>
+                </div>
+              </div>
+
+              <div class="iot-sys-arrow">
+                <span class="arrow-text">Relay Feed Topic (user/feeds/relay)</span>
+                <i class="fa-solid fa-arrow-down"></i>
+              </div>
+
+              <div class="iot-sys-node">
+                <div class="sys-node-icon"><i class="fa-solid fa-microchip"></i></div>
+                <div>
+                  <div class="sys-node-title">ESP32 MQTT Subscriber</div>
+                  <div class="sys-node-desc">Listens for incoming feed payload</div>
+                </div>
+              </div>
+
+              <div class="iot-sys-arrow">
+                <span class="arrow-text">GPIO 23 (HIGH / LOW)</span>
+                <i class="fa-solid fa-arrow-down"></i>
+              </div>
+
+              <div class="iot-sys-node">
+                <div class="sys-node-icon"><i class="fa-solid fa-toggle-on"></i></div>
+                <div>
+                  <div class="sys-node-title">5V Relay Module</div>
+                  <div class="sys-node-desc">Optocoupler isolation switching interface</div>
+                </div>
+              </div>
+
+              <div class="iot-sys-arrow">
+                <span class="arrow-text">High Voltage AC Circuit</span>
+                <i class="fa-solid fa-arrow-down"></i>
+              </div>
+
+              <div class="iot-sys-node highlight-output">
+                <div class="sys-node-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                <div>
+                  <div class="sys-node-title">AC Load / Bulb</div>
+                  <div class="sys-node-desc">Physical Light Switching</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. HARDWARE & SOFTWARE SPECIFICATIONS -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-list-check"></i> 4. Hardware & Software Specifications</h3>
+          <div class="iot-table-wrapper">
+            <table class="iot-spec-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Role & Specification</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>ESP32 Board</strong></td><td>Wi-Fi controller and MQTT subscriber</td></tr>
+                <tr><td><strong>5V Relay Module</strong></td><td>Optocoupler isolation switching interface driven by GPIO 23</td></tr>
+                <tr><td><strong>Bulb / Load</strong></td><td>Physical output connected across relay terminals</td></tr>
+                <tr><td><strong>WiFi.h</strong></td><td>ESP32 network connection library</td></tr>
+                <tr><td><strong>Adafruit_MQTT.h</strong></td><td>MQTT protocol handling and feed subscription management</td></tr>
+                <tr><td><strong>Adafruit IO</strong></td><td>Cloud MQTT broker and dashboard host</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 5. WIRING / SETUP -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-plug"></i> 5. Wiring / Setup</h3>
+          
+          <div class="iot-wiring-grid">
+            <div class="iot-wiring-card">
+              <div class="wiring-from">ESP32 GPIO 23</div>
+              <div class="wiring-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="wiring-to">Relay IN</div>
+              <div class="wiring-badge">Signal</div>
+            </div>
+            <div class="iot-wiring-card">
+              <div class="wiring-from">ESP32 GND</div>
+              <div class="wiring-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="wiring-to">Relay GND</div>
+              <div class="wiring-badge">Ground</div>
+            </div>
+            <div class="iot-wiring-card">
+              <div class="wiring-from">ESP32 5V/VCC</div>
+              <div class="wiring-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="wiring-to">Relay VCC</div>
+              <div class="wiring-badge">Power (5V)</div>
+            </div>
+            <div class="iot-wiring-card ac-warning-card">
+              <div class="wiring-from">Relay COM</div>
+              <div class="wiring-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="wiring-to">AC Live In</div>
+              <div class="wiring-badge">AC Mains (High Voltage)</div>
+            </div>
+            <div class="iot-wiring-card ac-warning-card">
+              <div class="wiring-from">Relay NO</div>
+              <div class="wiring-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="wiring-to">Bulb Live Terminal</div>
+              <div class="wiring-badge">AC Mains Load</div>
+            </div>
+          </div>
+
+          <div class="iot-safety-notice">
+            <i class="fa-solid fa-triangle-exclamation safety-icon"></i>
+            <div>
+              <strong>AC HIGH VOLTAGE SAFETY NOTICE:</strong>
+              <span>Relay COM and NO terminals switch AC mains power. High voltage live lines must be insulated with optocoupler isolation to ensure low-voltage ESP32 protection and safe operation.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. IMPLEMENTATION -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-code"></i> 6. Implementation</h3>
+          <p class="iot-text-content" style="margin-bottom: 1.25rem;">The code configures an Adafruit_MQTT_Client with server credentials and instantiates an Adafruit_MQTT_Subscribe relayFeed. Inside loop(), the ESP32 calls mqtt.readSubscription(5000) to listen for incoming feed packets. When data arrives, it parses the payload string: if "1" or "ON", GPIO 23 is set HIGH; if "0" or "OFF", GPIO 23 is set LOW.</p>
+          
+          <div class="iot-code-header">
+            <h4 class="iot-block-title"><i class="fa-solid fa-terminal"></i> Source Code Viewer</h4>
+          </div>
+          <div class="iot-code-viewer">
+            <pre><code>[ CODE WILL BE ADDED HERE ]</code></pre>
+          </div>
+        </div>
+
+        <!-- 7. CONFIGURATION PROCEDURE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-sliders"></i> 7. Configuration Procedure</h3>
+          <div class="iot-steps-timeline">
+            <div class="iot-step-card">
+              <div class="step-card-num">01</div>
+              <div class="step-card-body"><p>Create an account on Adafruit IO and obtain your AIO Key.</p></div>
+            </div>
+            <div class="iot-step-card">
+              <div class="step-card-num">02</div>
+              <div class="step-card-body"><p>Create an MQTT feed named relay.</p></div>
+            </div>
+            <div class="iot-step-card">
+              <div class="step-card-num">03</div>
+              <div class="step-card-body"><p>Build an Adafruit IO Dashboard with a Toggle Switch block tied to the relay feed.</p></div>
+            </div>
+            <div class="iot-step-card">
+              <div class="step-card-num">04</div>
+              <div class="step-card-body"><p>Flash the ESP32 with your Wi-Fi and Adafruit IO credentials and verify MQTT connection in Serial Monitor.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. EVIDENCE & VISUAL VERIFICATION -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-circle-play"></i> 8. Video Demonstration</h3>
+          
+          <!-- Featured Video Player Card -->
+          <div class="iot-video-featured-card" style="margin-bottom: 0;">
+            <div class="iot-video-wrapper">
+              <span class="iot-evidence-badge" style="top: 1rem; left: 1rem; right: auto;"><i class="fa-solid fa-video"></i> Video Demonstration</span>
+              <video controls autoplay loop muted playsinline class="iot-evidence-video">
+                <source src="images/iot/task-2/1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="iot-evidence-caption" style="margin-top: 0.75rem;"><i class="fa-solid fa-play"></i> Demonstration Video: ESP32 Adafruit IO MQTT AC Relay Actuation in action.</div>
+          </div>
+        </div>
+
+        <!-- 9. CHALLENGES & FIXES -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-wrench"></i> 9. Challenges & Fixes</h3>
+          <div class="iot-challenge-container">
+            <div class="iot-challenge-card">
+              <div class="challenge-side">
+                <div class="challenge-tag"><i class="fa-solid fa-circle-exclamation"></i> Challenge</div>
+                <p>Occasional MQTT socket disconnections occurred during idle periods due to router timeout rules.</p>
+              </div>
+              <div class="solution-side">
+                <div class="solution-tag"><i class="fa-solid fa-circle-check"></i> Fix / Solution</div>
+                <p>Implemented automatic keep-alive pinging mqtt.ping() and an auto-reconnect function MQTT_connect() inside the main execution loop.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10. REFLECTION -->
+        <div class="iot-detail-block full-width reflection-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-brain"></i> 10. Reflection</h3>
+          <p class="iot-text-content reflection-text">Task 2 taught me why MQTT is useful for IoT systems. In Task 1 the browser had to know the ESP32's local address. With MQTT, the ESP32 and the dashboard communicate through a broker and a feed. I learned the roles of publisher, subscriber, broker and feed, and I saw how a cloud message can be converted into a physical relay action.</p>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="iot-detail-footer" style="margin-top: 2.5rem;">
+        <a href="index.html#iot-works" class="btn btn-primary">
+          <i class="fa-solid fa-arrow-left"></i> Back to Main Portfolio
+        </a>
+      </div>
+
+    </div>
+  </main>
+</body>
+</html>

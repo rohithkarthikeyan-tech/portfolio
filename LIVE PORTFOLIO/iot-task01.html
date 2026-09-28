@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT Works — Task 01: ESP32 LED Blink & Serial Monitor | Rohith Karthikeyan</title>
+  <meta name="description" content="Detailed engineering report for IoT Task 01 - ESP32 LED Blink & Serial Monitor telemetry by Rohith Karthikeyan.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <style>
+    body {
+      padding-top: 2rem;
+      padding-bottom: 4rem;
+    }
+    .standalone-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .back-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-glass);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Engineering Background Container -->
+  <div id="bg-system-container" class="bg-system-container cyber-mode">
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    <div class="mechatronics-scanbeam"></div>
+  </div>
+
+  <main class="standalone-container">
+    
+    <!-- Top Navigation Header -->
+    <div class="back-nav-bar">
+      <a href="index.html#iot-works" class="btn btn-outline-sm">
+        <i class="fa-solid fa-arrow-left"></i> Back to Main Portfolio
+      </a>
+      <div class="iot-task-badge-nav">
+        <span class="badge badge-primary"><i class="fa-solid fa-microchip"></i> EXPERIMENT 01</span>
+      </div>
+    </div>
+
+    <!-- Details Glass Card Container -->
+    <div class="iot-details-view glass-card" style="display: block; margin-top: 0;">
+      
+      <!-- HERO SECTION -->
+      <div class="iot-detail-title-section">
+        <div class="editorial-annotation"><span class="editorial-num">TASK 01</span> <span class="editorial-slash">/</span> IoT / Embedded Hardware / ESP32 / GPIO Logic</div>
+        <h2 class="iot-detail-main-title">ESP32 LED Blink & Serial Monitor</h2>
+        <div class="iot-detail-subtitle">Basic Hardware Control, GPIO Logic, and Serial Telemetry</div>
+        <p class="iot-detail-lead-desc">GPIO pin configuration, digital output logic switching, serial UART communication, and timing loops using ESP32 microcontroller.</p>
+        
+        <div class="iot-detail-tags">
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> ESP32</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> GPIO</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> Serial UART</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> LED</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> C++</span>
+          <span class="badge badge-outline"><i class="fa-solid fa-tag"></i> Arduino IDE</span>
+        </div>
+      </div>
+
+      <!-- METADATA BANNER -->
+      <div class="iot-meta-bar">
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Task</span>
+          <span class="iot-meta-value">IoT Works — Task 01</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Microcontroller</span>
+          <span class="iot-meta-value">ESP32 Dev Module</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Interface</span>
+          <span class="iot-meta-value">Serial UART (CP2102)</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Baud Rate</span>
+          <span class="iot-meta-value">115200 baud</span>
+        </div>
+        <div class="iot-meta-item">
+          <span class="iot-meta-label">Actuation Target</span>
+          <span class="iot-meta-value">GPIO 2 (Onboard LED)</span>
+        </div>
+      </div>
+
+      <!-- GRID SECTION CONTENT -->
+      <div class="iot-detail-grid">
+        
+        <!-- 1. OVERVIEW -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-circle-info"></i> 1. Overview</h3>
+          <p class="iot-text-content">This initial experiment establishes the foundational workflow for working with the ESP32 microcontroller. The objective is to initialize General Purpose Input/Output (GPIO) pins, output high and low digital states to toggle an LED, and simultaneously transmit telemetry strings back to the host computer via serial UART communication at 115200 baud.</p>
+        </div>
+
+        <!-- 2. CONCEPTS & ARCHITECTURE -->
+        <div class="iot-detail-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-diagram-project"></i> 2. Core Concepts</h3>
+          <div class="table-responsive">
+            <table class="iot-spec-table">
+              <thead>
+                <tr>
+                  <th>Concept</th>
+                  <th>Function / Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>GPIO Output</strong></td>
+                  <td>Configures a hardware pin to output either 3.3V (HIGH) or 0V (LOW).</td>
+                </tr>
+                <tr>
+                  <td><strong>UART Serial</strong></td>
+                  <td>Transmits textual state updates over USB for debugging and status monitoring.</td>
+                </tr>
+                <tr>
+                  <td><strong>Baud Rate</strong></td>
+                  <td>Sets symbol transmission speed (115200 bits/sec) between ESP32 and host PC.</td>
+                </tr>
+                <tr>
+                  <td><strong>Non-blocking Delay</strong></td>
+                  <td>Foundation for managing hardware execution loops without freezing MCU registers.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. SYSTEM DESIGN & FLOW -->
+        <div class="iot-detail-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-route"></i> 3. System Architecture</h3>
+          <p class="iot-text-content mb-3">Data and signal path from code compilation to hardware actuation:</p>
+          <div class="iot-system-flow">
+            <div class="flow-step">
+              <div class="flow-icon"><i class="fa-solid fa-laptop-code"></i></div>
+              <div class="flow-label">Host PC / IDE</div>
+              <div class="flow-sub">Code Compilation</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-angle-right"></i></div>
+            <div class="flow-step">
+              <div class="flow-icon"><i class="fa-solid fa-cable-car"></i></div>
+              <div class="flow-label">USB UART</div>
+              <div class="flow-sub">115200 Baud</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-angle-right"></i></div>
+            <div class="flow-step">
+              <div class="flow-icon"><i class="fa-solid fa-microchip"></i></div>
+              <div class="flow-label">ESP32 Core</div>
+              <div class="flow-sub">GPIO 2 Control</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-angle-right"></i></div>
+            <div class="flow-step">
+              <div class="flow-icon"><i class="fa-solid fa-lightbulb"></i></div>
+              <div class="flow-label">LED Actuator</div>
+              <div class="flow-sub">Digital State HIGH/LOW</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. SPECIFICATIONS TABLE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-sliders"></i> 4. Specifications</h3>
+          <div class="table-responsive">
+            <table class="iot-spec-table">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value / Description</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Microcontroller</td>
+                  <td>ESP32 WROOM-32</td>
+                  <td>Dual-Core Tensilica LX6 @ 240MHz</td>
+                </tr>
+                <tr>
+                  <td>Target Output Pin</td>
+                  <td>GPIO 2</td>
+                  <td>Connected to onboard status LED</td>
+                </tr>
+                <tr>
+                  <td>Logic High Output</td>
+                  <td>3.3V DC</td>
+                  <td>Maximum source current 40mA per pin</td>
+                </tr>
+                <tr>
+                  <td>Serial Speed</td>
+                  <td>115200 Baud</td>
+                  <td>Hardware Serial UART 0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 5. WIRING & SETUP -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-plug"></i> 5. Wiring & Hardware Setup</h3>
+          <div class="iot-wiring-card">
+            <div class="iot-wiring-grid">
+              <div class="wiring-col">
+                <h4 class="wiring-subtitle"><i class="fa-solid fa-microchip"></i> ESP32 Pin Connections</h4>
+                <ul class="iot-pin-list">
+                  <li><span class="pin-tag pin-gpio">GPIO 2</span> <i class="fa-solid fa-arrow-right"></i> LED Anode (+) via 220Ω Resistor</li>
+                  <li><span class="pin-tag pin-gnd">GND</span> <i class="fa-solid fa-arrow-right"></i> LED Cathode (-) Ground Rail</li>
+                  <li><span class="pin-tag pin-vcc">Micro-USB</span> <i class="fa-solid fa-arrow-right"></i> 5V Power & Serial Interface</li>
+                </ul>
+              </div>
+              <div class="wiring-col">
+                <h4 class="wiring-subtitle"><i class="fa-solid fa-circle-check"></i> Verification Steps</h4>
+                <ul class="iot-pin-list">
+                  <li>Verify blue onboard LED blinks at 1 Hz (1 sec ON, 1 sec OFF).</li>
+                  <li>Open Serial Monitor in Arduino IDE set to 115200 baud.</li>
+                  <li>Observe live stream messages: <code>LED State: HIGH</code> / <code>LED State: LOW</code>.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. IMPLEMENTATION CODE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-code"></i> 6. Implementation Code</h3>
+          <div class="iot-code-wrapper">
+            <div class="iot-code-header">
+              <span class="iot-code-lang"><i class="fa-solid fa-file-code"></i> esp32_blink_serial.ino</span>
+            </div>
+            <pre class="iot-code-block"><code>// Task 01: ESP32 LED Blink & Serial Telemetry
+const int LED_PIN = 2; // Onboard LED on ESP32
+
+void setup() {
+  // Initialize serial communication at 115200 baud
+  Serial.begin(115200);
+  delay(500);
+  
+  // Configure GPIO pin as output
+  pinMode(LED_PIN, OUTPUT);
+  Serial.println("=== ESP32 Task 01 Initialized ===");
+}
+
+void loop() {
+  // Turn LED ON (3.3V)
+  digitalWrite(LED_PIN, HIGH);
+  Serial.println("Status: LED Turned ON [HIGH]");
+  delay(1000);
+
+  // Turn LED OFF (0V)
+  digitalWrite(LED_PIN, LOW);
+  Serial.println("Status: LED Turned OFF [LOW]");
+  delay(1000);
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- 7. CONFIGURATION TIMELINE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-list-check"></i> 7. Execution Steps</h3>
+          <div class="iot-timeline">
+            <div class="timeline-step">
+              <div class="step-num">01</div>
+              <div class="step-body">
+                <h4>Toolchain Setup</h4>
+                <p>Installed ESP32 board package in Arduino IDE and configured COM port for CP2102 driver.</p>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-num">02</div>
+              <div class="step-body">
+                <h4>Code Architecture</h4>
+                <p>Configured <code>pinMode(2, OUTPUT)</code> and initiated serial hardware communication at 115200 baud.</p>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-num">03</div>
+              <div class="step-body">
+                <h4>Firmware Flashing</h4>
+                <p>Uploaded C++ code to ESP32 board while holding the BOOT button during upload sequence.</p>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-num">04</div>
+              <div class="step-body">
+                <h4>Telemetry Validation</h4>
+                <p>Verified synchronized LED blinking and live state logs printed on Serial Monitor.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. VISUAL EVIDENCE -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-camera"></i> 8. Visual Evidence</h3>
+          <div class="iot-evidence-grid">
+            <div class="iot-evidence-card">
+              <div class="iot-evidence-img-wrapper">
+                <span class="iot-evidence-badge">Figure 1.1</span>
+                <img src="images/iot/task-1/1.jpeg" alt="Figure 1.1: Physical ESP32 hardware setup with GPIO pin wiring" class="iot-evidence-img">
+              </div>
+              <div class="iot-evidence-caption">Figure 1.1: Physical ESP32 hardware setup with GPIO pin wiring.</div>
+            </div>
+
+            <div class="iot-evidence-card">
+              <div class="iot-evidence-img-wrapper">
+                <span class="iot-evidence-badge">Figure 1.2</span>
+                <img src="images/iot/task-1/2.jpeg" alt="Figure 1.2: Real-time serial logs streaming from ESP32 UART" class="iot-evidence-img">
+              </div>
+              <div class="iot-evidence-caption">Figure 1.2: Real-time serial logs streaming from ESP32 UART.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. CHALLENGES & FIXES -->
+        <div class="iot-detail-block full-width">
+          <h3 class="iot-block-title"><i class="fa-solid fa-wrench"></i> 9. Challenges & Fixes</h3>
+          <div class="iot-challenge-container">
+            <div class="iot-challenge-card">
+              <div class="challenge-side">
+                <div class="challenge-tag"><i class="fa-solid fa-circle-exclamation"></i> Challenge</div>
+                <p>Garbled characters appearing in the Serial Monitor upon uploading code.</p>
+              </div>
+              <div class="solution-side">
+                <div class="solution-tag"><i class="fa-solid fa-circle-check"></i> Fix / Solution</div>
+                <p>Matched serial monitor dropdown baud rate to 115200 to match <code>Serial.begin(115200)</code> in firmware setup.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10. REFLECTION -->
+        <div class="iot-detail-block full-width reflection-block">
+          <h3 class="iot-block-title"><i class="fa-solid fa-brain"></i> 10. Reflection</h3>
+          <p class="iot-text-content reflection-text">Task 1 established the foundation for embedded programming with ESP32. Understanding GPIO pin modes and setting up serial telemetry communication forms the bedrock for building more complex sensor monitoring and cloud-connected IoT systems in subsequent experiments.</p>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="iot-detail-footer" style="margin-top: 2.5rem;">
+        <a href="index.html#iot-works" class="btn btn-primary">
+          <i class="fa-solid fa-arrow-left"></i> Back to Main Portfolio
+        </a>
+      </div>
+
+    </div>
+  </main>
+</body>
+</html>
