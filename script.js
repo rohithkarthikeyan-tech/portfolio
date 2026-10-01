@@ -2946,590 +2946,847 @@ function escapeHtml(str) {
                 Foreground Architectural Framing Girders, Floating Atmospheric Dust, 1.5s Reveal Sequence.
    ========================================================================== */
 
+const ENGINE_CONFIG = {
+  maxDpr: 2,
+  gridMajor: 100,
+  gridMinor: 20,
+  crossfadeSpeed: 0.05,
+
+  themes: {
+    dark: {
+      bg: '#0b0f19',
+      gridMajor: 'rgba(0, 242, 254, 0.14)',
+      gridMinor: 'rgba(0, 242, 254, 0.035)',
+      gridText: 'rgba(0, 242, 254, 0.35)',
+      primary: '#00f2fe',
+      secondary: '#4facfe',
+      accent: '#ff5e36',
+      warning: '#f59e0b',
+      text: '#f8fafc',
+      nodeLine: 'rgba(0, 242, 254, 0.22)',
+      glow: 'rgba(0, 242, 254, 0.25)'
+    },
+    light: {
+      bg: '#f1f5f9',
+      gridMajor: 'rgba(2, 132, 199, 0.18)',
+      gridMinor: 'rgba(2, 132, 199, 0.05)',
+      gridText: 'rgba(2, 132, 199, 0.45)',
+      primary: '#0284c7',
+      secondary: '#2563eb',
+      accent: '#ea580c',
+      warning: '#d97706',
+      text: '#0f172a',
+      nodeLine: 'rgba(2, 132, 199, 0.28)',
+      glow: 'rgba(2, 132, 199, 0.2)'
+    }
+  },
+
+  sectionScenes: {
+    'hero': 'gears',
+    'about': 'network',
+    'skills': 'network',
+    'experience': 'chassis',
+    'projects': 'cnc',
+    'protosem': 'protosem',
+    'iot-works': 'iot',
+    'contact': 'contact'
+  },
+
+  nodesMobile: 18,
+  nodesDesktop: 40,
+  mobileBreakpoint: 768
+};
+
 function initMechatronicsBackground() {
   const canvas = document.getElementById('mechatronics-bg-canvas');
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
-  let width = (canvas.width = window.innerWidth);
-  let height = (canvas.height = window.innerHeight);
+  let dpr = Math.min(window.devicePixelRatio || 1, ENGINE_CONFIG.maxDpr);
+  let width = 0;
+  let height = 0;
 
-  // Mouse, Camera & Motion State
-  let mouse = { x: width / 2, y: height / 2, targetX: width / 2, targetY: height / 2 };
-  let scrollY = window.scrollY;
-  let time = 0;
-  let revealProgress = 0; // 0 to 1 over 1.5s
+  function updateCanvasDimensions() {
+    dpr = Math.min(window.devicePixelRatio || 1, ENGINE_CONFIG.maxDpr);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.scale(dpr, dpr);
+  }
+  updateCanvasDimensions();
 
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isMobile = width < 768;
+  let isMobile = width < ENGINE_CONFIG.mobileBreakpoint;
+  let isTabVisible = true;
+  let prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  window.addEventListener('resize', () => {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
+  // Track Tab Visibility & Reduced Motion
+  document.addEventListener('visibilitychange', () => {
+    isTabVisible = !document.hidden;
   });
 
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+    prefersReducedMotion = e.matches;
+  });
+
+  window.addEventListener('resize', () => {
+    updateCanvasDimensions();
+    isMobile = width < ENGINE_CONFIG.mobileBreakpoint;
+  });
+
+  // State Management
+  const mouse = { x: width / 2, y: height / 2, targetX: width / 2, targetY: height / 2, active: false };
+  let currentActiveScene = 'gears';
+  const sceneNames = ['gears', 'network', 'chassis', 'cnc', 'protosem', 'iot', 'contact'];
+  const sceneWeights = { gears: 1, network: 0, chassis: 0, cnc: 0, protosem: 0, iot: 0, contact: 0 };
+  let time = 0;
+  let chassisProgress = 0;
+
+  // Mouse Listener
   window.addEventListener('mousemove', (e) => {
     mouse.targetX = e.clientX;
     mouse.targetY = e.clientY;
+    mouse.active = true;
+
+    // Update Spotlight Cursor Glow Element
+    const glowEl = document.getElementById('cursor-glow');
+    if (glowEl) {
+      glowEl.style.left = e.clientX + 'px';
+      glowEl.style.top = e.clientY + 'px';
+      glowEl.classList.add('active');
+    }
   });
 
-  window.addEventListener('scroll', () => {
-    scrollY = window.scrollY;
+  window.addEventListener('mouseleave', () => {
+    mouse.active = false;
+    const glowEl = document.getElementById('cursor-glow');
+    if (glowEl) glowEl.classList.remove('active');
   });
 
-  // Layer 1: Background Distant Monolith Pillars (Deep Atmosphere)
-  const numPillars = isMobile ? 4 : 8;
-  const pillars = [];
-  for (let i = 0; i < numPillars; i++) {
-    pillars.push({
-      xRatio: 0.05 + (i / (numPillars - 1)) * 0.9 + (Math.random() - 0.5) * 0.05,
-      widthRatio: 0.03 + Math.random() * 0.045,
-      heightRatio: 0.5 + Math.random() * 0.4,
-      zDepth: 0.2 + Math.random() * 0.4, // Depth scale
-      pulseOffset: Math.random() * Math.PI * 2,
-      hasLightBeacon: i % 2 === 0
+  // IntersectionObserver for Section-to-Scene Switching
+  const sectionIds = ['hero', 'about', 'skills', 'experience', 'projects', 'protosem', 'iot-works', 'contact'];
+  const observerOptions = { root: null, rootMargin: '-20% 0px -20% 0px', threshold: 0.15 };
+
+  const sceneObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        const mappedScene = ENGINE_CONFIG.sectionScenes[id] || 'gears';
+        currentActiveScene = mappedScene;
+
+        if (id === 'experience') chassisProgress = 0;
+      }
     });
-  }
+  }, observerOptions);
 
-  // Layer 2: Midground Circuit Telemetry Nodes & Control Network
-  const numNodes = isMobile ? 18 : 34;
-  const nodes = [];
-  for (let i = 0; i < numNodes; i++) {
-    nodes.push({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      radius: Math.random() * 2 + 1.2,
-      pulse: Math.random() * Math.PI * 2,
-      isAmber: i % 8 === 0
-    });
-  }
+  sectionIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) sceneObserver.observe(el);
+  });
 
-  // Telemetry Packets traveling along control lines
-  const packets = [];
-  const numPackets = isMobile ? 4 : 10;
-  for (let i = 0; i < numPackets; i++) {
-    packets.push({
-      fromNode: Math.floor(Math.random() * nodes.length),
-      toNode: Math.floor(Math.random() * nodes.length),
-      progress: Math.random(),
-      speed: 0.002 + Math.random() * 0.003,
-      color: Math.random() > 0.25 ? '#06b6d4' : '#f59e0b'
-    });
-  }
+  // -------------------------------------------------------------------------
+  // SCENE 1: HERO - Wireframe Gear Train & Floating Callouts
+  // -------------------------------------------------------------------------
+  const gearCallouts = [
+    { text: "Ø 84.50 mm", sub: "PITCH CIRCLE", xRatio: 0.72, yRatio: 0.35, phase: 0 },
+    { text: "R 42.0 mm", sub: "MODULE 1.5 Z=24", xRatio: 0.78, yRatio: 0.55, phase: 2 },
+    { text: "± 0.001 mm", sub: "PRECISION TOL", xRatio: 0.62, yRatio: 0.65, phase: 4 },
+    { text: "NEMA 23", sub: "STEPPER DRIVE", xRatio: 0.55, yRatio: 0.28, phase: 1 }
+  ];
 
-  // Layer 3: Floating Environmental Dust & Light Particles
-  const particles = [];
-  const numParticles = isMobile ? 22 : 55;
-  for (let i = 0; i < numParticles; i++) {
-    particles.push({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      z: 0.2 + Math.random() * 0.8,
-      size: Math.random() * 2.2 + 0.8,
-      speedY: -(Math.random() * 0.22 + 0.06),
-      speedX: (Math.random() - 0.5) * 0.15,
-      opacity: Math.random() * 0.5 + 0.2,
-      pulseSpeed: Math.random() * 0.02 + 0.008,
-      colorHue: Math.random() > 0.4 ? 'rgba(96, 165, 250, ' : (Math.random() > 0.5 ? 'rgba(6, 182, 212, ' : 'rgba(167, 139, 250, ')
-    });
-  }
-
-  // CAD Structural Rotation Angles
-  let angleGear = 0;
-  let angleGyro = 0;
-  let angleCube = 0;
-
-  // Main 60 FPS Render Loop
-  function render() {
-    time += 0.006;
-    if (revealProgress < 1) {
-      revealProgress = Math.min(1, revealProgress + 0.015);
-    }
-
-    // Smooth Damped Mouse Lerp
-    mouse.x += (mouse.targetX - mouse.x) * 0.035;
-    mouse.y += (mouse.targetY - mouse.y) * 0.035;
-
-    const mouseRelX = mouse.x - width / 2;
-    const mouseRelY = mouse.y - height / 2;
-
-    // Cinematic Floating Camera Motion
-    const camX = !prefersReducedMotion ? Math.sin(time * 0.4) * 16 + Math.cos(time * 0.2) * 8 : 0;
-    const camY = !prefersReducedMotion ? Math.cos(time * 0.3) * 12 + Math.sin(time * 0.15) * 6 : 0;
-
-    ctx.clearRect(0, 0, width, height);
-
-    // =========================================================================
-    // 1. BASE CINEMATIC SKY & CENTRAL VOLUMETRIC LIGHT SOURCE
-    // =========================================================================
-    const bgGrad = ctx.createRadialGradient(
-      width / 2 + mouseRelX * 0.015 + camX * 0.5,
-      height * 0.42 + mouseRelY * 0.015 + camY * 0.5,
-      80,
-      width / 2,
-      height / 2,
-      Math.max(width, height) * 0.95
-    );
-    bgGrad.addColorStop(0, '#161d38');    // Midnight Blue with soft Violet core
-    bgGrad.addColorStop(0.35, '#0e1428'); // Deep Navy
-    bgGrad.addColorStop(0.7, '#090d1c');  // Dark Indigo base
-    bgGrad.addColorStop(1, '#050710');    // Cinematic Near-Black
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, width, height);
-
-    // Volumetric Central Soft Light Core Glow
-    const coreGlow = ctx.createRadialGradient(
-      width / 2 + mouseRelX * 0.02 + camX,
-      height * 0.4 - scrollY * 0.05 + camY,
-      20,
-      width / 2,
-      height * 0.4,
-      Math.min(width, height) * 0.6
-    );
-    const pulseGlow = Math.sin(time * 0.8) * 0.03 + 0.12;
-    coreGlow.addColorStop(0, `rgba(59, 130, 246, ${pulseGlow * 1.4})`);  // Electric Blue
-    coreGlow.addColorStop(0.4, `rgba(139, 92, 246, ${pulseGlow * 0.7})`); // Soft Violet
-    coreGlow.addColorStop(0.85, 'rgba(6, 182, 212, 0.02)');               // Subtle Cyan
-    coreGlow.addColorStop(1, 'transparent');
-    ctx.fillStyle = coreGlow;
-    ctx.fillRect(0, 0, width, height);
-
-    // Volumetric Soft Light Rays Scattering
+  function drawGearsScene(colors, weight) {
+    if (weight <= 0.001) return;
     ctx.save();
-    ctx.globalCompositeOperation = 'screen';
-    for (let r = 0; r < 4; r++) {
-      const rayAngle = -Math.PI / 2 + (r - 1.5) * 0.35 + Math.sin(time * 0.3 + r) * 0.05;
-      const rayGrad = ctx.createLinearGradient(
-        width / 2,
-        height * 0.3,
-        width / 2 + Math.cos(rayAngle) * width * 0.8,
-        height * 0.3 + Math.sin(rayAngle) * height * 0.8
-      );
-      rayGrad.addColorStop(0, 'rgba(59, 130, 246, 0.035)');
-      rayGrad.addColorStop(0.6, 'rgba(124, 58, 237, 0.015)');
-      rayGrad.addColorStop(1, 'transparent');
-      ctx.fillStyle = rayGrad;
+    ctx.globalAlpha = weight;
+
+    const parallaxX = (mouse.x - width / 2) * 0.035;
+    const parallaxY = (mouse.y - height / 2) * 0.035;
+    const cx = width * (isMobile ? 0.5 : 0.7) + parallaxX;
+    const cy = height * 0.45 + parallaxY;
+
+    // Gear 1 (Main Sun Gear)
+    const r1 = isMobile ? 80 : 120;
+    const teeth1 = 24;
+    const rot1 = time * 0.3;
+
+    drawGear(cx, cy, r1, teeth1, rot1, colors.primary, 2);
+
+    // Gear 2 (Interlocking Pinion)
+    const r2 = r1 * 0.5;
+    const teeth2 = 12;
+    const angle2 = -0.65;
+    const cx2 = cx + (r1 + r2) * Math.cos(angle2);
+    const cy2 = cy + (r1 + r2) * Math.sin(angle2);
+    const rot2 = -rot1 * (teeth1 / teeth2) + Math.PI / teeth2;
+
+    drawGear(cx2, cy2, r2, teeth2, rot2, colors.secondary, 1.5);
+
+    // Gear 3 (Idler Cluster)
+    const r3 = r1 * 0.7;
+    const teeth3 = 17;
+    const angle3 = 1.85;
+    const cx3 = cx + (r1 + r3) * Math.cos(angle3);
+    const cy3 = cy + (r1 + r3) * Math.sin(angle3);
+    const rot3 = -rot1 * (teeth1 / teeth3) + Math.PI / teeth3;
+
+    drawGear(cx3, cy3, r3, teeth3, rot3, colors.accent, 1.5);
+
+    // Pitch Line mesh connections
+    ctx.strokeStyle = colors.gridMajor;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.arc(cx, cy, r1, 0, Math.PI * 2);
+    ctx.arc(cx2, cy2, r2, 0, Math.PI * 2);
+    ctx.arc(cx3, cy3, r3, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Dimension Callouts
+    gearCallouts.forEach((callout) => {
+      const alpha = Math.max(0, Math.sin(time * 1.5 + callout.phase) * 0.7 + 0.3);
+      const bx = width * callout.xRatio + parallaxX;
+      const by = height * callout.yRatio + parallaxY;
+
+      ctx.save();
+      ctx.globalAlpha = weight * alpha;
+      ctx.strokeStyle = colors.primary;
+      ctx.fillStyle = colors.text;
+      ctx.font = '10px "JetBrains Mono", monospace';
 
       ctx.beginPath();
-      ctx.moveTo(width / 2, height * 0.3);
-      ctx.lineTo(
-        width / 2 + Math.cos(rayAngle - 0.12) * width,
-        height * 0.3 + Math.sin(rayAngle - 0.12) * height
-      );
-      ctx.lineTo(
-        width / 2 + Math.cos(rayAngle + 0.12) * width,
-        height * 0.3 + Math.sin(rayAngle + 0.12) * height
-      );
-      ctx.closePath();
+      ctx.arc(bx, by, 3, 0, Math.PI * 2);
       ctx.fill();
-    }
-    ctx.restore();
 
-    // =========================================================================
-    // 2. BACKGROUND DISTANT MONOLITH PILLARS (BACKGROUND DEPTH LAYER)
-    // =========================================================================
-    ctx.save();
-    const bgParallaxX = mouseRelX * 0.008 + camX * 0.3;
-    const bgParallaxY = mouseRelY * 0.008 + camY * 0.3 - scrollY * 0.04;
-
-    for (let p of pillars) {
-      const pX = p.xRatio * width + bgParallaxX * p.zDepth;
-      const pW = p.widthRatio * width * (0.6 + p.zDepth * 0.4);
-      const pH = p.heightRatio * height;
-      const pY = height - pH + bgParallaxY * p.zDepth;
-
-      // Atmospheric Pillar Gradient (Fading into bottom fog)
-      const pGrad = ctx.createLinearGradient(pX, pY, pX, pY + pH);
-      pGrad.addColorStop(0, `rgba(18, 24, 51, ${0.45 * p.zDepth})`);
-      pGrad.addColorStop(0.7, `rgba(12, 17, 36, ${0.75 * p.zDepth})`);
-      pGrad.addColorStop(1, `rgba(8, 11, 23, ${0.95 * p.zDepth})`);
-
-      ctx.fillStyle = pGrad;
-      ctx.fillRect(pX - pW / 2, pY, pW, pH);
-
-      // Subtle Vertical Edge Metallic Highlight
-      ctx.strokeStyle = `rgba(59, 130, 246, ${0.1 * p.zDepth})`;
-      ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(pX - pW / 2, pY);
-      ctx.lineTo(pX - pW / 2, pY + pH);
-      ctx.moveTo(pX + pW / 2, pY);
-      ctx.lineTo(pX + pW / 2, pY + pH);
+      ctx.moveTo(bx, by);
+      ctx.lineTo(bx + 25, by - 20);
+      ctx.lineTo(bx + 110, by - 20);
       ctx.stroke();
 
-      // Distant Light Beacon
-      if (p.hasLightBeacon) {
-        const bGlow = Math.sin(time * 1.5 + p.pulseOffset) * 0.2 + 0.8;
-        ctx.fillStyle = `rgba(6, 182, 212, ${0.4 * bGlow * p.zDepth})`;
-        ctx.beginPath();
-        ctx.arc(pX, pY + 12, 1.8, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-    ctx.restore();
-
-    // =========================================================================
-    // 3. MIDGROUND ENGINEERING STRUCTURES & CAD GEOMETRY (MIDGROUND LAYER)
-    // =========================================================================
-    if (!prefersReducedMotion) {
-      angleGear += 0.0007;
-      angleGyro -= 0.001;
-      angleCube += 0.0012;
-    }
-
-    const midParallaxX = mouseRelX * 0.025 + camX * 0.6;
-    const midParallaxY = mouseRelY * 0.025 + camY * 0.6 - scrollY * 0.1;
-
-    // Structural Cross-Bracing / Chassis Trusses on Flanks
-    drawStructuralTruss(ctx, 40 + midParallaxX * 0.8, height * 0.45 + midParallaxY, 180, height * 0.5, true);
-    drawStructuralTruss(ctx, width - 40 + midParallaxX * 0.8, height * 0.4 + midParallaxY, 180, height * 0.55, false);
-
-    // CAD Element 1: Gyroscope Precision Scale Ring (Top-Right Flank)
-    drawCADGyro(ctx, width * 0.84 + midParallaxX, 210 + midParallaxY, 140, angleGyro);
-
-    // CAD Element 2: Industrial Gear Assembly (Bottom-Left Flank)
-    drawCADGear(ctx, width * 0.13 + midParallaxX * 1.1, height * 0.74 + midParallaxY, 125, 12, angleGear);
-
-    // CAD Element 3: 3D Isometric CAD Cube Geometry (Center-Right Depth)
-    drawCADIsometricCube(ctx, width * 0.81 + midParallaxX * 0.7, height * 0.62 + midParallaxY, 70, angleCube);
-
-    // Control System Circuit Traces Network
-    ctx.save();
-    ctx.lineWidth = 1;
-    for (let i = 0; i < nodes.length; i++) {
-      let n1 = nodes[i];
-      if (!prefersReducedMotion) {
-        n1.x += n1.vx;
-        n1.y += n1.vy;
-        if (n1.x < 0 || n1.x > width) n1.vx *= -1;
-        if (n1.y < 0 || n1.y > height) n1.vy *= -1;
-        n1.pulse += 0.025;
-      }
-
-      const renderX = n1.x + midParallaxX * 0.5;
-      const renderY = n1.y + midParallaxY * 0.5;
-      const glow = Math.sin(n1.pulse) * 0.35 + 0.65;
-
-      ctx.fillStyle = n1.isAmber ? `rgba(245, 158, 11, ${0.45 * glow})` : `rgba(6, 182, 212, ${0.35 * glow})`;
-      ctx.beginPath();
-      ctx.arc(renderX, renderY, n1.radius, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Connect nearby nodes with 90-degree orthogonal circuit lines
-      for (let j = i + 1; j < nodes.length; j++) {
-        let n2 = nodes[j];
-        let dx = n1.x - n2.x;
-        let dy = n1.y - n2.y;
-        let dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < 140) {
-          const r2X = n2.x + midParallaxX * 0.5;
-          const r2Y = n2.y + midParallaxY * 0.5;
-          ctx.strokeStyle = `rgba(30, 41, 59, ${0.75 * (1 - dist / 140)})`;
-          ctx.beginPath();
-          ctx.moveTo(renderX, renderY);
-          ctx.lineTo(renderX, r2Y);
-          ctx.lineTo(r2X, r2Y);
-          ctx.stroke();
-
-          if (dist < 85) {
-            ctx.strokeStyle = `rgba(6, 182, 212, ${0.14 * (1 - dist / 85)})`;
-            ctx.stroke();
-          }
-        }
-      }
-    }
-    ctx.restore();
-
-    // Telemetry Packets
-    ctx.save();
-    for (let p of packets) {
-      if (!prefersReducedMotion) {
-        p.progress += p.speed;
-        if (p.progress >= 1) {
-          p.fromNode = p.toNode;
-          p.toNode = Math.floor(Math.random() * nodes.length);
-          p.progress = 0;
-        }
-      }
-      let n1 = nodes[p.fromNode];
-      let n2 = nodes[p.toNode];
-      if (n1 && n2) {
-        let px = n1.x + (n2.x - n1.x) * p.progress + midParallaxX * 0.5;
-        let py = n1.y + (n2.y - n1.y) * p.progress + midParallaxY * 0.5;
-
-        ctx.fillStyle = p.color;
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = 6;
-        ctx.beginPath();
-        ctx.arc(px, py, 2.2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-    }
-    ctx.restore();
-
-    // =========================================================================
-    // 4. FLOATING ATMOSPHERIC DUST & PARTICLES
-    // =========================================================================
-    ctx.save();
-    const particleParallaxX = mouseRelX * 0.045 + camX * 0.9;
-    const particleParallaxY = mouseRelY * 0.045 + camY * 0.9 - scrollY * 0.12;
-
-    for (let pt of particles) {
-      if (!prefersReducedMotion) {
-        pt.y += pt.speedY;
-        pt.x += pt.speedX;
-        pt.opacity += Math.sin(Date.now() * pt.pulseSpeed) * 0.006;
-
-        if (pt.y < -10) {
-          pt.y = height + 10;
-          pt.x = Math.random() * width;
-        }
-      }
-
-      let renderX = pt.x + particleParallaxX * pt.z;
-      let renderY = pt.y + particleParallaxY * pt.z;
-
-      ctx.fillStyle = `${pt.colorHue}${Math.max(0.1, Math.min(0.55, pt.opacity * pt.z))})`;
-      ctx.beginPath();
-      ctx.arc(renderX, renderY, pt.size * pt.z, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.restore();
-
-    // =========================================================================
-    // 5. FOREGROUND HEAVY ARCHITECTURAL FRAMING GIRDERS (FOREGROUND DEPTH)
-    // =========================================================================
-    ctx.save();
-    const fgParallaxX = mouseRelX * 0.065 + camX * 1.3;
-    const fgParallaxY = mouseRelY * 0.065 + camY * 1.3 - scrollY * 0.2;
-
-    // Left Foreground Pillar / Mechanical Frame
-    drawForegroundGirder(ctx, -60 + fgParallaxX, -40 + fgParallaxY, 180, height + 80, true);
-
-    // Right Foreground Pillar / Mechanical Frame
-    drawForegroundGirder(ctx, width - 120 + fgParallaxX, -40 + fgParallaxY, 180, height + 80, false);
-    ctx.restore();
-
-    // =========================================================================
-    // 6. ATMOSPHERIC VOLUMETRIC FOG & CENTER CONTENT VIGNETTE MASK
-    // =========================================================================
-    // Bottom Volumetric Fog Haze Layer
-    const fogGrad = ctx.createLinearGradient(0, height * 0.65, 0, height);
-    fogGrad.addColorStop(0, 'transparent');
-    fogGrad.addColorStop(0.6, 'rgba(11, 16, 33, 0.45)');
-    fogGrad.addColorStop(1, 'rgba(7, 10, 20, 0.85)');
-    ctx.fillStyle = fogGrad;
-    ctx.fillRect(0, height * 0.65, width, height * 0.35);
-
-    // Central Content Readability Radial Vignette
-    const vignetteGrad = ctx.createRadialGradient(
-      width / 2,
-      height / 2,
-      Math.min(width, height) * 0.3,
-      width / 2,
-      height / 2,
-      Math.max(width, height) * 0.75
-    );
-    vignetteGrad.addColorStop(0, 'transparent');
-    vignetteGrad.addColorStop(0.7, 'rgba(5, 7, 16, 0.2)');
-    vignetteGrad.addColorStop(1, 'rgba(5, 7, 16, 0.7)');
-    ctx.fillStyle = vignetteGrad;
-    ctx.fillRect(0, 0, width, height);
-
-    // =========================================================================
-    // 7. OPENING INTRO REVEAL BLEND (1.5s Fade-In)
-    // =========================================================================
-    if (revealProgress < 1) {
-      ctx.fillStyle = `rgba(5, 7, 16, ${1 - revealProgress})`;
-      ctx.fillRect(0, 0, width, height);
-    }
-
-    requestAnimationFrame(render);
-  }
-
-  // Draw Structural Chassis Cross-Bracing Truss (Midground)
-  function drawStructuralTruss(ctx, x, y, w, h, isLeft) {
-    ctx.save();
-    ctx.strokeStyle = 'rgba(59, 130, 246, 0.1)';
-    ctx.fillStyle = 'rgba(15, 23, 42, 0.15)';
-    ctx.lineWidth = 1.2;
-
-    const dir = isLeft ? 1 : -1;
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x + w * 0.4 * dir, y + h * 0.2);
-    ctx.lineTo(x + w * 0.4 * dir, y + h);
-    ctx.lineTo(x, y + h * 0.8);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-
-    // Cross Truss Lines
-    ctx.strokeStyle = 'rgba(167, 139, 250, 0.08)';
-    for (let i = 0; i < 4; i++) {
-      let tY1 = y + (i / 4) * h * 0.8;
-      let tY2 = y + ((i + 1) / 4) * h * 0.8;
-      ctx.beginPath();
-      ctx.moveTo(x, tY1);
-      ctx.lineTo(x + w * 0.4 * dir, tY2);
-      ctx.moveTo(x + w * 0.4 * dir, tY1);
-      ctx.lineTo(x, tY2);
-      ctx.stroke();
-    }
-    ctx.restore();
-  }
-
-  // Draw Heavy Foreground Architectural Girder Frame (Foreground Depth)
-  function drawForegroundGirder(ctx, x, y, w, h, isLeft) {
-    ctx.save();
-    const dir = isLeft ? 1 : -1;
-
-    // Dark Silhouetted Chassis Pillar Fill
-    const fgGrad = ctx.createLinearGradient(x, y, x + w * dir, y + h);
-    fgGrad.addColorStop(0, 'rgba(10, 14, 26, 0.94)');
-    fgGrad.addColorStop(0.5, 'rgba(15, 21, 38, 0.88)');
-    fgGrad.addColorStop(1, 'rgba(8, 11, 22, 0.96)');
-
-    ctx.fillStyle = fgGrad;
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x + w * dir, y);
-    ctx.lineTo(x + w * 0.65 * dir, y + h);
-    ctx.lineTo(x, y + h);
-    ctx.closePath();
-    ctx.fill();
-
-    // Edge Metallic Highlight Line
-    ctx.strokeStyle = 'rgba(59, 130, 246, 0.22)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(x + w * dir, y);
-    ctx.lineTo(x + w * 0.65 * dir, y + h);
-    ctx.stroke();
-
-    // Subtle Cyan Status Indicator Pin
-    ctx.fillStyle = 'rgba(6, 182, 212, 0.4)';
-    ctx.beginPath();
-    ctx.arc(x + w * 0.8 * dir, y + h * 0.3, 2.5, 0, Math.PI * 2);
-    ctx.fill();
+      ctx.fillText(callout.text, bx + 30, by - 24);
+      ctx.fillStyle = colors.gridText;
+      ctx.font = '8px "JetBrains Mono", monospace';
+      ctx.fillText(callout.sub, bx + 30, by - 12);
+      ctx.restore();
+    });
 
     ctx.restore();
   }
 
-  // Draw Technical Mechanical Gear
-  function drawCADGear(ctx, cx, cy, radius, teeth, angle) {
+  function drawGear(x, y, radius, teeth, rotation, color, lineWidth) {
     ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(angle);
-    ctx.strokeStyle = 'rgba(167, 139, 250, 0.15)';
-    ctx.lineWidth = 1.1;
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+
+    const outerR = radius + 8;
+    const innerR = radius - 10;
+    const toothAngle = (Math.PI * 2) / teeth;
+    const halfTooth = toothAngle * 0.28;
 
     ctx.beginPath();
     for (let i = 0; i < teeth; i++) {
-      let a1 = (i / teeth) * Math.PI * 2;
-      let a2 = ((i + 0.3) / teeth) * Math.PI * 2;
-      let a3 = ((i + 0.5) / teeth) * Math.PI * 2;
-      let a4 = ((i + 0.8) / teeth) * Math.PI * 2;
-
-      let rOuter = radius;
-      let rInner = radius * 0.85;
-
-      ctx.lineTo(Math.cos(a1) * rInner, Math.sin(a1) * rInner);
-      ctx.lineTo(Math.cos(a2) * rOuter, Math.sin(a2) * rOuter);
-      ctx.lineTo(Math.cos(a3) * rOuter, Math.sin(a3) * rOuter);
-      ctx.lineTo(Math.cos(a4) * rInner, Math.sin(a4) * rInner);
+      const a = i * toothAngle;
+      ctx.lineTo(Math.cos(a - halfTooth) * innerR, Math.sin(a - halfTooth) * innerR);
+      ctx.lineTo(Math.cos(a - halfTooth * 0.7) * outerR, Math.sin(a - halfTooth * 0.7) * outerR);
+      ctx.lineTo(Math.cos(a + halfTooth * 0.7) * outerR, Math.sin(a + halfTooth * 0.7) * outerR);
+      ctx.lineTo(Math.cos(a + halfTooth) * innerR, Math.sin(a + halfTooth) * innerR);
     }
     ctx.closePath();
     ctx.stroke();
 
-    ctx.strokeStyle = 'rgba(6, 182, 212, 0.15)';
+    // Inner Hub & Spokes
     ctx.beginPath();
-    ctx.arc(0, 0, radius * 0.92, 0, Math.PI * 2);
+    ctx.arc(0, 0, radius * 0.35, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.strokeStyle = 'rgba(96, 165, 250, 0.12)';
     ctx.beginPath();
-    ctx.arc(0, 0, radius * 0.5, 0, Math.PI * 2);
-    ctx.arc(0, 0, radius * 0.2, 0, Math.PI * 2);
-    ctx.stroke();
+    ctx.arc(0, 0, radius * 0.12, 0, Math.PI * 2);
+    ctx.fill();
+
+    for (let i = 0; i < 4; i++) {
+      const sa = (i * Math.PI) / 2;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(sa) * (radius * 0.12), Math.sin(sa) * (radius * 0.12));
+      ctx.lineTo(Math.cos(sa) * (radius * 0.35), Math.sin(sa) * (radius * 0.35));
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // -------------------------------------------------------------------------
+  // SCENE 2: ABOUT / SKILLS - Interactive Circuit Node Mesh & Packets
+  // -------------------------------------------------------------------------
+  const nodeCount = isMobile ? ENGINE_CONFIG.nodesMobile : ENGINE_CONFIG.nodesDesktop;
+  const nodes = [];
+  for (let i = 0; i < nodeCount; i++) {
+    nodes.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      radius: Math.random() * 2.2 + 1.2,
+      pulse: Math.random() * Math.PI * 2
+    });
+  }
+
+  const packets = [];
+  for (let i = 0; i < 8; i++) {
+    packets.push({
+      from: Math.floor(Math.random() * nodeCount),
+      to: Math.floor(Math.random() * nodeCount),
+      progress: Math.random(),
+      speed: 0.003 + Math.random() * 0.004
+    });
+  }
+
+  function drawNetworkScene(colors, weight) {
+    if (weight <= 0.001) return;
+    ctx.save();
+    ctx.globalAlpha = weight;
+
+    // Update & draw nodes
+    nodes.forEach((node) => {
+      node.x += node.vx;
+      node.y += node.vy;
+
+      if (node.x < 0 || node.x > width) node.vx *= -1;
+      if (node.y < 0 || node.y > height) node.vy *= -1;
+
+      // Cursor Reaction
+      const dx = mouse.x - node.x;
+      const dy = mouse.y - node.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 160 && mouse.active) {
+        node.x -= (dx / dist) * 0.8;
+        node.y -= (dy / dist) * 0.8;
+      }
+
+      ctx.fillStyle = colors.primary;
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Connecting Lines
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const d = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
+        if (d < 140) {
+          ctx.strokeStyle = colors.nodeLine;
+          ctx.lineWidth = (1 - d / 140) * 1.2;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Data Packets
+    packets.forEach((p) => {
+      p.progress += p.speed;
+      if (p.progress >= 1) {
+        p.progress = 0;
+        p.from = p.to;
+        p.to = Math.floor(Math.random() * nodes.length);
+      }
+
+      const n1 = nodes[p.from];
+      const n2 = nodes[p.to];
+      if (n1 && n2) {
+        const px = n1.x + (n2.x - n1.x) * p.progress;
+        const py = n1.y + (n2.y - n1.y) * p.progress;
+
+        ctx.fillStyle = colors.accent;
+        ctx.shadowColor = colors.accent;
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    });
 
     ctx.restore();
   }
 
-  // Draw Precision Gyroscope Angle Ring
-  function drawCADGyro(ctx, cx, cy, radius, angle) {
+  // -------------------------------------------------------------------------
+  // SCENE 3: EXPERIENCE - Formula Student Spaceframe Chassis 3D Line Drawing
+  // -------------------------------------------------------------------------
+  const chassisVertices = [
+    // Front Bulkhead
+    [-1.0, 0.4, -0.4], [-1.0, -0.4, -0.4], [-1.0, -0.3, 0.4], [-1.0, 0.3, 0.4],
+    // Front Suspension Hoop
+    [-0.4, 0.5, -0.5], [-0.4, -0.5, -0.5], [-0.4, -0.4, 0.5], [-0.4, 0.4, 0.5],
+    // Main Roll Hoop
+    [0.3, 0.65, -0.6], [0.3, -0.65, -0.6], [0.3, -0.45, 0.95], [0.3, 0.45, 0.95],
+    // Rear Subframe
+    [1.1, 0.5, -0.5], [1.1, -0.5, -0.5], [1.1, -0.4, 0.6], [1.1, 0.4, 0.6]
+  ];
+
+  const chassisEdges = [
+    // Front Bulkhead
+    [0, 1], [1, 2], [2, 3], [3, 0],
+    // Front to Suspension
+    [0, 4], [1, 5], [2, 6], [3, 7],
+    // Suspension Hoop
+    [4, 5], [5, 6], [6, 7], [7, 4],
+    // Triangulation Front
+    [0, 5], [1, 4], [2, 7], [3, 6],
+    // Suspension to Main Hoop
+    [4, 8], [5, 9], [6, 10], [7, 11],
+    // Main Hoop
+    [8, 9], [9, 10], [10, 11], [11, 8],
+    // Side Impact Triangulated Tubes
+    [4, 9], [5, 8], [6, 11], [7, 10],
+    // Main Hoop to Rear Subframe
+    [8, 12], [9, 13], [10, 14], [11, 15],
+    // Rear Subframe
+    [12, 13], [13, 14], [14, 15], [15, 12],
+    // Rear Diagonal Bracing
+    [8, 13], [9, 12], [10, 15], [11, 14]
+  ];
+
+  function drawChassisScene(colors, weight) {
+    if (weight <= 0.001) return;
     ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(angle);
-    ctx.strokeStyle = 'rgba(96, 165, 250, 0.13)';
-    ctx.lineWidth = 1;
+    ctx.globalAlpha = weight;
 
-    ctx.beginPath();
-    ctx.arc(0, 0, radius, 0, Math.PI * 2);
-    ctx.stroke();
+    if (chassisProgress < 1) chassisProgress += 0.015;
 
-    for (let i = 0; i < 36; i++) {
-      let a = (i / 36) * Math.PI * 2;
-      let isMajor = i % 9 === 0;
-      let len = isMajor ? 10 : 5;
+    const yaw = time * 0.35 + (mouse.x - width / 2) * 0.0006;
+    const pitch = 0.25 + (mouse.y - height / 2) * 0.0006;
 
-      ctx.strokeStyle = isMajor ? 'rgba(6, 182, 212, 0.3)' : 'rgba(96, 165, 250, 0.1)';
+    const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+    const cosP = Math.cos(pitch), sinP = Math.sin(pitch);
+
+    const scale = isMobile ? 180 : 260;
+    const cx = width * (isMobile ? 0.5 : 0.65);
+    const cy = height * 0.5;
+
+    // Project Vertices
+    const projected = chassisVertices.map(v => {
+      let x = v[0], y = v[1], z = v[2];
+
+      // Yaw rotation
+      let x1 = x * cosY - y * sinY;
+      let y1 = x * sinY + y * cosY;
+      let z1 = z;
+
+      // Pitch rotation
+      let y2 = y1 * cosP - z1 * sinP;
+      let z2 = y1 * sinP + z1 * cosP;
+
+      return {
+        px: cx + x1 * scale,
+        py: cy - z2 * scale
+      };
+    });
+
+    // Draw Edges with Progressive Reveal
+    const edgesToDraw = Math.floor(chassisEdges.length * Math.min(1, chassisProgress));
+
+    ctx.strokeStyle = colors.accent;
+    ctx.lineWidth = 1.8;
+    ctx.shadowColor = colors.accent;
+    ctx.shadowBlur = 10;
+
+    for (let i = 0; i < edgesToDraw; i++) {
+      const e = chassisEdges[i];
+      const p1 = projected[e[0]];
+      const p2 = projected[e[1]];
+
       ctx.beginPath();
-      ctx.moveTo(Math.cos(a) * (radius - len), Math.sin(a) * (radius - len));
-      ctx.lineTo(Math.cos(a) * radius, Math.sin(a) * radius);
+      ctx.moveTo(p1.px, p1.py);
+      ctx.lineTo(p2.px, p2.py);
+      ctx.stroke();
+    }
+    ctx.shadowBlur = 0;
+
+    // Chassis Telemetry Label
+    ctx.fillStyle = colors.accent;
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.fillText("FS-CHASSIS v3.2 [CHROMOLY 4130]", cx - 110, cy + scale * 0.7);
+    ctx.fillStyle = colors.gridText;
+    ctx.fillText("TORSIONAL RIGIDITY: 1450 Nm/deg | -500g OPTIMIZED", cx - 110, cy + scale * 0.7 + 14);
+
+    ctx.restore();
+  }
+
+  // -------------------------------------------------------------------------
+  // SCENE 4: PROJECTS - CNC Toolpath Glowing Cutter & Fading Trail
+  // -------------------------------------------------------------------------
+  const cncTrail = [];
+  const cncWaypoints = [
+    { x: 0.25, y: 0.35 },
+    { x: 0.55, y: 0.35 },
+    { x: 0.65, y: 0.45 },
+    { x: 0.65, y: 0.65 },
+    { x: 0.45, y: 0.75 },
+    { x: 0.30, y: 0.60 },
+    { x: 0.25, y: 0.35 }
+  ];
+
+  let cncPathProgress = 0;
+
+  function drawCNCScene(colors, weight) {
+    if (weight <= 0.001) return;
+    ctx.save();
+    ctx.globalAlpha = weight;
+
+    cncPathProgress += 0.004;
+    if (cncPathProgress >= 1) cncPathProgress = 0;
+
+    // Interpolate current tool position
+    const totalWaypoints = cncWaypoints.length - 1;
+    const currIndex = Math.floor(cncPathProgress * totalWaypoints);
+    const segT = (cncPathProgress * totalWaypoints) - currIndex;
+
+    const w1 = cncWaypoints[currIndex];
+    const w2 = cncWaypoints[currIndex + 1];
+
+    const tx = (w1.x + (w2.x - w1.x) * segT) * width;
+    const ty = (w1.y + (w2.y - w1.y) * segT) * height;
+
+    // Add to fading trail
+    cncTrail.push({ x: tx, y: ty, alpha: 1.0 });
+    if (cncTrail.length > 90) cncTrail.shift();
+
+    // Draw fading cut trail
+    for (let i = 1; i < cncTrail.length; i++) {
+      const p1 = cncTrail[i - 1];
+      const p2 = cncTrail[i];
+      p1.alpha *= 0.96;
+
+      ctx.strokeStyle = colors.primary;
+      ctx.lineWidth = 2.5;
+      ctx.globalAlpha = weight * p1.alpha;
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
       ctx.stroke();
     }
 
+    // Draw Glowing Cutter Head
+    ctx.globalAlpha = weight;
+    ctx.fillStyle = colors.warning;
+    ctx.shadowColor = colors.warning;
+    ctx.shadowBlur = 14;
+    ctx.beginPath();
+    ctx.arc(tx, ty, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Spindle Tool Circle
+    ctx.strokeStyle = colors.warning;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(tx, ty, 12, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Live G-Code HUD Overlay
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = colors.primary;
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.fillText(`G01 X${tx.toFixed(1)} Y${ty.toFixed(1)} F350`, tx + 18, ty - 8);
+    ctx.fillStyle = colors.gridText;
+    ctx.fillText(`SPINDLE: 12,000 RPM | ENDMILL Ø6.0mm`, tx + 18, ty + 6);
+
     ctx.restore();
   }
 
-  // Draw 3D Isometric Wireframe Box (Dark Glass Surfaces + Electric Blue Edges)
-  function drawCADIsometricCube(ctx, cx, cy, size, angle) {
+  // -------------------------------------------------------------------------
+  // SCENE 5: PROTOSEM - PCB Trace Timeline & Component Outlines
+  // -------------------------------------------------------------------------
+  function drawProtoSemScene(colors, weight) {
+    if (weight <= 0.001) return;
     ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(angle * 0.4);
-    ctx.strokeStyle = 'rgba(96, 165, 250, 0.16)';
-    ctx.lineWidth = 1;
+    ctx.globalAlpha = weight;
 
-    const w = size;
+    const traceY = height * 0.55;
+    const startX = width * 0.1;
+    const endX = width * 0.9;
 
-    // Top Face (Dark Transparent Glass)
-    ctx.fillStyle = 'rgba(22, 29, 56, 0.25)';
+    // Main PCB Bus Line
+    ctx.strokeStyle = colors.primary;
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(0, -size);
-    ctx.lineTo(w, -size / 2);
-    ctx.lineTo(0, 0);
-    ctx.lineTo(-w, -size / 2);
-    ctx.closePath();
-    ctx.fill();
+    ctx.moveTo(startX, traceY);
+
+    const stepWidth = (endX - startX) / 8;
+    for (let i = 0; i <= 8; i++) {
+      const px = startX + i * stepWidth;
+      const py = traceY + (i % 2 === 0 ? 0 : -35);
+      ctx.lineTo(px, py);
+    }
     ctx.stroke();
 
-    // Left Face
-    ctx.beginPath();
-    ctx.moveTo(-w, -size / 2);
-    ctx.lineTo(-w, size / 2);
-    ctx.lineTo(0, size);
-    ctx.lineTo(0, 0);
-    ctx.stroke();
+    // Lit Nodes along timeline
+    const activeNodeIndex = Math.floor((time * 1.5) % 9);
+    for (let i = 0; i <= 8; i++) {
+      const px = startX + i * stepWidth;
+      const py = traceY + (i % 2 === 0 ? 0 : -35);
 
-    // Right Face
-    ctx.beginPath();
-    ctx.moveTo(w, -size / 2);
-    ctx.lineTo(w, size / 2);
-    ctx.lineTo(0, size);
-    ctx.stroke();
+      ctx.fillStyle = i === activeNodeIndex ? colors.accent : colors.secondary;
+      if (i === activeNodeIndex) {
+        ctx.shadowColor = colors.accent;
+        ctx.shadowBlur = 12;
+      }
 
-    // Axis Origin Amber Node
-    ctx.fillStyle = '#f59e0b';
-    ctx.beginPath();
-    ctx.arc(0, 0, 2.5, 0, Math.PI * 2);
-    ctx.fill();
+      ctx.beginPath();
+      ctx.arc(px, py, i === activeNodeIndex ? 6 : 3.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    // Drifting Electronics Symbol Outlines
+    drawSchematicResistor(width * 0.25, height * 0.35 + Math.sin(time) * 10, colors.gridText);
+    drawSchematicCapacitor(width * 0.75, height * 0.3 + Math.cos(time) * 10, colors.gridText);
 
     ctx.restore();
+  }
+
+  function drawSchematicResistor(x, y, color) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(x - 30, y);
+    ctx.lineTo(x - 15, y);
+    ctx.lineTo(x - 10, y - 8);
+    ctx.lineTo(x - 0, y + 8);
+    ctx.lineTo(x + 10, y - 8);
+    ctx.lineTo(x + 15, y);
+    ctx.lineTo(x + 30, y);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawSchematicCapacitor(x, y, color) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(x - 25, y); ctx.lineTo(x - 6, y);
+    ctx.moveTo(x - 6, y - 12); ctx.lineTo(x - 6, y + 12);
+    ctx.moveTo(x + 6, y - 12); ctx.lineTo(x + 6, y + 12);
+    ctx.moveTo(x + 6, y); ctx.lineTo(x + 25, y);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // -------------------------------------------------------------------------
+  // SCENE 6: IoT WORKS - ESP32 Wi-Fi Arcs & Oscilloscope Waveforms
+  // -------------------------------------------------------------------------
+  function drawIoTScene(colors, weight) {
+    if (weight <= 0.001) return;
+    ctx.save();
+    ctx.globalAlpha = weight;
+
+    const wifiX = width * (isMobile ? 0.5 : 0.8);
+    const wifiY = height * 0.4;
+
+    // Expanding Concentric Wi-Fi Arcs
+    for (let i = 1; i <= 4; i++) {
+      const radius = ((time * 30 + i * 20) % 80) + 10;
+      const alpha = Math.max(0, 1 - radius / 90);
+
+      ctx.strokeStyle = colors.primary;
+      ctx.globalAlpha = weight * alpha;
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.arc(wifiX, wifiY, radius, -Math.PI * 0.75, -Math.PI * 0.25);
+      ctx.stroke();
+    }
+
+    ctx.globalAlpha = weight;
+    ctx.fillStyle = colors.primary;
+    ctx.beginPath();
+    ctx.arc(wifiX, wifiY, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Scrolling Oscilloscope Sine Wave & PWM Square Wave
+    const waveY = height * 0.7;
+    ctx.strokeStyle = colors.secondary;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let x = 0; x < width; x += 6) {
+      const sineVal = Math.sin((x * 0.015) - (time * 4)) * 25;
+      if (x === 0) ctx.moveTo(x, waveY + sineVal);
+      else ctx.lineTo(x, waveY + sineVal);
+    }
+    ctx.stroke();
+
+    // PWM Square Wave overlay
+    ctx.strokeStyle = colors.accent;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    for (let x = 0; x < width; x += 10) {
+      const pwmVal = Math.sin((x * 0.015) - (time * 4)) > 0 ? 18 : -18;
+      if (x === 0) ctx.moveTo(x, waveY + 50 + pwmVal);
+      else ctx.lineTo(x, waveY + 50 + pwmVal);
+    }
+    ctx.stroke();
+
+    // Telemetry Status Text
+    ctx.fillStyle = colors.primary;
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.fillText("ESP32-WROOM-32 [2.4GHz Wi-Fi / BLE]", wifiX - 90, wifiY + 25);
+    ctx.fillStyle = colors.gridText;
+    ctx.fillText("MQTT: CONNECTED | BAUD: 115200 | RSSI: -42 dBm", wifiX - 90, wifiY + 38);
+
+    ctx.restore();
+  }
+
+  // -------------------------------------------------------------------------
+  // SCENE 7: CONTACT - Calm State Particle Equilibrium Convergence
+  // -------------------------------------------------------------------------
+  const calmParticles = [];
+  for (let i = 0; i < 25; i++) {
+    calmParticles.push({
+      angle: Math.random() * Math.PI * 2,
+      dist: Math.random() * 200 + 50,
+      speed: 0.005 + Math.random() * 0.005,
+      radius: Math.random() * 2 + 1
+    });
+  }
+
+  function drawContactScene(colors, weight) {
+    if (weight <= 0.001) return;
+    ctx.save();
+    ctx.globalAlpha = weight;
+
+    const focalX = width / 2;
+    const focalY = height * 0.45;
+
+    // Central Equilibrium Focal Ring
+    ctx.strokeStyle = colors.primary;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.arc(focalX, focalY, 45, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Particles converging into orbit
+    calmParticles.forEach(p => {
+      p.angle += p.speed;
+      if (p.dist > 50) p.dist -= 0.2;
+
+      const px = focalX + Math.cos(p.angle) * p.dist;
+      const py = focalY + Math.sin(p.angle) * p.dist;
+
+      ctx.fillStyle = colors.primary;
+      ctx.beginPath();
+      ctx.arc(px, py, p.radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.restore();
+  }
+
+  // -------------------------------------------------------------------------
+  // GLOBAL BLUEPRINT GRID DRAWING ENGINE
+  // -------------------------------------------------------------------------
+  function drawBlueprintGrid(colors) {
+    ctx.save();
+    const major = ENGINE_CONFIG.gridMajor;
+    const minor = ENGINE_CONFIG.gridMinor;
+
+    // Minor Grid Lines
+    ctx.strokeStyle = colors.gridMinor;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let x = 0; x < width; x += minor) {
+      ctx.moveTo(x, 0); ctx.lineTo(x, height);
+    }
+    for (let y = 0; y < height; y += minor) {
+      ctx.moveTo(0, y); ctx.lineTo(width, y);
+    }
+    ctx.stroke();
+
+    // Major Grid Lines & Coordinate Labels
+    ctx.strokeStyle = colors.gridMajor;
+    ctx.fillStyle = colors.gridText;
+    ctx.font = '8px "JetBrains Mono", monospace';
+    ctx.beginPath();
+
+    for (let x = 0; x < width; x += major) {
+      ctx.moveTo(x, 0); ctx.lineTo(x, height);
+      ctx.fillText(`X:${Math.round(x)}`, x + 4, 12);
+    }
+    for (let y = 0; y < height; y += major) {
+      ctx.moveTo(0, y); ctx.lineTo(width, y);
+      ctx.fillText(`Y:${Math.round(y)}`, 4, y - 4);
+    }
+    ctx.stroke();
+
+    // Corner Intersection Crosses '+'
+    ctx.strokeStyle = colors.primary;
+    ctx.lineWidth = 1;
+    for (let x = major; x < width; x += major) {
+      for (let y = major; y < height; y += major) {
+        ctx.beginPath();
+        ctx.moveTo(x - 4, y); ctx.lineTo(x + 4, y);
+        ctx.moveTo(x, y - 4); ctx.lineTo(x, y + 4);
+        ctx.stroke();
+      }
+    }
+
+    ctx.restore();
+  }
+
+  // -------------------------------------------------------------------------
+  // MAIN ANIMATION RENDER LOOP (60 FPS)
+  // -------------------------------------------------------------------------
+  function render() {
+    if (!isTabVisible) {
+      requestAnimationFrame(render);
+      return;
+    }
+
+    time += 0.016;
+
+    // Smooth Lerp Mouse Movement
+    mouse.x += (mouse.targetX - mouse.x) * 0.1;
+    mouse.y += (mouse.targetY - mouse.y) * 0.1;
+
+    // Update Scene Crossfade Weights
+    sceneNames.forEach(name => {
+      const targetWeight = (name === currentActiveScene) ? 1 : 0;
+      sceneWeights[name] += (targetWeight - sceneWeights[name]) * ENGINE_CONFIG.crossfadeSpeed;
+    });
+
+    // Detect Theme Mode
+    const htmlTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const colors = ENGINE_CONFIG.themes[htmlTheme] || ENGINE_CONFIG.themes.dark;
+
+    // Clear Canvas
+    ctx.clearRect(0, 0, width, height);
+
+    // If Reduced Motion requested, render simple static grid & pause heavy loop
+    if (prefersReducedMotion) {
+      drawBlueprintGrid(colors);
+      requestAnimationFrame(render);
+      return;
+    }
+
+    // 1. Base Blueprint Grid
+    drawBlueprintGrid(colors);
+
+    // 2. Render Layered Active Scenes with Crossfading
+    drawGearsScene(colors, sceneWeights.gears);
+    drawNetworkScene(colors, sceneWeights.network);
+    drawChassisScene(colors, sceneWeights.chassis);
+    drawCNCScene(colors, sceneWeights.cnc);
+    drawProtoSemScene(colors, sceneWeights.protosem);
+    drawIoTScene(colors, sceneWeights.iot);
+    drawContactScene(colors, sceneWeights.contact);
+
+    requestAnimationFrame(render);
   }
 
   render();
